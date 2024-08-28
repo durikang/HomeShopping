@@ -28,7 +28,7 @@ public class FrontController extends HttpServlet {
 
 		Properties prop = new Properties();
 		
-		String fileName = FrontController.class.getResource("/com/common/mapping/mapping.properties").getPath();
+		String fileName = FrontController.class.getResource("/mapping/mapping.properties").getPath();
 		
 		prop.load(new FileReader(fileName));
 		// URI와 커맨드를 추출 

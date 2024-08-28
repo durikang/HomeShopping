@@ -15,26 +15,27 @@
 
     <!-- Main 영역 -->
     <!-- 서블릿에서 전달된 URL에 따라 동적으로 JSP 페이지를 포함 -->
-<c:choose>
-    <c:when test="${not empty param.url}">
-        <c:import url="${param.url}" />
-        
-    </c:when>
-    <c:when test="${not empty url}">
-        <c:import url="${url}" />
-       	<!-- Include the pagination JSP -->
-        <c:if test="${not empty pi }">
-		    <jsp:include page="/views/common/pagination.jsp"/>
-        </c:if>
-    </c:when>
-    <c:otherwise>
-<%-- 이곳에 컨텐츠가 표시됩니다 --%>
-<div style="padding: 20px;">
-	<h1>관리자 페이지 대시보드</h1>
-	<p>이곳에서 관리할 수 있는 다양한 항목들을 관리하세요.</p>
-</div>
-    </c:otherwise>
-</c:choose>
+	<c:choose>
+	    <c:when test="${not empty param.url}">
+	        <c:import url="${param.url}" />
+	        
+	    </c:when>
+	    <c:when test="${not empty url}">
+	        <c:import url="${url}" />
+	       	<!-- Include the pagination JSP -->
+	       	<!-- pi객체가 존재한다면. List페이지 이므로 페이지네이션 import -->
+	        <c:if test="${not empty pi }"> 
+			    <jsp:include page="/views/common/pagination.jsp"/>
+	        </c:if>
+	    </c:when>
+	    <c:otherwise>
+			<%-- 이곳에 main 컨텐츠가 표시됩니다 --%>
+			<c:import url="main/dashboard.jsp" />
+	    </c:otherwise>
+	</c:choose>
+
+<%-- footer 영역 --%>
+<c:import url="common/footer.jsp"/>
 
 </body>
 </html>
