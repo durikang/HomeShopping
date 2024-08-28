@@ -10,33 +10,14 @@
 <script src="<%=request.getContextPath() %>/resources/index/js/index.js"></script>
 </head>
 <body>
+
 <c:set var="contextPath" value="${ pageContext.servletContext.contextPath }" scope="application"/>
+
 <script>
-window.onload = function(){
-		location.href="${contextPath}/main.go";
-	}
+	window.onload = function(){
+			location.href="${contextPath}/main.go";
+		}
 </script>
-
-<!-- 
-<div class="container">
-    <div class="login-box">
-        <h2>로그인</h2>
-        <form>
-            <div class="input-group">
-                <label for="username">아이디</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="input-group">
-                <label for="password">비밀번호</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">로그인</button>
-            <div class="links">
-            </div>
-        </form>
-    </div>
-</div> -->
-
 
 </body>
 </html>
