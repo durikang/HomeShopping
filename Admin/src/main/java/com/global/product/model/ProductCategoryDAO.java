@@ -107,8 +107,8 @@ public class ProductCategoryDAO {
 	} // closeConn() end
 
 
-	// 카테고리 등록 메서드
-	public int insertCategory(ProductCategoryDTO dto) {
+
+public int insertCategory(ProductCategoryDTO dto) {
 		
 		int result = 0;
 		
@@ -140,7 +140,7 @@ public class ProductCategoryDAO {
 		return result;
 	} // 카테고리 등록 종료
 
-
+		
 	public List<ProductCategoryDTO> getCategoryList() {
 
 		List<ProductCategoryDTO> list = new ArrayList<ProductCategoryDTO>();
@@ -197,7 +197,7 @@ public class ProductCategoryDAO {
 			
 			dto = new ProductCategoryDTO();
 			
-			dto.setCategory_No(rs.getString("categoryNo"));
+			dto.setCategory_No(rs.getString("category_no"));
 			dto.setName(rs.getString("name"));
 			dto.setDescription(rs.getString("description"));
 			
@@ -217,15 +217,72 @@ public class ProductCategoryDAO {
 		return dto;
 	}
 
-
+	
 	public int getProductCategoryListCount() {
+		int count = 0;
+		
+		try {
+		
+			openConn();
+			
+			sql = "SELECT COUNT(*) FROM PRODUCT_CATEGORY ORDER BY 1";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+			
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			closeConn(rs, pstmt, con);
+		}
+		return count;
+	}
 
-		return 0;
+
+	public List<ProductCategoryDTO> getProductCategoryPage(int currentPage, int boardLimit) {
+
+		
+		
+		
+		List<ProductCategoryDTO> list = new ArrayList<>();
+		
+		try {
+
+	    int startRow = (currentPage - 1) * boardLimit + 1;
+	    int endRow = startRow + boardLimit - 1;
+			
+		openConn();
+		
+		sql = "SELECT COUNT(*) FROM PRODUCT_CATEGORY ORDER BY 1";
+
+		pstmt = con.prepareStatement(sql);
+        pstmt.setInt(1, startRow);
+        pstmt.setInt(2, endRow);
+		
+        rs = pstmt.executeQuery();
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+	        closeConn(rs, pstmt, con);
+	    }
+		
+		
+		
+		return list;
 	}
 
 
 
+		
+	}
 
-	
-	
-}
+
+

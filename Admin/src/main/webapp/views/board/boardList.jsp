@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			</c:choose>
 			<tr>
 				<td class="table_bottom button" colspan="9" align="center">
-					<input type="button" class="btn" value="게시글 작성" onclick="location.href=''">
+					<input type="button" class="btn" value="게시글 작성" onclick="location.href='boardInsert.do'">
 				</td>
 			</tr>
 		</table>
