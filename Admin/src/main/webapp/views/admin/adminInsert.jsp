@@ -24,6 +24,34 @@
 	         </tr>
 	         
 	         <tr>
+	            <th>사용자 아이디</th>
+	            <td>
+	               <input type = "text" name = "user_id">
+	            </td>
+	         </tr>
+	         
+	         <tr>
+	            <th>사용자 비밀번호</th>
+	            <td>
+	               <input type = "password" name = "password">
+	            </td>
+	         </tr>
+	         
+	         <tr>
+	            <th>사용자 이름</th>
+	            <td>
+	               <input type = "text" name = "name">
+	            </td>
+	         </tr>
+	         
+	         <tr>
+	            <th>사용자 이메일</th>
+	            <td>
+	               <input type = "text" name = "email">
+	            </td>
+	         </tr>
+	         
+	         <tr>
 	            <th>역할 코드</th>
 	            <td>
 	               <input type = "text" name = "role_code">
@@ -40,7 +68,7 @@
 	         <tr>
 	            <td colspan="2" align="center">
 	               <input type="submit" value="등록">&nbsp;
-	         	   <input type="reset" value="다시작성">
+	         	   <input type="reset" value="초기화">
 	            </td>
 	         </tr>
 	      </table>

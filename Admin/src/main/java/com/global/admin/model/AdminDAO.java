@@ -65,7 +65,7 @@ public class AdminDAO {
    } // closeConn() end
    
    // 관리자인지 여부를 확인하는 메서드
-   public int adminCheck(String id, String pwd) {
+   public int adminCheck(String id, String password) {
 	   
 	   int result = 0;
 	   
@@ -79,7 +79,7 @@ public class AdminDAO {
 		   rs = pstmt.executeQuery();
 		   
 		   if(rs.next()) {
-			   if(pwd.equals(rs.getString("password"))) {
+			   if(password.equals(rs.getString("password"))) {
 				   result = 1;
 			   }
 			   
@@ -123,9 +123,10 @@ public class AdminDAO {
 				dto.setUser_no(rs.getInt(1));
 				dto.setUser_id(rs.getString(2));
 				dto.setPassword(rs.getString(3));
-				dto.setRole_name(rs.getString(4));
+				dto.setName(rs.getString(4));
 				dto.setEmail(rs.getString(5));
 				dto.setRole_code(rs.getString(6));
+				dto.setRole_name(rs.getString(7));
 			}
 		} 
 		

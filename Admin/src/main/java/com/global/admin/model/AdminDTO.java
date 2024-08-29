@@ -5,9 +5,10 @@ public class AdminDTO {
 	private int user_no;
 	private String user_id;
 	private String password;
-	private String role_name;
+	private String name;
 	private String email;
 	private String role_code;
+	private String role_name;
 	
 	public int getUser_no() {
 		return user_no;
@@ -33,12 +34,12 @@ public class AdminDTO {
 		this.password = password;
 	}
 	
-	public String getRole_name() {
-		return role_name;
+	public String getName() {
+		return name;
 	}
 	
-	public void setRole_name(String role_name) {
-		this.role_name = role_name;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public String getEmail() {
@@ -55,5 +56,13 @@ public class AdminDTO {
 	
 	public void setRole_code(String role_code) {
 		this.role_code = role_code;
+	}
+	
+	public String getRole_name() {
+		return role_name;
+	}
+	
+	public void setRole_name(String role_name) {
+		this.role_name = role_name;
 	}
 }
