@@ -8,6 +8,7 @@ DROP TABLE ORDER_ITEM CASCADE CONSTRAINTS;
 DROP TABLE ORDERS CASCADE CONSTRAINTS;
 DROP TABLE CART_ITEM CASCADE CONSTRAINTS;
 DROP TABLE CART CASCADE CONSTRAINTS;
+DROP TABLE PRODUCT_REVIEW_REPLY CASCADE CONSTRAINTS; -- 추가된 테이블 20240829 
 DROP TABLE PRODUCT_REVIEW CASCADE CONSTRAINTS;
 DROP TABLE PRODUCT_IMAGE CASCADE CONSTRAINTS;
 DROP TABLE PRODUCT CASCADE CONSTRAINTS;
@@ -19,6 +20,7 @@ DROP TABLE ADMIN CASCADE CONSTRAINTS;
 DROP TABLE ADMIN_ROLE CASCADE CONSTRAINTS;
 DROP TABLE CUSTOMER CASCADE CONSTRAINTS;
 DROP TABLE USERS CASCADE CONSTRAINTS;
+
 
 
 
@@ -140,7 +142,20 @@ CREATE TABLE PRODUCT_REVIEW (
     FOREIGN KEY (USER_NO) REFERENCES USERS(USER_NO)  -- 작성자 (USERS 테이블 참조)
 );
 
--- 12. 사용자 장바구니를 관리하는 테이블 (USERS 테이블 참조)
+-- 12. 상품 리뷰의 댓글을 관리하는 테이블 (USERS 및 PRODUCT_REVIEW 테이블 참조) - 20240829 추가
+CREATE TABLE PRODUCT_REVIEW_REPLY (
+    REPLY_NO NUMBER PRIMARY KEY,  -- 댓글 번호 (Primary Key)
+    REVIEW_NO NUMBER,  -- 댓글이 달린 리뷰 (PRODUCT_REVIEW 테이블 참조)
+    USER_NO NUMBER,  -- 댓글 작성자 (USERS 테이블 참조)
+    CONTENT VARCHAR2(4000),  -- 댓글 내용
+    CREATED_AT DATE DEFAULT SYSDATE,  -- 댓글 작성일 (기본값: 현재 날짜)
+    UPDATED_AT DATE,  -- 댓글 수정일
+    IS_DELETED CHAR(1) DEFAULT 'N' CHECK (IS_DELETED IN ('Y', 'N')),  -- 댓글 삭제 여부 (Default: N)
+    FOREIGN KEY (REVIEW_NO) REFERENCES PRODUCT_REVIEW(REVIEW_NO),  -- 리뷰 (PRODUCT_REVIEW 테이블 참조)
+    FOREIGN KEY (USER_NO) REFERENCES USERS(USER_NO)  -- 작성자 (USERS 테이블 참조)
+);
+
+-- 13. 사용자 장바구니를 관리하는 테이블 (USERS 테이블 참조)
 CREATE TABLE CART (
     CART_NO NUMBER PRIMARY KEY,  -- 장바구니 번호 (Primary Key)
     USER_NO NUMBER,  -- 장바구니 소유자 (USERS 테이블 참조)
@@ -148,7 +163,7 @@ CREATE TABLE CART (
     FOREIGN KEY (USER_NO) REFERENCES USERS(USER_NO)  -- 소유자 (USERS 테이블 참조)
 );
 
--- 13. 장바구니에 담긴 상품 항목을 관리하는 테이블 (CART 및 PRODUCT 테이블 참조)
+-- 14. 장바구니에 담긴 상품 항목을 관리하는 테이블 (CART 및 PRODUCT 테이블 참조)
 CREATE TABLE CART_ITEM (
     CART_ITEM_NO NUMBER PRIMARY KEY,  -- 장바구니 항목 번호 (Primary Key)
     CART_NO NUMBER,  -- 장바구니 (CART 테이블 참조)
@@ -160,7 +175,7 @@ CREATE TABLE CART_ITEM (
     FOREIGN KEY (PRODUCT_NO) REFERENCES PRODUCT(PRODUCT_NO)  -- 상품 (PRODUCT 테이블 참조)
 );
 
--- 14. 주문 정보를 관리하는 테이블 (USERS 테이블 참조)
+-- 15. 주문 정보를 관리하는 테이블 (USERS 테이블 참조)
 CREATE TABLE ORDERS (
     ORDER_NO NUMBER PRIMARY KEY,  -- 주문 번호 (Primary Key)
     USER_NO NUMBER,  -- 주문한 고객 (USERS 테이블 참조)
@@ -170,7 +185,7 @@ CREATE TABLE ORDERS (
     FOREIGN KEY (USER_NO) REFERENCES USERS(USER_NO)  -- 고객 (USERS 테이블 참조)
 );
 
--- 15. 주문 항목을 관리하는 테이블 (ORDERS 및 PRODUCT 테이블 참조)
+-- 16. 주문 항목을 관리하는 테이블 (ORDERS 및 PRODUCT 테이블 참조)
 CREATE TABLE ORDER_ITEM (
     ORDER_ITEM_NO NUMBER PRIMARY KEY,  -- 주문 항목 번호 (Primary Key)
     ORDER_NO NUMBER,  -- 주문 (ORDERS 테이블 참조)
@@ -181,7 +196,7 @@ CREATE TABLE ORDER_ITEM (
     FOREIGN KEY (PRODUCT_NO) REFERENCES PRODUCT(PRODUCT_NO)  -- 상품 (PRODUCT 테이블 참조)
 );
 
--- 16. 주문 배송 정보를 관리하는 테이블 (ORDERS 테이블 참조)
+-- 17. 주문 배송 정보를 관리하는 테이블 (ORDERS 테이블 참조)
 CREATE TABLE DELIVERY (
     DELIVERY_NO NUMBER PRIMARY KEY,  -- 배송 번호 (Primary Key)
     ORDER_NO NUMBER,  -- 주문 (ORDERS 테이블 참조)
@@ -190,7 +205,7 @@ CREATE TABLE DELIVERY (
     FOREIGN KEY (ORDER_NO) REFERENCES ORDERS(ORDER_NO)  -- 주문 (ORDERS 테이블 참조)
 );
 
--- 17. 이벤트 정보를 관리하는 테이블
+-- 18. 이벤트 정보를 관리하는 테이블
 CREATE TABLE EVENT (
     EVENT_NO NUMBER PRIMARY KEY, -- 이벤트 NO: 각 이벤트를 고유하게 식별하는 기본 키입니다.
     NAME VARCHAR2(255) NOT NULL, -- 이벤트 이름: 이벤트의 제목이나 이름을 저장합니다. 예: "봄맞이 할인".
@@ -201,7 +216,7 @@ CREATE TABLE EVENT (
     UPDATED_AT DATE -- 이벤트 수정일: 이벤트 정보가 마지막으로 수정된 날짜를 기록합니다.
 );
 
--- 18. 쿠폰 정보를 관리하는 테이블 (EVENT 테이블 참조)
+-- 19. 쿠폰 정보를 관리하는 테이블 (EVENT 테이블 참조)
 CREATE TABLE COUPON (
     COUPON_NO NUMBER PRIMARY KEY, -- 쿠폰 NO: 각 쿠폰을 고유하게 식별하는 기본 키입니다.
     CODE VARCHAR2(50) UNIQUE NOT NULL, -- 쿠폰 코드: 사용자가 쿠폰을 사용할 때 입력하는 고유 코드입니다. 중복되지 않도록 설정합니다.
@@ -215,7 +230,7 @@ CREATE TABLE COUPON (
     FOREIGN KEY (EVENT_NO) REFERENCES EVENT(EVENT_NO) -- 외래 키: EVENT 테이블의 EVENT_NO를 참조합니다.
 );
 
--- 19. 이메일 발송 기록을 관리하는 테이블 (COUPON 테이블 참조)
+-- 20. 이메일 발송 기록을 관리하는 테이블 (COUPON 테이블 참조)
 CREATE TABLE EMAIL_LOG (
     EMAIL_LOG_NO NUMBER PRIMARY KEY, -- 이메일 로그 NO: 각 이메일 발송 기록을 고유하게 식별하는 기본 키입니다.
     EMAIL_ADDRESS VARCHAR2(255) NOT NULL, -- 이메일 주소: 쿠폰이 발송된 이메일 주소를 저장합니다.
@@ -226,7 +241,7 @@ CREATE TABLE EMAIL_LOG (
     FOREIGN KEY (COUPON_NO) REFERENCES COUPON(COUPON_NO) -- 외래 키: COUPON 테이블의 COUPON_NO를 참조합니다.
 );
 
--- 20. 사용자 쿠폰을 관리하는 테이블 (USERS 및 COUPON 테이블 참조)
+-- 21. 사용자 쿠폰을 관리하는 테이블 (USERS 및 COUPON 테이블 참조)
 CREATE TABLE USER_COUPON (
     USER_COUPON_NO NUMBER PRIMARY KEY, -- 사용자 쿠폰 NO: 각 사용자 쿠폰을 고유하게 식별하는 기본 키입니다.
     USER_NO NUMBER, -- 사용자 NO: 쿠폰을 받은 사용자의 NO입니다. USERS 테이블과의 외래 키입니다.
@@ -237,5 +252,3 @@ CREATE TABLE USER_COUPON (
     FOREIGN KEY (USER_NO) REFERENCES USERS(USER_NO), -- 외래 키: USERS 테이블의 USER_NO를 참조합니다.
     FOREIGN KEY (COUPON_NO) REFERENCES COUPON(COUPON_NO) -- 외래 키: COUPON 테이블의 COUPON_NO를 참조합니다.
 );
-
-
