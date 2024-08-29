@@ -51,7 +51,7 @@
             <!-- 게시판 관리 -->
             <li class="dropdown">게시판 관리
                 <ul class="dropdown-menu">
-                    <li><a href="board_list.html">게시글 목록</a></li>
+                    <li><a href="boardList.do">게시글 목록</a></li>
                     <li><a href="board_category.html">카테고리 관리</a></li>
                     <li><a href="board_stats.html">게시글 통계</a></li>
                 </ul>

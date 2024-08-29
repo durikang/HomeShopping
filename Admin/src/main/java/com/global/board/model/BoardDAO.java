@@ -140,7 +140,7 @@ public class BoardDAO {
 	public List<BoardDTO> selectBoardList(int currentPage, int boardLimit, char status) {
 		List<BoardDTO> list = new ArrayList<>();
 
-		String sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY BOARD_NO ASC) AS rnum, b.* FROM BOARD b WHERE b.IS_DELETED = ?) WHERE rnum BETWEEN ? AND ?";
+		sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY BOARD_NO ASC) AS rnum, b.* FROM BOARD b WHERE b.IS_DELETED = ?) WHERE rnum BETWEEN ? AND ?";
 
 		try {
 			openConn();
@@ -178,7 +178,7 @@ public class BoardDAO {
 	public List<BoardDTO> selectBoardList(int currentPage, int boardLimit) {
 		List<BoardDTO> list = new ArrayList<>();
 
-		String sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY BOARD_NO ASC) AS rnum, b.* FROM BOARD b ) WHERE rnum BETWEEN ? AND ?";
+		sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY BOARD_NO ASC) AS rnum, b.* FROM BOARD b ) WHERE rnum BETWEEN ? AND ?";
 
 		try {
 			openConn();
@@ -207,6 +207,141 @@ public class BoardDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			closeConn(rs, pstmt, conn);
+		}
+		return list;
+	}
+
+	public List<BoardCategoryDTO> selectBoardCategoryList(int currentPage, int boardLimit) {
+		List<BoardCategoryDTO> list = new ArrayList<>();
+
+		sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY category_no ASC) AS rnum, b.* FROM BOARD_CATEGORY b ) WHERE rnum BETWEEN ? AND ?";
+
+		try {
+			openConn();
+			int startRow = (currentPage - 1) * boardLimit + 1;
+			int endRow = startRow + boardLimit - 1;
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, startRow);
+			pstmt.setInt(2, endRow);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				BoardCategoryDTO category = new BoardCategoryDTO();
+				
+				list.add(category);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, conn);
+		}
+		return list;
+	}
+
+	public int getBoardCategoryCount() {
+		int count = 0;
+
+		try {
+			openConn();
+			sql = "select count(*) from BOARD_CATEGORY";
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, conn);
+		}
+
+		return count;
+	}
+
+	public int getBoardCategoryCount(char status) {
+		int count = 0;
+
+		try {
+			openConn();
+			sql = "select count(*) from BOARD_CATEGORY";
+			// 상태에 따라 SQL 조건 추가
+			if (status == 'Y') {
+				sql += " WHERE is_deleted = 'Y' order by 1 desc";
+			} else if (status == 'N') {
+				sql += " WHERE is_deleted = 'N' order by 1 desc";
+			}
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, conn);
+		}
+
+		return count;
+	}
+
+	public List<BoardCategoryDTO> selectBoardCategoryList(int currentPage, int boardLimit, char status) {
+		List<BoardCategoryDTO> list = new ArrayList<>();
+
+		sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY CATEGORY_NO ASC) AS rnum, b.* FROM BOARD_CATEGORY b) WHERE rnum BETWEEN ? AND ?";
+
+		try {
+			openConn();
+			int startRow = (currentPage - 1) * boardLimit + 1;
+			int endRow = startRow + boardLimit - 1;
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, String.valueOf(status));
+			pstmt.setInt(2, startRow);
+			pstmt.setInt(3, endRow);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				BoardCategoryDTO category = new BoardCategoryDTO();
+				category.setCategoryNo(rs.getString("CATEGORY_NO"));
+				category.setName(rs.getString("NAME"));
+				category.setDescription(rs.getString("DESCRIPTION"));
+				
+				list.add(category);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, conn);
+		}
+		return list;
+	}
+
+	public List<BoardCategoryDTO> selectBoardCategoryList() {
+		List<BoardCategoryDTO> list = new ArrayList<>();
+		try {
+			sql = "select * from BOARD_CATEGORY order by 1 asc";
+			openConn();
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				BoardCategoryDTO category = new BoardCategoryDTO();
+				category.setCategoryNo(rs.getString(1));
+				category.setName(rs.getString(2));
+				category.setDescription(rs.getString(3));
+				list.add(category);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
 			closeConn(rs, pstmt, conn);
 		}
 		return list;
