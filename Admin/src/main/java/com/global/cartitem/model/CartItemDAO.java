@@ -192,4 +192,6 @@ public class CartItemDAO {
 		return dto;
 	}
 	
+	//cartItem 테이블 삭제하는  메서드 
+	
 }//class end
