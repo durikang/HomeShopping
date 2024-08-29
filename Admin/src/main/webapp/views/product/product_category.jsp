@@ -28,7 +28,8 @@
 				<c:forEach items="${list }" var="dto">
 					<tr>
 						<td>${dto.getCategory_No() }</td>
-						<td>${dto.getName() }</td>
+						<td><a 
+						href="<%=request.getContextPath() %>/productCategoryContent.do?no=${dto.getCategory_No() }">${dto.getName() }</a></td>
 						<td>${dto.getDescription() }</td>
 					</tr>
 				</c:forEach>
@@ -42,9 +43,7 @@
 			</c:if>
 			<tr>
 				<td colspan="3" align="center">
-					<input type="button" value="카테고리 등록" onclick="location.href='product_category_insert.go'">&nbsp;&nbsp; 
-					<input type="button" value="카테고리 수정" onclick="location.href='product_category_modify.do'">&nbsp; &nbsp;
-					<input type="button" value="카테고리 삭제" onclick="location.href='product_category_delete.do'">
+					<input type="button" value="카테고리 등록" onclick="location.href='product_category_insert.go'">
 				</td>
 			</tr>
 

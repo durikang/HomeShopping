@@ -10,6 +10,7 @@ import com.global.action.Action;
 import com.global.action.View;
 import com.global.product.model.ProductCategoryDAO;
 import com.global.product.model.ProductCategoryDTO;
+import com.global.utils.ScriptUtil;
 
 public class ProductInsertCategoryAction implements Action {
 
@@ -17,36 +18,25 @@ public class ProductInsertCategoryAction implements Action {
 		@Override
 		public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 			
-			String no = request.getParameter("cateNo").trim();
-			String name = request.getParameter("cateName").trim();
-			String description = request.getParameter("cateInfo").trim();
+			String category_no = request.getParameter("category_no").trim();
+			String name = request.getParameter("name").trim();
+			String description = request.getParameter("description").trim();
 			
 			ProductCategoryDTO dto = new ProductCategoryDTO();
 			
-			dto.setCategory_No(no);
+			dto.setCategory_No(category_no);
 			dto.setName(name);
 			dto.setDescription(description);
 			
 			ProductCategoryDAO dao = ProductCategoryDAO.getInstance();
 			
 			int check = dao.insertCategory(dto);
-					
-			PrintWriter out = response.getWriter();
 			
-			if(check > 0) {
-				out.println("<script>");
-				out.println("alert('카테고리 추가 성공')");
-				out.println("location.href=''");
-				out.println("</script>");
-			}else {
-				out.println("<script>");
-				out.println("alert('카테고리  추가 실패')");
-				out.println("history.back()");
-				out.println("</script>");
-				
+			if (check > 0) {
+				ScriptUtil.sendScript(response, "카테고리 추가 성공", "product_category.do");
+			} else {
+				ScriptUtil.sendScript(response, "카테고리 추가 실패!!!", null);
 			}
-			
-			
 			
 			
 			return null;
