@@ -157,7 +157,7 @@ public class CartDAO {
 				
 				dto.setCart_no(rs.getInt("CART_NO"));
 				dto.setCart_userNo(rs.getInt("USER_NO"));
-				dto.setCart_createdAt(rs.getString("CREATED_AT"));
+				dto.setCart_createdAt(rs.getDate("CREATED_AT"));
 				
 				list.add(dto);
 				
@@ -172,7 +172,7 @@ public class CartDAO {
 	}//getCartList end
 
 	// cart 테이블 user_no로 해당하는 정보를 조회하는 메서드
-	public CartDTO contentCrt(int no) {
+	public CartDTO contentCart(int no) {
 		CartDTO dto = null;
 		
 		

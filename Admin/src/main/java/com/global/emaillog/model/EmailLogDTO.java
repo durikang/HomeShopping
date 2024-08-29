@@ -1,11 +1,13 @@
 package com.global.emaillog.model;
 
+import java.sql.Date;
+
 public class EmailLogDTO {
 	
 	private int emailLog_no;				// 이메일 로그 No
 	private String emailLog_emailAddress;	// 이메일 주소
 	private int emailLog_couponNo;			// 쿠폰 No
-	private String emailLog_sentAt;			// 이메일 발송일
+	private Date emailLog_sentAt;			// 이메일 발송일
 	private String emailLog_status;			// 발송상태
 	private String emailLog_errorMessage;	// 에러 메세지
 	
@@ -33,11 +35,11 @@ public class EmailLogDTO {
 		this.emailLog_couponNo = emailLog_couponNo;
 	}
 	
-	public String getEmailLog_sentAt() {
+	public Date getEmailLog_sentAt() {
 		return emailLog_sentAt;
 	}
 	
-	public void setEmailLog_sentAt(String emailLog_sentAt) {
+	public void setEmailLog_sentAt(Date emailLog_sentAt) {
 		this.emailLog_sentAt = emailLog_sentAt;
 	}
 	
