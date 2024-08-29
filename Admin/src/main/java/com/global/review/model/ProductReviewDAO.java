@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -20,7 +21,7 @@ public class ProductReviewDAO {
 	
 	public ProductReviewDAO() {}
 	
-	public ProductReviewDAO getInstance() {
+	public static ProductReviewDAO getInstance() {
 		
 		if(instance == null) {
 			instance = new ProductReviewDAO();
@@ -65,5 +66,25 @@ public class ProductReviewDAO {
 		}
 
 	} // closeConn() end
+
+	public int getReviewCount(char c) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public List<ProductReviewDTO> selectReviewList(int currentPage, int boardLimit, char c) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getReviewCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public List<ProductReviewDTO> selectReviewList(int currentPage, int boardLimit) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
