@@ -136,15 +136,60 @@ public class CartItemDAO {
 			while (rs.next()) {
 				CartItemDTO dto = new CartItemDTO();
 				
-				dto.setCartItem_cartNo(rs.getInt("CART_ITEM_NO"));
+				dto.setCartItem_no(rs.getInt("CART_ITEM_NO"));
+				dto.setCartItem_cartNo(rs.getInt("CART_NO"));
+				dto.setCartItem_productNo(rs.getInt("PRODUCT_NO"));
+				dto.setCartItem_quantity(rs.getInt("QUANTITY"));
+				dto.setCartItem_addedAt(rs.getDate("ADDED_AT"));
+				dto.setCartItem_updatedAt(rs.getDate("UPDATED_AT"));
+				
+				list.add(dto);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+				}finally {
+						closeConn(rs, pstmt, con);
+					}
 		
 		return list;
-	}
+		
+	}//getCartItemList end
 	
+	//cartItem 테이블  CART_NO 검색하여 해당 정보를 조회하는 메서드 
+	public CartItemDTO contentCartItem(int no) {
+		CartItemDTO dto = null;
+		
+	
+		try {
+			openConn();
+			
+			sql ="SELECT * FROM CART_ITEM WHERE CART_NO =? ";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setInt(1, no);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dto = new CartItemDTO();
+				
+				dto.getCartItem_no();
+				dto.getCartItem_cartNo();
+				dto.getCartItem_productNo();
+				dto.getCartItem_quantity();
+				dto.getCartItem_addedAt();
+				dto.getCartItem_updatedAt();
+	
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+				}finally {
+						closeConn(rs, pstmt, con);
+					}
+	
+		return dto;
+	}
 	
 }//class end

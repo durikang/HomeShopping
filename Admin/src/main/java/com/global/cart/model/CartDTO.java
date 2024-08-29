@@ -1,10 +1,12 @@
 package com.global.cart.model;
 
+import java.sql.Date;
+
 public class CartDTO {
 	
 	private int cart_no;				// 장바구니 번호
 	private int cart_userNo;			// 장바구니 소유자 
-	private String cart_createdAt;		// 장바구니 생성일
+	private Date cart_createdAt;		// 장바구니 생성일
 	
 	public int getCart_no() {
 		return cart_no;
@@ -22,11 +24,11 @@ public class CartDTO {
 		this.cart_userNo = cart_userNo;
 	}
 	
-	public String getCart_createdAt() {
+	public Date getCart_createdAt() {
 		return cart_createdAt;
 	}
 	
-	public void setCart_createdAt(String cart_createdAt) {
+	public void setCart_createdAt(Date cart_createdAt) {
 		this.cart_createdAt = cart_createdAt;
 	}
 	

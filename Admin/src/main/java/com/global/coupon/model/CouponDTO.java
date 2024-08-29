@@ -1,16 +1,18 @@
 package com.global.coupon.model;
 
+import java.sql.Date;
+
 public class CouponDTO {
 	
 	private int coupon_no;
 	private String coupon_code;
 	private int coupon_discountAmount;
 	private int coupon_discountPercent;
-	private String coupon_expiryDate;
+	private Date coupon_expiryDate;
 	private String coupon_isUsed;
 	private int coupon_eventNo;
-	private String coupon_createdAt;
-	private String coupon_updatedAt;
+	private Date coupon_createdAt;
+	private Date coupon_updatedAt;
 	
 	public int getCoupon_no() {
 		return coupon_no;
@@ -44,11 +46,11 @@ public class CouponDTO {
 		this.coupon_discountPercent = coupon_discountPercent;
 	}
 	
-	public String getCoupon_expiryDate() {
+	public Date getCoupon_expiryDate() {
 		return coupon_expiryDate;
 	}
 	
-	public void setCoupon_expiryDate(String coupon_expiryDate) {
+	public void setCoupon_expiryDate(Date coupon_expiryDate) {
 		this.coupon_expiryDate = coupon_expiryDate;
 	}
 	
@@ -68,20 +70,21 @@ public class CouponDTO {
 		this.coupon_eventNo = coupon_eventNo;
 	}
 	
-	public String getCoupon_createdAt() {
+	public Date getCoupon_createdAt() {
 		return coupon_createdAt;
 	}
 	
-	public void setCoupon_createdAt(String coupon_createdAt) {
+	public void setCoupon_createdAt(Date coupon_createdAt) {
 		this.coupon_createdAt = coupon_createdAt;
 	}
 	
-	public String getCoupon_updatedAt() {
+	public Date getCoupon_updatedAt() {
 		return coupon_updatedAt;
 	}
 	
-	public void setCoupon_updatedAt(String coupon_updatedAt) {
+	public void setCoupon_updatedAt(Date coupon_updatedAt) {
 		this.coupon_updatedAt = coupon_updatedAt;
 	}
+	
 	
 }

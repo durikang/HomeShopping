@@ -14,7 +14,7 @@ public class OrderDTO {
 
 	private int order_no;			// 주문 번호
 	private int order_userNO;		// 주문한 고객
-	private String order_date;		// 주문 일자
+	private Date order_date;		// 주문 일자
 	private String order_status;	// 주문 상태
 	private int order_totalAmount;	// 총 주문 금액
 

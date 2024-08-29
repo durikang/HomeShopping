@@ -1,13 +1,15 @@
 package com.global.cartitem.model;
 
+import java.sql.Date;
+
 public class CartItemDTO {
 	
 	private int cartItem_no;			// 장바구니 항목 번호
 	private int cartItem_cartNo;		// 장바구니
 	private int cartItem_productNo;		// 장바구니에 담긴 상품
 	private int cartItem_quantity;		// 수량
-	private String cartItem_addedAt;	// 항목 추가일
-	private String cartItem_updatedAt;	// 항목 수정일
+	private Date cartItem_addedAt;		// 항목 추가일
+	private Date cartItem_updatedAt;	// 항목 수정일
 	
 	public int getCartItem_no() {
 		return cartItem_no;
@@ -41,19 +43,19 @@ public class CartItemDTO {
 		this.cartItem_quantity = cartItem_quantity;
 	}
 	
-	public String getCartItem_addedAt() {
+	public Date getCartItem_addedAt() {
 		return cartItem_addedAt;
 	}
 	
-	public void setCartItem_addedAt(String cartItem_addedAt) {
+	public void setCartItem_addedAt(Date cartItem_addedAt) {
 		this.cartItem_addedAt = cartItem_addedAt;
 	}
 	
-	public String getCartItem_updatedAt() {
+	public Date getCartItem_updatedAt() {
 		return cartItem_updatedAt;
 	}
 	
-	public void setCartItem_updatedAt(String cartItem_updatedAt) {
+	public void setCartItem_updatedAt(Date cartItem_updatedAt) {
 		this.cartItem_updatedAt = cartItem_updatedAt;
 	}
 	
