@@ -7,7 +7,6 @@ public class BoardCategoryDTO {
 	private String description;
 	
 	public BoardCategoryDTO() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public BoardCategoryDTO(String categoryNo, String name, String description) {
