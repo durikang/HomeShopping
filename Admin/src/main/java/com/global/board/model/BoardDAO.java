@@ -231,6 +231,10 @@ public class BoardDAO {
 			while (rs.next()) {
 				BoardCategoryDTO category = new BoardCategoryDTO();
 				
+				category.setCategoryNo(rs.getString("CATEGORY_NO"));
+				category.setName(rs.getString("NAME"));
+				category.setDescription(rs.getString("DESCRIPTION"));
+				
 				list.add(category);
 			}
 		} catch (SQLException e) {
@@ -311,7 +315,7 @@ public class BoardDAO {
 				category.setCategoryNo(rs.getString("CATEGORY_NO"));
 				category.setName(rs.getString("NAME"));
 				category.setDescription(rs.getString("DESCRIPTION"));
-				
+
 				list.add(category);
 			}
 		} catch (SQLException e) {
@@ -328,23 +332,46 @@ public class BoardDAO {
 			sql = "select * from BOARD_CATEGORY order by 1 asc";
 			openConn();
 			pstmt = conn.prepareStatement(sql);
-			
+
 			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				BoardCategoryDTO category = new BoardCategoryDTO();
 				category.setCategoryNo(rs.getString(1));
 				category.setName(rs.getString(2));
 				category.setDescription(rs.getString(3));
 				list.add(category);
 			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, conn);
+		}
+		return list;
+	}
+
+	public int insertBoardCategory(BoardCategoryDTO category) {
+		int res = 0;
+
+		try {
+			openConn();
+			sql = "insert into BOARD_CATEGORY values(?,?,?)";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, category.getCategoryNo());
+			pstmt.setString(2, category.getName());
+			pstmt.setString(3, category.getDescription());
+			
+			res = pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
-			closeConn(rs, pstmt, conn);
+			closeConn(pstmt, conn);
 		}
-		return list;
+
+		return res;
 	}
 
 }
