@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -86,7 +88,128 @@ public class BoardDAO {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+	public int getBoardCount() {
+		int count = 0;
+
+		try {
+			openConn();
+			sql = "select count(*) from BOARD";
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, conn);
+		}
+
+		return count;
+	}
+
+	public int getBoardCount(char status) {
+		int count = 0;
+
+		try {
+			openConn();
+			sql = "select count(*) from BOARD";
+			// 상태에 따라 SQL 조건 추가
+			if (status == 'Y') {
+				sql += " WHERE is_deleted = 'Y' order by 1 desc";
+			} else if (status == 'N') {
+				sql += " WHERE is_deleted = 'N' order by 1 desc";
+			}
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, conn);
+		}
+
+		return count;
+	}
+
+	public List<BoardDTO> selectBoardList(int currentPage, int boardLimit, char status) {
+		List<BoardDTO> list = new ArrayList<>();
+
+		String sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY BOARD_NO ASC) AS rnum, b.* FROM BOARD b WHERE b.IS_DELETED = ?) WHERE rnum BETWEEN ? AND ?";
+
+		try {
+			openConn();
+			int startRow = (currentPage - 1) * boardLimit + 1;
+			int endRow = startRow + boardLimit - 1;
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, String.valueOf(status));
+			pstmt.setInt(2, startRow);
+			pstmt.setInt(3, endRow);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				BoardDTO board = new BoardDTO();
+				board.setBoardNo(rs.getInt("BOARD_NO"));
+				board.setUserNo(rs.getInt("USER_NO"));
+				board.setCategoryNo(rs.getString("CATEGORY_NO"));
+				board.setTitle(rs.getString("TITLE"));
+				board.setContent(rs.getString("CONTENT"));
+				board.setCreateAt(rs.getDate("CREATED_AT"));
+				board.setUpdateAt(rs.getDate("UPDATED_AT"));
+				board.setIsDeleted(rs.getString("IS_DELETED"));
+
+				list.add(board);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, conn);
+		}
+		return list;
+	}
+
+	public List<BoardDTO> selectBoardList(int currentPage, int boardLimit) {
+		List<BoardDTO> list = new ArrayList<>();
+
+		String sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY BOARD_NO ASC) AS rnum, b.* FROM BOARD b ) WHERE rnum BETWEEN ? AND ?";
+
+		try {
+			openConn();
+			int startRow = (currentPage - 1) * boardLimit + 1;
+			int endRow = startRow + boardLimit - 1;
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, startRow);
+			pstmt.setInt(2, endRow);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				BoardDTO board = new BoardDTO();
+				board.setBoardNo(rs.getInt("BOARD_NO"));
+				board.setUserNo(rs.getInt("USER_NO"));
+				board.setCategoryNo(rs.getString("CATEGORY_NO"));
+				board.setTitle(rs.getString("TITLE"));
+				board.setContent(rs.getString("CONTENT"));
+				board.setCreateAt(rs.getDate("CREATED_AT"));
+				board.setUpdateAt(rs.getDate("UPDATED_AT"));
+				board.setIsDeleted(rs.getString("IS_DELETED"));
+
+				list.add(board);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, conn);
+		}
+		return list;
+	}
+
 }
