@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+  
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+  
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,8 +19,11 @@
 		
 		<table border = "1" width = "auto">
 			<tr>
-				<th>사용자 번호</th> <th>역할 코드</th> <th>역할 이름</th> 
+				<th>사용자 번호</th> <th>사용자 이름</th> <th>역할 이름</th> 
 			</tr>
+			
+			<c:set  var="" value="${ }"/>		
+	
 		</table>
 	</div>
 </body>
