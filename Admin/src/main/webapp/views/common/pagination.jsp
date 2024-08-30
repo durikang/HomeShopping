@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<link href="${contextPath }/resources/common/css/pagination.css" rel="stylesheet" type="text/css"/>
 <!-- pagination.jsp -->
 <div class="pagination" align="center">
     <%-- 이전 버튼 --%>

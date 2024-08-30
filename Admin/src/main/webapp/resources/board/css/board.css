@@ -1,0 +1,54 @@
+@charset "UTF-8";
+/* 전반적인 레이아웃 스타일 */
+.content {
+	max-width: 900px;
+	margin: 50px 446px;
+	padding: 30px;
+	background-color: #ffffff;
+	border-radius: 12px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+	font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 제목 스타일 */
+.content-title {
+	font-size: 2.5rem;
+	font-weight: bold;
+	color: #333;
+	margin-bottom: 15px;
+	border-bottom: 2px solid #eee;
+	padding-bottom: 10px;
+}
+
+/* 작성자 정보 및 날짜 스타일 */
+.content-info {
+	margin-bottom: 30px;
+	color: #888;
+	font-size: 0.95rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* 본문 스타일 */
+.content-body {
+	font-size: 1.1rem;
+	line-height: 1.8;
+	color: #444;
+	background-color: #fafafa;
+	padding: 25px;
+	border-radius: 8px;
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+	white-space: pre-wrap;
+}
+
+/* 카테고리 스타일 */
+.category-label {
+	font-size: 1rem;
+	color: #5a5a5a;
+	background-color: #f0f0f0;
+	padding: 5px 10px;
+	border-radius: 5px;
+	margin-bottom: 20px;
+	display: inline-block;
+}

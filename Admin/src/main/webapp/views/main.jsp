@@ -14,6 +14,7 @@
 <c:import url="common/menubar.jsp"/>
 
     <!-- Main 영역 -->
+    <div class="main-content"> <!-- 메인 콘텐츠 영역을 감싸는 div 추가 -->
     <!-- 서블릿에서 전달된 URL에 따라 동적으로 JSP 페이지를 포함 -->
 	<c:choose>
 	    <c:when test="${not empty param.url}">
@@ -33,7 +34,8 @@
 			<c:import url="main/dashboard.jsp" />
 	    </c:otherwise>
 	</c:choose>
-
+    </div> <!-- 메인 콘텐츠 영역 끝 -->
+    
 <%-- footer 영역 --%>
 <c:import url="common/footer.jsp"/>
 

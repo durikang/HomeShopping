@@ -9,9 +9,11 @@
 <link rel="stylesheet" href="${contextPath }/resources/master.css">
 <link href="${contextPath }/resources/common/css/pwd.css" rel="stylesheet" type="text/css"/>
 <link href="${contextPath }/resources/common/css/table.css" rel="stylesheet" type="text/css"/>
-    
+<link href="${contextPath}/resources/common/css/btn.css" rel="stylesheet">    
+<link href="${contextPath }/resources/common/css/form.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<!-- CKEditor 스크립트 추가 -->
+<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
 <!-- 내비게이션 바 -->
 <!-- 내비게이션 바 -->
 <nav class="navbar">

@@ -35,7 +35,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-
+<style>
+	.notice {
+		background-color: #f5f5f5;
+		font-weight: bold;
+		color: #d9534f;
+	}
+	
+	.post {
+		background-color: #ffffff;
+	}
+	
+	.table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+	
+	.table th, .table td {
+		padding: 10px;
+		border: 1px solid #ddd;
+	}
+</style>
 </head>
 <body>
 
@@ -45,8 +65,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		<!-- 공백 추가 -->
 		<table border="1">
 			<tr>
-				<td class="table_header button" colspan="9" align="right">전체 게시글 수
-					수 : ${count}</td>
+				<td class="table_header button" colspan="9" align="right">전체
+					게시글 수 수 : ${count}</td>
 			</tr>
 			<tr>
 				<th>BoardNo.</th>
@@ -60,28 +80,32 @@ document.addEventListener('DOMContentLoaded', function() {
 			</tr>
 			<c:choose>
 				<c:when test="${not empty list}">
-				<c:forEach items="${list}" var="board">
-				    <c:set var="truncatedTitle" value="${fn:length(board.title) > 20 ? fn:substring(board.title, 0, 20) + '...' : board.title}" />
-					<c:set var="truncatedContent" value="${fn:length(board.content) > 30 ? fn:substring(board.content, 0, 30) + '...' : board.content}" />
-				    
-				    <tr class="trlist" data-id="${board.boardNo}" data-user-type="${board.userType}">
-				        <td>${board.boardNo}</td>
-				        <td>${board.userNo}</td>
-				        <td>${board.categoryName} <span class="subtitle">(${board.categoryNo})</span> </td>
-						<td>${truncatedTitle}</td>
-						<td>${truncatedContent}</td>
-				        <td><fmt:formatDate value="${board.createAt }"/></td>
-				        <td><fmt:formatDate value="${board.updateAt }" /></td>
-				        <td><c:choose>
-				                <c:when test="${board.isDeleted == 'N'}">
-				                    <c:set var="status" value="정상" />
-				                </c:when>
-				                <c:otherwise>
-				                    <c:set var="status" value="삭제됨" />
-				                </c:otherwise>
-				            </c:choose> <c:out value="${status}" /></td>
-				    </tr>
-				</c:forEach>
+					<c:forEach items="${list}" var="board">
+						<c:set var="truncatedTitle"
+							value="${fn:length(board.title) > 20 ? fn:substring(board.title, 0, 20) + '...' : board.title}" />
+						<c:set var="truncatedContent"
+							value="${fn:length(board.content) > 30 ? fn:substring(board.content, 0, 30) + '...' : board.content}" />
+
+						<tr class="trlist" data-id="${board.boardNo}"
+							data-user-type="${board.userType}">
+							<td>${board.boardNo}</td>
+							<td>${board.userNo}</td>
+							<td>${board.categoryName}<span class="subtitle">(${board.categoryNo})</span>
+							</td>
+							<td>${truncatedTitle}</td>
+							<td>${truncatedContent}</td>
+							<td><fmt:formatDate value="${board.createAt }" /></td>
+							<td><fmt:formatDate value="${board.updateAt }" /></td>
+							<td><c:choose>
+									<c:when test="${board.isDeleted == 'N'}">
+										<c:set var="status" value="정상" />
+									</c:when>
+									<c:otherwise>
+										<c:set var="status" value="삭제됨" />
+									</c:otherwise>
+								</c:choose> <c:out value="${status}" /></td>
+						</tr>
+					</c:forEach>
 				</c:when>
 				<c:otherwise>
 					<tr>
@@ -92,9 +116,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				</c:otherwise>
 			</c:choose>
 			<tr>
-				<td class="table_bottom button" colspan="9" align="center">
-					<input type="button" class="btn" value="게시글 작성" onclick="location.href='boardInsertForm.do'">
-				</td>
+				<td class="table_bottom button" colspan="9" align="center"><input
+					type="button" class="btn" value="게시글 작성"
+					onclick="location.href='boardInsertForm.do'"></td>
 			</tr>
 		</table>
 	</div>
