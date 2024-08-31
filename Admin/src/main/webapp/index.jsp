@@ -17,7 +17,6 @@
 	window.onload = function(){
 			location.href="${contextPath}/main.go";
 		}
-	
 </script>
 
 </body>

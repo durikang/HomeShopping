@@ -16,6 +16,16 @@
     
 }
 
+
+.btn-w {
+    width: 100px;
+}
+
+.btn-h {
+    height: 40px;
+}
+
+
 .btn:hover {
     background-color: #e0e0e0; /* 호버 시 버튼 색상 */
     color: #000; /* 호버 시 버튼 텍스트 색상 */

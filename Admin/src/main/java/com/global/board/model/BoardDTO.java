@@ -4,12 +4,14 @@ import java.sql.Date;
 
 public class BoardDTO {
 	private int boardNo;
-	private int userNo;
+	private Integer userNo;
 	private String title;
 	private String content;
+	private int views; // 조회수
 	private Date createAt;
 	private Date updateAt;
 	private String isDeleted;
+	
 	
 	/* boardCategory Join용*/
 	private String categoryNo;
@@ -26,7 +28,7 @@ public class BoardDTO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public BoardDTO(int boardNo, int userNo, String title, String content, Date createAt, Date updateAt,
+	public BoardDTO(int boardNo, Integer userNo, String title, String content, int views, Date createAt, Date updateAt,
 			String isDeleted, String categoryNo, String categoryName, String description, String userId,
 			String userName, String userEmail, String userType) {
 		super();
@@ -34,6 +36,7 @@ public class BoardDTO {
 		this.userNo = userNo;
 		this.title = title;
 		this.content = content;
+		this.views = views;
 		this.createAt = createAt;
 		this.updateAt = updateAt;
 		this.isDeleted = isDeleted;
@@ -51,11 +54,13 @@ public class BoardDTO {
 	public void setBoardNo(int boardNo) {
 		this.boardNo = boardNo;
 	}
-	public int getUserNo() {
+	public Integer getUserNo() {
 		return userNo;
 	}
-	public void setUserNo(int userNo) {
-		this.userNo = userNo;
+	public void setUserNo(Object userNo) {
+		if(userNo instanceof Integer ) {
+			this.userNo = (Integer)userNo;
+		}
 	}
 	public String getTitle() {
 		return title;
@@ -68,6 +73,12 @@ public class BoardDTO {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public int getViews() {
+		return views;
+	}
+	public void setViews(int views) {
+		this.views = views;
 	}
 	public Date getCreateAt() {
 		return createAt;
@@ -129,10 +140,6 @@ public class BoardDTO {
 	public void setUserType(String userType) {
 		this.userType = userType;
 	}
-	
-	
-	
-	
 	
 	
 }

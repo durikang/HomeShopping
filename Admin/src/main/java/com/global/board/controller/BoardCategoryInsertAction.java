@@ -17,7 +17,7 @@ public class BoardCategoryInsertAction implements Action {
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String no = request.getParameter("no");
 		String name = request.getParameter("name");
-		String description = request.getParameter("content");
+		String description = request.getParameter("description");
 		
 		BoardCategoryDTO category = new BoardCategoryDTO();
 		category.setCategoryNo(no);

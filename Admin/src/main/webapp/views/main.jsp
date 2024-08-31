@@ -8,6 +8,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="${contextPath }/resources/master.css" rel ="stylesheet" type="text/css"/>
 <title>관리지 페이지</title>
+<style>
+</style>
+
+
 </head>
 <body>
 <%-- header 영역 --%>

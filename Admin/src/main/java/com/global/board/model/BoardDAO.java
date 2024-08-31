@@ -89,77 +89,73 @@ public class BoardDAO {
 		}
 	}
 
-	public int getBoardCount() {
-		int count = 0;
+	public int getBoardCount(String status) {
+	    int count = 0;
+	    try {
+	        openConn();
+	        sql = "SELECT COUNT(*) FROM board LEFT JOIN users USING(user_no)";
+	        
+	        if (status != null) {
+	            sql += " WHERE is_deleted = ?";
+	        }
+	        
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        if (status != null) {
+	            pstmt.setString(1, status);
+	        }
 
-		try {
-			openConn();
-			sql = "select count(*) from BOARD";
-			pstmt = conn.prepareStatement(sql);
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            count = rs.getInt(1);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(rs, pstmt, conn);
+	    }
 
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				count = rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeConn(rs, pstmt, conn);
-		}
-
-		return count;
+	    return count;
 	}
 
-	public int getBoardCount(char status) {
-		int count = 0;
-
-		try {
-			openConn();
-			sql = "select count(*) from BOARD";
-			// 상태에 따라 SQL 조건 추가
-			if (status == 'Y') {
-				sql += " WHERE is_deleted = 'Y' order by 1 desc";
-			} else if (status == 'N') {
-				sql += " WHERE is_deleted = 'N' order by 1 desc";
-			}
-			pstmt = conn.prepareStatement(sql);
-
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				count = rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeConn(rs, pstmt, conn);
-		}
-
-		return count;
-	}
 
 	public List<BoardDTO> selectBoardList(int currentPage, int boardLimit, char status) {
 		List<BoardDTO> list = new ArrayList<>();
-
-		sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY b.BOARD_NO ASC) AS rnum, b.*, u.USER_TYPE, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, bc.NAME AS CATEGORY_NAME FROM BOARD b JOIN USERS u ON b.USER_NO = u.USER_NO JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO WHERE b.IS_DELETED = ?) WHERE rnum BETWEEN ? AND ?";
-
+		/*
+			sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY b.BOARD_NO ASC) AS rnum, b.*, u.USER_TYPE, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, bc.NAME AS CATEGORY_NAME FROM BOARD b JOIN USERS u ON b.USER_NO = u.USER_NO JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO WHERE b.IS_DELETED = ?) WHERE rnum BETWEEN ? AND ?";
+	 	*/
+		// 현재 회원 관련된 로직이 미구현 상태이므로 임시로 아래 쿼리를 사용합니다.
+			sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY b.BOARD_NO ASC) AS rnum, b.*, u.USER_TYPE, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, bc.NAME AS CATEGORY_NAME FROM BOARD b LEFT JOIN USERS u ON b.USER_NO = u.USER_NO JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO WHERE b.IS_DELETED = ?) WHERE rnum BETWEEN ? AND ?";
+				
 		try {
 			openConn();
+			int paramIndex = 1;
 			int startRow = (currentPage - 1) * boardLimit + 1;
 			int endRow = startRow + boardLimit - 1;
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, String.valueOf(status));
-			pstmt.setInt(2, startRow);
-			pstmt.setInt(3, endRow);
+			pstmt.setString(paramIndex++, String.valueOf(status));
+			pstmt.setInt(paramIndex++, startRow);
+			pstmt.setInt(paramIndex++, endRow);
 
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				BoardDTO board = new BoardDTO();
 				board.setBoardNo(rs.getInt("BOARD_NO"));
-				board.setUserNo(rs.getInt("USER_NO"));
+				
+			    // 아직 회원 관련 로직이 구현되지 않았으므로
+			    int userNo = rs.getInt("USER_NO");
+			    if (rs.wasNull()) {
+			        board.setUserNo(null); // USER_NO가 NULL이면 null 설정
+			    } else {
+			        board.setUserNo(userNo); // USER_NO가 NULL이 아니면 해당 값 설정
+			    }
+				
+				
 				board.setTitle(rs.getString("TITLE"));
 				board.setContent(rs.getString("CONTENT"));
+				board.setViews(rs.getInt("VIEWS"));				// 조회수 컬럼 추가 20240830 by 두리
 				board.setCreateAt(rs.getDate("CREATED_AT"));
 				board.setUpdateAt(rs.getDate("UPDATED_AT"));
 				board.setIsDeleted(rs.getString("IS_DELETED"));
@@ -186,26 +182,39 @@ public class BoardDAO {
 
 	public List<BoardDTO> selectBoardList(int currentPage, int boardLimit) {
 		List<BoardDTO> list = new ArrayList<>();
-		/* boardList페이지에서 BOARD_DETAIL을 호출할때 USER_TYPE,USER_ID,USER_EMAIL,BOARD_CATEGORY테이블에 대한 정보를 포함하고 있습니다. */
-		sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY b.BOARD_NO ASC) AS rnum, b.*, u.USER_TYPE, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, bc.NAME AS CATEGORY_NAME FROM BOARD b JOIN USERS u ON b.USER_NO = u.USER_NO JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO) WHERE rnum BETWEEN ? AND ?";
-
+		/* boardList페이지에서 BOARD_DETAIL을 호출할때 USER_TYPE,USER_ID,USER_EMAIL,BOARD_CATEGORY테이블에 대한 정보를 포함하고 있습니다. 
+			sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY b.BOARD_NO ASC) AS rnum, b.*, u.USER_TYPE, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, bc.NAME AS CATEGORY_NAME FROM BOARD b JOIN USERS u ON b.USER_NO = u.USER_NO JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO) WHERE rnum BETWEEN ? AND ?";
+		*/
+		// 현재 회원 관련된 로직이 미구현 상태이므로 임시로 아래 쿼리를 사용합니다.
+		sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY b.BOARD_NO ASC) AS rnum, b.*, u.USER_TYPE, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, bc.NAME AS CATEGORY_NAME FROM BOARD b LEFT JOIN USERS u ON b.USER_NO = u.USER_NO JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO) WHERE rnum BETWEEN ? AND ?";
+		
 		try {
 			openConn();
+			int paramIndex = 1;
 			int startRow = (currentPage - 1) * boardLimit + 1;
 			int endRow = startRow + boardLimit - 1;
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, startRow);
-			pstmt.setInt(2, endRow);
+			pstmt.setInt(paramIndex++, startRow);
+			pstmt.setInt(paramIndex++, endRow);
 
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				BoardDTO board = new BoardDTO();
 				board.setBoardNo(rs.getInt("BOARD_NO"));
-				board.setUserNo(rs.getInt("USER_NO"));
+				
+				// 아직 회원 관련 로직이 구현되지 않았으므로
+			    int userNo = rs.getInt("USER_NO");
+			    if (rs.wasNull()) {
+			        board.setUserNo(null); // USER_NO가 NULL이면 null 설정
+			    } else {
+			        board.setUserNo(userNo); // USER_NO가 NULL이 아니면 해당 값 설정
+			    }
+			    
 				board.setTitle(rs.getString("TITLE"));
 				board.setContent(rs.getString("CONTENT"));
+				board.setViews(rs.getInt("VIEWS"));				// 조회수 컬럼 추가 20240830 by 두리
 				board.setCreateAt(rs.getDate("CREATED_AT"));
 				board.setUpdateAt(rs.getDate("UPDATED_AT"));
 				board.setIsDeleted(rs.getString("IS_DELETED"));
@@ -215,7 +224,9 @@ public class BoardDAO {
 				board.setCategoryName(rs.getString("CATEGORY_NAME"));
 
 				/* USERS 정보도 필요하므로 SET*/
-				board.setUserNo(rs.getInt("USER_NO"));
+				
+				board.setUserNo(rs.getObject("USER_NO"));
+				
 				board.setUserId(rs.getString("USER_ID"));
 				board.setUserEmail(rs.getString("USEr_EMAIL"));
 				board.setUserType(rs.getString("USER_TYPE"));
@@ -237,12 +248,13 @@ public class BoardDAO {
 
 		try {
 			openConn();
+			int paramIndex = 1;
 			int startRow = (currentPage - 1) * boardLimit + 1;
 			int endRow = startRow + boardLimit - 1;
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, startRow);
-			pstmt.setInt(2, endRow);
+			pstmt.setInt(paramIndex++, startRow);
+			pstmt.setInt(paramIndex++, endRow);
 
 			rs = pstmt.executeQuery();
 
@@ -318,13 +330,14 @@ public class BoardDAO {
 
 		try {
 			openConn();
+			int paramIndex=1;
 			int startRow = (currentPage - 1) * boardLimit + 1;
 			int endRow = startRow + boardLimit - 1;
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, String.valueOf(status));
-			pstmt.setInt(2, startRow);
-			pstmt.setInt(3, endRow);
+			pstmt.setString(paramIndex++, String.valueOf(status));
+			pstmt.setInt(paramIndex++, startRow);
+			pstmt.setInt(paramIndex++, endRow);
 
 			rs = pstmt.executeQuery();
 
@@ -375,11 +388,13 @@ public class BoardDAO {
 		try {
 			openConn();
 			sql = "insert into BOARD_CATEGORY values(?,?,?)";
-
+			int paramIndex=1;
+			
+			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, category.getCategoryNo());
-			pstmt.setString(2, category.getName());
-			pstmt.setString(3, category.getDescription());
+			pstmt.setString(paramIndex++, category.getCategoryNo());
+			pstmt.setString(paramIndex++, category.getName());
+			pstmt.setString(paramIndex++, category.getDescription());
 			
 			res = pstmt.executeUpdate();
 			
@@ -392,7 +407,7 @@ public class BoardDAO {
 		return res;
 	}
 
-	public int insertBoard(BoardDTO board) {
+	public int insertBoard(BoardDTO board,Integer userNo) {
 		int res = 0;
 		
 		openConn();
@@ -401,18 +416,24 @@ public class BoardDAO {
 		 * sql = "insert into board values(seq_board_no.nextval,?,?,?,?,sysdate,null,'N')";
 		 */
 		
-		sql = "insert into board values(seq_board_no.nextval,NULL,?,?,?,sysdate,null,'N')";
+		sql = "insert into board values(seq_board_no.nextval,?,?,?,?,default,sysdate,null,'N')";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
+			int paramIndex=1;
 			/* 현재 로그인이 구현 안됐으므로 아래 코드는 임시 주석처리합니다.*/
 			/*
 			 * pstmt.setInt(1, board.getUserNo());
 			 */
 			
-			pstmt.setString(1, board.getCategoryNo());
-			pstmt.setString(2, board.getTitle());
-			pstmt.setString(3, board.getContent());
+	        if (userNo == null) {
+	            pstmt.setNull(paramIndex++, java.sql.Types.INTEGER); // userNo가 null일 때 처리
+	        } else {
+	            pstmt.setInt(paramIndex++, userNo); // userNo가 null이 아닐 때 처리
+	        }
+			pstmt.setString(paramIndex++, board.getCategoryNo());
+			pstmt.setString(paramIndex++, board.getTitle());
+			pstmt.setString(paramIndex++, board.getContent());
 			
 			res = pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -426,6 +447,10 @@ public class BoardDAO {
 
 	public BoardDTO selectBoard(int no, String userType) {
 		BoardDTO board = null;
+		/*
+			만약 UserType이 Admin이고, admin_roll이 '최고 관리자' 일경우도 아래 setter해줘야함.
+			이건 추후에 추가할 예정
+		*/
 		try {
 			openConn();
 			
@@ -445,11 +470,13 @@ public class BoardDAO {
                         "JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO " +
                         "WHERE b.BOARD_NO = ?";
             }
+			/* 만약 user정보 없이 삽입된 게시글일 경우*/
+			sql = "SELECT b.*, bc.NAME AS CATEGORY_NAME, bc.DESCRIPTION, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, u.USER_TYPE FROM BOARD b LEFT JOIN USERS u ON b.USER_NO = u.USER_NO LEFT JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO WHERE b.BOARD_NO = ?";
 			
 			 if (sql != null) {
-			
+				int paramIndex=1;
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, no);
+				pstmt.setInt(paramIndex++, no);
 				
 				rs = pstmt.executeQuery();
 				
@@ -485,13 +512,13 @@ public class BoardDAO {
 		try {
 			openConn();
 			sql = "update board set CATEGORY_NO = ?, TITLE = ?, CONTENT = ?, UPDATED_AT = SYSDATE WHERE BOARD_NO = ?";
-			
+			int paramIndex = 1;
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, board.getCategoryNo());
-			pstmt.setString(2, board.getTitle());
-			pstmt.setString(3, board.getContent());
-			pstmt.setInt(4, board.getBoardNo());
+			pstmt.setString(paramIndex++, board.getCategoryNo());
+			pstmt.setString(paramIndex++, board.getTitle());
+			pstmt.setString(paramIndex++, board.getContent());
+			pstmt.setInt(paramIndex++, board.getBoardNo());
 			
 			res = pstmt.executeUpdate();
 			
@@ -512,9 +539,11 @@ public class BoardDAO {
 		int res = 0;
 		
 		try {
-			sql = "UPDATE BOARD SET VIEWS=VIEWS+1 WHERE BOARD_NO=?";
+			openConn();
+			int paramIndex = 1;
+			sql = "UPDATE BOARD SET VIEWS = VIEWS+1 WHERE BOARD_NO=?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, boardNo);
+			pstmt.setInt(paramIndex, boardNo);
 			
 			res = pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -526,5 +555,235 @@ public class BoardDAO {
 		
 		return res;
 	}
+
+	public BoardCategoryDTO selectBoardCategory(String categoryNo) {
+		BoardCategoryDTO category = null;
+		try {
+			openConn();
+			sql = "select * from BOARD_CATEGORY where CATEGORY_NO = ?";
+			int paramIndex = 1;
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(paramIndex++, categoryNo);
+		
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				category = new BoardCategoryDTO();
+				
+				category.setCategoryNo(rs.getString("CATEGORY_NO"));
+				category.setName(rs.getString("NAME"));
+				category.setDescription(rs.getString("DESCRIPTION"));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return category;
+	}
+
+	public int updateCategory(BoardCategoryDTO category) {
+		int res = 0;
+
+		try {
+			sql = "update BOARD_CATEGORY set NAME = ?, DESCRIPTION = ? where CATEGORY_NO = ?";
+			
+			int paramIndex = 1;
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(paramIndex++, category.getName());
+			pstmt.setString(paramIndex++, category.getDescription());
+			pstmt.setString(paramIndex++, category.getCategoryNo());
+			
+			res = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			closeConn(pstmt, conn);
+		}
+		
+		return res;
+	}
+	
+	public int getBoardCount(BoardFilter filter) {
+	    int count = 0;
+	    sql = "SELECT COUNT(*) FROM BOARD b LEFT JOIN USERS u ON b.USER_NO = u.USER_NO WHERE 1=1";
+	    
+	    // 필터 조건 추가
+	    List<Object> params = new ArrayList<>();
+	    if (filter.getCategoryNo() != null && !filter.getCategoryNo().isEmpty()) {
+	        sql += " AND b.CATEGORY_NO = ?";
+	        params.add(filter.getCategoryNo());
+	    }
+	    if (filter.getUserNo() != null) {
+	        sql += " AND b.USER_NO = ?";
+	        params.add(filter.getUserNo());
+	    }
+	    if (filter.getMinViews() != null) {
+	        sql += " AND b.VIEWS >= ?";
+	        params.add(filter.getMinViews());
+	    }
+	    if (filter.getMaxViews() != null) {
+	        sql += " AND b.VIEWS <= ?";
+	        params.add(filter.getMaxViews());
+	    }
+	    if (filter.getStartDate() != null) {
+	        sql += " AND b.CREATED_AT >= ?";
+	        params.add(filter.getStartDate());
+	    }
+	    if (filter.getEndDate() != null) {
+	        sql += " AND b.CREATED_AT <= ?";
+	        params.add(filter.getEndDate());
+	    }
+	    if (filter.getIsDeleted() != null && !filter.getIsDeleted().isEmpty()) {
+	        sql += " AND b.IS_DELETED = ?";
+	        params.add(filter.getIsDeleted());
+	    }
+
+	    try {
+	        openConn();
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        // 파라미터 바인딩
+	        for (int i = 0; i < params.size(); i++) {
+	            pstmt.setObject(i + 1, params.get(i));
+	        }
+
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            count = rs.getInt(1);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(rs, pstmt, conn);
+	    }
+
+	    return count;
+	}
+
+	
+	public List<BoardDTO> searchBoardList(int currentPage, int boardLimit, String searchKeyword, BoardFilter filter) {
+	    List<BoardDTO> list = new ArrayList<>();
+	    
+	    // 동적 SQL을 구성하기 위해 기본 SELECT 쿼리 작성
+	    sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY b.BOARD_NO ASC) AS rnum, b.*, u.USER_TYPE, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, bc.NAME AS CATEGORY_NAME " +
+	          "FROM BOARD b " +
+	          "LEFT JOIN USERS u ON b.USER_NO = u.USER_NO " +
+	          "JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO " +
+	          "WHERE 1=1";
+
+	    // 검색어(제목) 필터 추가
+	    if (searchKeyword != null && !searchKeyword.isEmpty()) {
+	        sql += " AND b.TITLE LIKE ?";
+	    }
+
+	    // 필터링 조건 추가
+	    if (filter.getCategoryNo() != null && !filter.getCategoryNo().isEmpty()) {
+	        sql += " AND b.CATEGORY_NO = ?";
+	    }
+	    if (filter.getUserNo() != null) {
+	        sql += " AND b.USER_NO = ?";
+	    }
+	    if (filter.getMinViews() != null) {
+	        sql += " AND b.VIEWS >= ?";
+	    }
+	    if (filter.getMaxViews() != null) {
+	        sql += " AND b.VIEWS <= ?";
+	    }
+	    if (filter.getStartDate() != null) {
+	        sql += " AND b.CREATED_AT >= ?";
+	    }
+	    if (filter.getEndDate() != null) {
+	        sql += " AND b.CREATED_AT <= ?";
+	    }
+	    if (filter.getIsDeleted() != null && !filter.getIsDeleted().isEmpty()) {
+	        sql += " AND b.IS_DELETED = ?";
+	    }
+
+	    // 페이지네이션을 위한 서브 쿼리 조건 추가
+	    sql += ") WHERE rnum BETWEEN ? AND ?";
+
+	    try {
+	        openConn();
+	        pstmt = conn.prepareStatement(sql);
+
+	        int paramIndex = 1;
+
+	        // 검색어(제목) 파라미터 세팅
+	        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+	            pstmt.setString(paramIndex++, "%" + searchKeyword + "%");
+	        }
+
+	        // 필터 파라미터 세팅
+	        if (filter.getCategoryNo() != null && !filter.getCategoryNo().isEmpty()) {
+	            pstmt.setString(paramIndex++, filter.getCategoryNo());
+	        }
+	        if (filter.getUserNo() != null) {
+	            pstmt.setInt(paramIndex++, filter.getUserNo());
+	        }
+	        if (filter.getMinViews() != null) {
+	            pstmt.setInt(paramIndex++, filter.getMinViews());
+	        }
+	        if (filter.getMaxViews() != null) {
+	            pstmt.setInt(paramIndex++, filter.getMaxViews());
+	        }
+	        if (filter.getStartDate() != null) {
+	            pstmt.setDate(paramIndex++, filter.getStartDate());
+	        }
+	        if (filter.getEndDate() != null) {
+	            pstmt.setDate(paramIndex++, filter.getEndDate());
+	        }
+	        if (filter.getIsDeleted() != null && !filter.getIsDeleted().isEmpty()) {
+	            pstmt.setString(paramIndex++, filter.getIsDeleted());
+	        }
+
+	        // 페이지네이션 파라미터 세팅
+	        int startRow = (currentPage - 1) * boardLimit + 1;
+	        int endRow = startRow + boardLimit - 1;
+	        pstmt.setInt(paramIndex++, startRow);
+	        pstmt.setInt(paramIndex++, endRow);
+
+	        rs = pstmt.executeQuery();
+
+	        // 결과를 리스트에 담음
+	        while (rs.next()) {
+	            BoardDTO board = new BoardDTO();
+	            board.setBoardNo(rs.getInt("BOARD_NO"));
+	            board.setTitle(rs.getString("TITLE"));
+	            board.setContent(rs.getString("CONTENT"));
+	            board.setViews(rs.getInt("VIEWS"));
+	            board.setCreateAt(rs.getDate("CREATED_AT"));
+	            board.setUpdateAt(rs.getDate("UPDATED_AT"));
+	            board.setIsDeleted(rs.getString("IS_DELETED"));
+	            board.setCategoryNo(rs.getString("CATEGORY_NO"));
+	            board.setCategoryName(rs.getString("CATEGORY_NAME"));
+			    
+	            // 아직 회원 관련 로직이 구현되지 않았으므로
+			    int userNo = rs.getInt("USER_NO");
+			    if (rs.wasNull()) {
+			        board.setUserNo(null); // USER_NO가 NULL이면 null 설정
+			    } else {
+			        board.setUserNo(userNo); // USER_NO가 NULL이 아니면 해당 값 설정
+			    }
+         
+	            board.setUserId(rs.getString("USER_ID"));
+	            board.setUserEmail(rs.getString("USER_EMAIL"));
+	            board.setUserType(rs.getString("USER_TYPE"));
+	            list.add(board);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(rs, pstmt, conn);
+	    }
+
+	    return list;
+	}
+
+
 
 }
