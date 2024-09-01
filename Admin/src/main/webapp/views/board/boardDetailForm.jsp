@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
@@ -8,6 +7,7 @@
 <meta charset="UTF-8">
 <title>게시글 상세보기</title>
 <link rel="stylesheet" href="${contextPath}/resources/board/css/board.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="content">
@@ -37,10 +37,76 @@
 
         <!-- 뒤로가기 버튼 -->
         <button type="button" onclick="location.href='boardList.do?status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">뒤로가기</button>
-		<!-- 수정하기 버튼 (수정 권한 : 본인이 작성한 게시판 or session의 userType : admin 
-			그러나 현재 admin 관련 로직이 미구현 상태 이므로 해당 로직은 추후에 구축 예정 by 두리
-		-->
+        <!-- 수정하기 버튼 -->
         <button type="button" onclick="location.href='boardUpdateForm.do?no=${info.boardNo}&userType=${info.userType}&status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">수정하기</button>
+
+        <!-- 댓글 입력 폼 -->
+        <div class="comment-section">
+            <h3>댓글 작성</h3>
+            <form id="commentForm">
+                <input type="hidden" name="boardNo" value="${info.boardNo}">
+                <input type="hidden" name="userNo" value="${sessionScope.userNo}">
+                <input type="hidden" name="status" value="${status}">
+                <input type="hidden" name="currentPage" value="${currentPage}">
+                <div class="form-group">
+                    <label for="commentContent">내용:</label>
+                    <textarea id="commentContent" name="content" rows="4" class="input-field" required></textarea>
+                </div>
+                <button type="submit" class="btn btn_primary">댓글 작성</button>
+            </form>
+        </div>
+
+        <!-- 기존 댓글 표시 -->
+        <c:import url="${replyUrl}" />
     </div>
+    <!-- AJAX로 댓글 전송 및 추가 -->
+<script>
+    $(document).ready(function() {
+        $('#commentForm').on('submit', function(event) {
+            event.preventDefault(); // 폼 제출 기본 동작 방지
+
+            // Form 데이터를 JSON으로 변환
+            var formData = {
+                status: $('input[name="status"]').val(),
+                currentPage: $('input[name="currentPage"]').val(),
+                boardNo: $('input[name="boardNo"]').val(),
+                userNo: $('input[name="userNo"]').val(),
+                content: $('#commentContent').val(),
+                parentReplyNo: $('input[name="parentReplyNo"]').val() // 부모 댓글 번호 (없으면 null)
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: 'BoardReplyInsert.do',
+                contentType: 'application/json', // 서버로 JSON 데이터 전송
+                data: JSON.stringify(formData), // JSON으로 변환된 데이터를 전송
+                dataType: 'json', // 서버 응답도 JSON으로 기대
+                success: function(response) {
+                    if (response.success) {
+                        // 서버에서 성공적으로 응답을 받았을 때의 처리
+                        var commentsHtml = '';
+                        $.each(response.comments, function(index, comment) {
+                            commentsHtml += '<div class="comment" style="margin-left: ' + (comment.nodeLevel * 20) + 'px;">';
+                            commentsHtml += '<div class="comment-info">';
+                            commentsHtml += '<strong>' + comment.userId + '</strong>';
+                            commentsHtml += '<span>' + comment.createdAt + '</span>';
+                            commentsHtml += '</div>';
+                            commentsHtml += '<div class="comment-content">';
+                            commentsHtml += comment.content;
+                            commentsHtml += '</div></div>';
+                        });
+                        $('#commentsContainer').html(commentsHtml); // 댓글 목록 업데이트
+                        $('#commentContent').val(''); // 입력창 초기화
+                    } else {
+                        alert('댓글 등록에 실패했습니다.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('댓글 등록에 실패했습니다.');
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

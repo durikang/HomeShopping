@@ -20,9 +20,11 @@ public class BoardSearchListAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// 게시판의 현재 위치
+		String subtitle = request.getParameter("subtitle");
 		// 검색 키워드
 		String searchKeyword = request.getParameter("searchKeyword").trim();
-
+		
 		// 필터 파라미터들을 설정 및 필터 객체 생성
 		BoardFilter filter = new BoardFilter();
 
@@ -66,6 +68,7 @@ public class BoardSearchListAction implements Action {
 		request.setAttribute("count", pi.getListCount());
 		request.setAttribute("list", boardList);
 		request.setAttribute("pi", pi);
+		request.setAttribute("subtitle", subtitle); // 메뉴바에서 누른 게시글 현 위치를 보냄
 
 		// 결과 페이지로 이동
 		return new View("main.go").setUrl("/views/board/boardList.jsp");

@@ -70,6 +70,7 @@ public class BoardListAction implements Action {
 		request.setAttribute("categoryList", categoryList);
         request.setAttribute("count", pi.getListCount());
         request.setAttribute("list", boardList);
+        request.setAttribute("address", "boardList.do"); // 페이지의 매핑을 던져줘야 함
         request.setAttribute("pi", pi);
         request.setAttribute("status", status); // 필터 상태를 JSP로 전달
         request.setAttribute("subtitle", subtitle); // 메뉴바에서 누른 게시글 현 위치를 보냄

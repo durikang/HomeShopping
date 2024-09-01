@@ -43,4 +43,12 @@ public class RequestParameterUtils {
             return null;
         }
     }
+
+	public static String parseString(String value, String defaultValue) {
+		try {
+            return (value != null && !value.isEmpty()) ? String.valueOf(value) : defaultValue;
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+	}
 }

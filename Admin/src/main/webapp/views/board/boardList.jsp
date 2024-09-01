@@ -40,7 +40,7 @@ function goToDetailPage(event) {
     const status = '${status}';
     
     if (No) {
-        window.location.href = '${contextPath}/boardDetailForm.do?no=' + No + '&userType=' + userType + '&status=' + status + '&currentPage=' + currentPage;
+        window.location.href = '${contextPath}/boardDetailForm.do?boardNo=' + No + '&userType=' + userType + '&status=' + status + '&currentPage=' + currentPage;
     }
 }
 
@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <!-- 검색 바 추가 -->
             <div class="search-container">
                 <form action="boardSearchList.do" method="get">
+                	<input type="hidden" name="subtitle" value="${param.subtitle }">
 					<div class="content-title form-group">
 					    <div class="search-bar">
 					        <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -162,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="table-container">
                 <table>
 				    <tr>
-				        <td class="table_header button" colspan="9" align="right">전체 게시글 수: ${count}</td>
+				        <td class="table_header info" colspan="9" align="right">전체 게시글 수: ${count}</td>
 				    </tr>
 				    <tr>
 				        <th class="border-th">BoardNo.</th>
@@ -176,68 +177,78 @@ document.addEventListener('DOMContentLoaded', function() {
 				        <th class="border-th">상태</th>
 				    </tr>
 				    <c:choose>
-				        <c:when test="${not empty list}">
-				            <c:forEach items="${list}" var="board" varStatus="status">
-				                <c:set var="truncatedTitle" value="${fn:length(board.title) > 20 ? fn:substring(board.title, 0, 20) + '...' : board.title}" />
-				                <c:set var="truncatedContent" value="${fn:length(board.content) > 30 ? fn:substring(board.content, 0, 30) + '...' : board.content}" />
-				
-				                <tr class="trlist" data-id="${board.boardNo}" data-user-type="${board.userType}">
-				                    <td class="board-td">${board.boardNo}</td>
-				                    <td class="board-td">
-				                        <c:choose>
-				                            <c:when test="${board.userNo == null}">
-				                                null
-				                            </c:when>
-				                            <c:otherwise>
-				                                ${board.userId}
-				                                <span class="subtitle">(${board.userNo})</span>
-				                            </c:otherwise>
-				                        </c:choose>
-				                    </td>
-				                    <td class="board-td">${board.categoryName} <span class="subtitle">(${board.categoryNo})</span></td>
-				                    <td class="board-td">${truncatedTitle}</td>
-				                    <td class="board-td">${StringUtils.stripHtml(truncatedContent)}</td>
-				                    <td class="board-td"><fmt:formatDate value="${board.createAt}" /></td>
-				                    <td class="board-td"><fmt:formatDate value="${board.updateAt}" /></td>
-				                    <td class="board-td">${board.views}</td>
-				                    <td class="board-td">
-				                        <c:choose>
-				                            <c:when test="${board.isDeleted == 'N'}">
-				                                <c:set var="status" value="정상" />
-				                            </c:when>
-				                            <c:otherwise>
-				                                <c:set var="status" value="삭제됨" />
-				                            </c:otherwise>
-				                        </c:choose>
-				                        <c:out value="${status}" />
-				                    </td>
-				                </tr>
-				            </c:forEach>
-				
-				            <!-- 빈 행 추가 -->
-				            <c:forEach var="i" begin="${list.size() + 1}" end="100">
-				                <tr class="trlist">
-				                    <c:forEach var="i" begin="1" end="9">
-				                        <td class="board-td" style="height: 40px;">&nbsp;</td> <!-- 빈 셀 생성 -->
-				                    </c:forEach>
-				                </tr>
-				            </c:forEach>
-				        </c:when>
-				        <c:otherwise>
-				            <tr>
-				                <td colspan="9" align="center">
-				                    <h3>게시판 데이터가 없습니다.</h3>
-				                </td>
-				            </tr>
-				
-				            <!-- 빈 행 추가 -->
-				            <c:forEach begin="1" end="10">
-				                <tr class="trlist">
-				                    <td class="board-td" style="height: 40px;">&nbsp;</td> <!-- 빈 공간 표시 -->
-				                </tr>
-				            </c:forEach>
-				        </c:otherwise>
-				    </c:choose>
+					    <c:when test="${not empty list}">
+					        <c:forEach items="${list}" var="board" varStatus="status">
+					            <!-- 제목과 내용을 잘라서 변수에 저장 -->
+ 
+								<c:set var="truncatedTitle" value="${StringUtils.truncateWithEllipsis(board.title, 20)}" />
+								<c:set var="truncatedContent" value="${StringUtils.truncateWithEllipsis(board.content, 30)}" />
+					
+					            <!-- 각 행의 데이터를 출력 -->
+					            <tr class="trlist" data-id="${board.boardNo}" data-user-type="${board.userType}">
+					                <td class="board-td">${board.boardNo}</td>
+					                <td class="board-td">
+					                    <c:choose>
+					                        <c:when test="${board.userNo == null}">
+					                            null
+					                        </c:when>
+					                        <c:otherwise>
+					                            ${board.userId}
+					                            <span class="subtitle">(${board.userNo})</span>
+					                        </c:otherwise>
+					                    </c:choose>
+					                </td>
+					                <td class="board-td">${board.categoryName} <span class="subtitle">(${board.categoryNo})</span></td>
+					                <td class="board-td">
+					                    <!-- 명확하게 문자열로 출력 -->
+					                    <c:out value="${truncatedTitle}" />
+					                </td>
+					                <td class="board-td">
+					                    <!-- stripHtml 메서드 결과를 명확히 문자열로 처리 -->
+					                    <c:out value="${truncatedContent}" />
+					                </td>
+					                <td class="board-td"><fmt:formatDate value="${board.createAt}" /></td>
+					                <td class="board-td"><fmt:formatDate value="${board.updateAt}" /></td>
+					                <td class="board-td">${board.views}</td>
+					                <td class="board-td">
+					                    <c:choose>
+					                        <c:when test="${board.isDeleted == 'N'}">
+					                            <c:set var="status" value="정상" />
+					                        </c:when>
+					                        <c:otherwise>
+					                            <c:set var="status" value="삭제됨" />
+					                        </c:otherwise>
+					                    </c:choose>
+					                    <c:out value="${status}" />
+					                </td>
+					            </tr>
+					        </c:forEach>
+					
+					        <!-- 빈 행 추가 -->
+					        <c:forEach var="i" begin="${list.size() + 1}" end="100">
+					            <tr class="trlist">
+					                <c:forEach var="i" begin="1" end="9">
+					                    <td class="board-td" style="height: 40px;">&nbsp;</td> <!-- 빈 셀 생성 -->
+					                </c:forEach>
+					            </tr>
+					        </c:forEach>
+					    </c:when>
+					    <c:otherwise>
+					        <tr>
+					            <td colspan="9" align="center">
+					                <h3>게시판 데이터가 없습니다.</h3>
+					            </td>
+					        </tr>
+					
+					        <!-- 빈 행 추가 -->
+					        <c:forEach begin="1" end="10">
+					            <tr class="trlist">
+					                <td class="board-td" style="height: 40px;">&nbsp;</td> <!-- 빈 공간 표시 -->
+					            </tr>
+					        </c:forEach>
+					    </c:otherwise>
+					</c:choose>
+
 				
 				    <tr>
 				        <td class="table_bottom button" colspan="9" align="center">

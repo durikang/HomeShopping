@@ -1,6 +1,7 @@
 package com.global.board.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import com.global.action.View;
 import com.global.board.exception.BoardException;
 import com.global.board.model.BoardDAO;
 import com.global.board.model.BoardDTO;
+import com.global.board.model.BoardReplyDTO;
 
 public class BoardDetailFormAction implements Action {
 
@@ -23,7 +25,7 @@ public class BoardDetailFormAction implements Action {
 		 * 그러므로 선택해서 들어온 게시글의 유저 타입 userType이 ADMIN인지 CUSTOMER인지 구분하여 
 		 * BOARD 테이블, BOARD_CATEGORY테이블 그리고 userType에 따라 ADMIN 테이블 혹은 CUSTOMER테이블을 JOIN하여 갖고온다.
 		 * */
-		int boardNo = Integer.parseInt(request.getParameter("no"));
+		int boardNo = Integer.parseInt(request.getParameter("boardNo"));
 		String userType = request.getParameter("userType");
 		
 		/*
@@ -80,9 +82,14 @@ public class BoardDetailFormAction implements Action {
 		
 		}
     	
+        // 최신 댓글 리스트를 가져와서 리턴
+        List<BoardReplyDTO> comments = dao.getCommentsByBoardNo(boardNo);
+        request.setAttribute("comments", comments);
+		
+		
     	request.setAttribute("status", status);
     	request.setAttribute("currentPage", currentPage);
-    	
+    	request.setAttribute("replyUrl", "/views/board/replyListForm.jsp");
     	request.setAttribute("info", board);
 			
 		return new View("main.go").setUrl("/views/board/boardDetailForm.jsp");
