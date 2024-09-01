@@ -783,6 +783,170 @@ public class BoardDAO {
 
 	    return list;
 	}
+	/*댓글 로직*/
+	public void insertReply(BoardReplyDTO reply) {
+	    try {
+	        openConn();
+
+	        // 게시글에 첫 댓글이 달리는 경우, leftVal과 rightVal을 1과 2로 초기화
+	        sql = "SELECT COUNT(*) FROM BOARD_REPLY WHERE BOARD_NO = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, reply.getBoardNo());
+	        rs = pstmt.executeQuery();
+
+	        int count = 0;
+	        if (rs.next()) {
+	            count = rs.getInt(1);
+	        }
+
+	        if (count == 0) {
+	            // 첫 댓글
+	            reply.setLeftVal(1);
+	            reply.setRightVal(2);
+	            reply.setNodeLevel(1);
+	        } else {
+	            // 게시글에 다른 댓글이 있을 때, 가장 큰 right_val을 찾는다
+	            sql = "SELECT MAX(RIGHT_VAL) FROM BOARD_REPLY WHERE BOARD_NO = ?";
+	            pstmt = conn.prepareStatement(sql);
+	            pstmt.setInt(1, reply.getBoardNo());
+	            rs = pstmt.executeQuery();
+
+	            int maxRightVal = 0;
+	            if (rs.next()) {
+	                maxRightVal = rs.getInt(1);
+	            }
+
+	            // 새로운 댓글의 left_val, right_val, node_level 설정
+	            reply.setLeftVal(maxRightVal + 1);
+	            reply.setRightVal(maxRightVal + 2);
+	            reply.setNodeLevel(1);
+	        }
+
+	        // 새로운 댓글 삽입
+	        sql = "INSERT INTO BOARD_REPLY (REPLY_NO, BOARD_NO, USER_NO, CONTENT, LEFT_VAL, RIGHT_VAL, NODE_LEVEL, CREATED_AT, IS_DELETED) " +
+	              "VALUES (SEQ_BOARD_REPLY_NO.NEXTVAL, ?, ?, ?, ?, ?, ?, SYSDATE, 'N')";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, reply.getBoardNo());
+	        pstmt.setInt(2, reply.getUserNo());
+	        pstmt.setString(3, reply.getContent());
+	        pstmt.setInt(4, reply.getLeftVal());
+	        pstmt.setInt(5, reply.getRightVal());
+	        pstmt.setInt(6, reply.getNodeLevel());
+
+	        pstmt.executeUpdate();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(rs, pstmt, conn);
+	    }
+	}
+	/*대댓글 로직*/
+	public void insertSubReply(BoardReplyDTO reply) {
+	    try {
+	        openConn();
+
+	        // 부모 노드의 right_val을 가져옴
+	        sql = "SELECT RIGHT_VAL, NODE_LEVEL FROM BOARD_REPLY WHERE REPLY_NO = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, reply.getParentReplyNo());
+	        rs = pstmt.executeQuery();
+
+	        int parentRightVal = 0;
+	        int parentNodeLevel = 0;
+	        if (rs.next()) {
+	            parentRightVal = rs.getInt("RIGHT_VAL");
+	            parentNodeLevel = rs.getInt("NODE_LEVEL");
+	        }
+
+	        // 부모의 right_val 이후에 위치한 모든 노드의 left_val과 right_val을 2씩 증가시킴
+	        sql = "UPDATE BOARD_REPLY SET RIGHT_VAL = RIGHT_VAL + 2 WHERE RIGHT_VAL >= ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, parentRightVal);
+	        pstmt.executeUpdate();
+
+	        sql = "UPDATE BOARD_REPLY SET LEFT_VAL = LEFT_VAL + 2 WHERE LEFT_VAL > ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, parentRightVal);
+	        pstmt.executeUpdate();
+
+	        // 새로운 대댓글을 삽입
+	        sql = "INSERT INTO BOARD_REPLY (REPLY_NO, BOARD_NO, USER_NO, CONTENT, LEFT_VAL, RIGHT_VAL, NODE_LEVEL, PARENT_REPLY_NO, CREATED_AT, IS_DELETED) " +
+	              "VALUES (SEQ_BOARD_REPLY_NO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, SYSDATE, 'N')";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, reply.getBoardNo());
+	        pstmt.setInt(2, reply.getUserNo());
+	        pstmt.setString(3, reply.getContent());
+	        pstmt.setInt(4, parentRightVal);
+	        pstmt.setInt(5, parentRightVal + 1);
+	        pstmt.setInt(6, parentNodeLevel + 1);  // 부모의 level + 1
+	        pstmt.setInt(7, reply.getParentReplyNo());
+
+	        pstmt.executeUpdate();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(rs, pstmt, conn);
+	    }
+	}
+
+	
+	
+	
+	// 최신 댓글 리스트를 갖고 와야함
+	public List<BoardReplyDTO> getCommentsByBoardNo(Integer boardNo) {
+	    List<BoardReplyDTO> commentList = new ArrayList<>();
+	    
+	    try {
+	        openConn();
+	        
+	        // 게시글 번호에 해당하는 댓글들과 사용자 정보를 가져오되, LEFT_VAL 순으로 정렬하여 계층 구조를 유지함
+	        sql = "SELECT r.*, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, u.USER_TYPE " +
+	              "FROM BOARD_REPLY r " +
+	              "JOIN USERS u ON r.USER_NO = u.USER_NO " +
+	              "WHERE r.BOARD_NO = ? AND r.IS_DELETED = 'N' " +
+	              "ORDER BY r.LEFT_VAL ASC";
+	        
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, boardNo);
+	        
+	        rs = pstmt.executeQuery();
+	        
+	        while (rs.next()) {
+	            BoardReplyDTO reply = new BoardReplyDTO();
+	            reply.setReplyNo(rs.getInt("REPLY_NO"));
+	            reply.setBoardNo(rs.getInt("BOARD_NO"));
+	            reply.setUserNo(rs.getInt("USER_NO"));
+	            reply.setContent(rs.getString("CONTENT"));
+	            reply.setLeftVal(rs.getInt("LEFT_VAL"));
+	            reply.setRightVal(rs.getInt("RIGHT_VAL"));
+	            reply.setNodeLevel(rs.getInt("NODE_LEVEL"));
+	            reply.setParentReplyNo(rs.getInt("PARENT_REPLY_NO"));
+	            reply.setCreatedAt(rs.getTimestamp("CREATED_AT"));
+	            reply.setUpdatedAt(rs.getTimestamp("UPDATED_AT"));
+	            reply.setIsDeleted(rs.getString("IS_DELETED"));
+	            
+	            // USERS 테이블에서 가져온 추가 정보 설정
+	            reply.setUserId(rs.getString("USER_ID"));
+	            reply.setUserName(rs.getString("USER_NAME"));
+	            reply.setUserEmail(rs.getString("USER_EMAIL"));
+	            reply.setUserType(rs.getString("USER_TYPE"));
+	            
+	            commentList.add(reply);
+	        }
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(rs, pstmt, conn);
+	    }
+	    
+	    return commentList;
+	}
+
+
+
 
 
 
