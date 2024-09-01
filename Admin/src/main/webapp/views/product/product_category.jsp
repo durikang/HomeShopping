@@ -43,7 +43,7 @@
 			</c:if>
 			<tr>
 				<td colspan="3" align="center">
-					<input type="button" value="카테고리 등록" onclick="location.href='product_category_insert.go'">
+					<input type="button" value="카테고리 등록" onclick="location.href='productCategoryInsert.go'">
 				</td>
 			</tr>
 

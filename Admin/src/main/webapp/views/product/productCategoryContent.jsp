@@ -49,13 +49,13 @@
 		<br>
 		
 		<input type="button" value="카테고리수정"
-	        onclick="location.href='product_category_modify.do?no=${dto.getCategory_No() }'">
+	        onclick="location.href='productCategoryModify.do?no=${dto.getCategory_No() }'">
 	   &nbsp;&nbsp;
 	   <input type="button" value="글삭제"
-	        onclick="location.href='product_category_delete.do?no=${dto.getCategory_No() }'">
+	        onclick="location.href='productCategoryDelete.do?no=${dto.getCategory_No() }'">
 	   &nbsp;&nbsp;
 	   <input type="button" value="전체목록"
-	        onclick="location.href='product_category.do'">
+	        onclick="location.href='productCategory.do'">
 	</div>
 </body>
 </html>

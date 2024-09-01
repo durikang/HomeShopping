@@ -280,6 +280,77 @@ public int insertCategory(ProductCategoryDTO dto) {
 	}
 
 
+	public int ModifyCategory(ProductCategoryDTO dto) {
+		
+		int result = 0;
+		
+		try {
+		
+		openConn();
+		
+		sql = "UPDATE PRODUCT_CATEGORY SET NAME = ?, DESCRIPTION = ? WHERE CATEGORY_NO = ?";
+		
+		pstmt = con.prepareStatement(sql);
+
+		pstmt.setString(1, dto.getName());
+		pstmt.setString(2, dto.getDescription());
+		pstmt.setString(3, dto.getCategory_No());
+		
+		result = pstmt.executeUpdate();
+		
+		
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			closeConn(pstmt, con);
+		}
+		
+		
+		
+		return result;
+	}
+
+
+		 public int DeleteCategory(String category_no) {
+			 
+			 int result = 0;
+
+			 try {
+			 
+			 openConn();
+			  
+			 sql = "SELECT * FROM PRODUCT_CATEGORY WHERE CATEGORY_NO = ?";
+			 
+			
+			 pstmt = con.prepareStatement(sql);
+			 
+			 pstmt.setString(1, category_no);
+			 
+			 rs = pstmt.executeQuery();
+			 
+			 if(rs.next()) {
+				 sql = "DELETE FROM PRODUCT_CATEGORY WHERE CATEGORY_NO = ?";
+				 
+				 pstmt = con.prepareStatement(sql);
+				 
+				 pstmt.setString(1, category_no);
+				 
+				 result = pstmt.executeUpdate();
+			 }
+			 
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				closeConn(rs, pstmt, con);
+			}
+			 
+		return result;
+	}
+
+
 
 		
 	}

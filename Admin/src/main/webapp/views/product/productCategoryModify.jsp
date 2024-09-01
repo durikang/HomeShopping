@@ -15,12 +15,12 @@
 		<hr width="30%" color="red">
 		<h3>${dto.getName() } 카테고리 수정 페이지</h3>
 		<hr width="30%" color="red">
-		<input type="hidden" name="uno" value="${dto.getCategory_No() }">
+		<input type="hidden" name="category_no" value="${dto.getCategory_No() }">
 		<br>
 		<br>
 
 		<form method="post" enctype="multipart/form-date"
-			action="<%=request.getContextPath()%>/product_category_modify_ok.do">
+			action="<%=request.getContextPath()%>/productCategoryModifyOk.do">
 			<table border="1" width="400">
 			<tr>
 				<th>카테고리 번호</th>
@@ -38,7 +38,7 @@
 				<td><textarea rows="8" cols="22" name="description" value="${dto.getDescription() }"></textarea></td>
 			</tr>
 			            
-                        <tr>
+            <tr>
                 <td class="table_bottom button categoryInsertBtn" colspan="2">
                     <input class="btn" type="submit" value="카테고리 수정">
                     <input class="btn" type="reset" value="초기화">
