@@ -7,7 +7,7 @@ sql
 CREATE TABLE BOARD_REPLY (
     REPLY_NO NUMBER PRIMARY KEY,  
     BOARD_NO NUMBER,  
-    USER_NO NUMBER,  
+    USER_NO NUMBER NULL,  -- 추후에 null 삭제 예정
     CONTENT VARCHAR2(4000),  
     LEFT_VAL NUMBER,  -- 중첩 집합에서의 왼쪽 값
     RIGHT_VAL NUMBER,  -- 중첩 집합에서의 오른쪽 값

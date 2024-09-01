@@ -142,89 +142,39 @@
         </div>
 
         <!-- 기존 댓글 표시 -->
-		<div class="comment-list">
-		    <h3>댓글</h3>
-		    <div id="commentsContainer">
-		        <c:forEach var="comment" items="${comments}">
-		            <div class="comment" data-node-level="${comment.nodeLevel}" style="margin-left: ${comment.nodeLevel * 20}px;">
-		                <div class="comment-info">
-		                    <strong>${comment.userId}</strong>
-		                    <c:if test="${comment.userId == info.userId}">
-		                        <span class="author-label">(작성자)</span>
-		                    </c:if>
-		                    <span><fmt:formatDate value="${comment.createdAt}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
-		                </div>
-		                <div class="comment-content">
-		                    <c:out value="${comment.content}" escapeXml="false"/>
-		                </div>
-		                <!-- 댓글 달기 링크 항상 보임 -->
-		                <a href="#" class="reply-link" data-reply-no="${comment.replyNo}" data-user-id="${comment.userId}">댓글 달기</a>
-		                <!-- 대댓글 입력 폼 -->
-		                <div class="reply-form" id="reply-form-${comment.replyNo}">
-		                    <textarea class="reply-content" rows="3" placeholder="${comment.userId}의 답변을 입력하세요"></textarea>
-		                    <button class="submit-reply" data-parent-reply-no="${comment.replyNo}">대댓글 작성</button>
-		                </div>
-		            </div>
-		        </c:forEach>
-		    </div>
-		</div>
-
+        <div class="comment-list">
+            <h3>댓글</h3>
+            <div id="commentsContainer">
+                <c:forEach var="comment" items="${comments}">
+                    <div class="comment" data-node-level="${comment.nodeLevel}" style="margin-left: ${comment.nodeLevel * 20}px;">
+                        <div class="comment-info">
+                            <strong>${comment.userId}</strong>
+                            <span><fmt:formatDate value="${comment.createdAt}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
+                        </div>
+                        <div class="comment-content">
+                            <c:out value="${comment.content}" escapeXml="false"/>
+                        </div>
+                        <!-- 댓글 달기 링크 항상 보임 -->
+                        <a href="#" class="reply-link" data-reply-no="${comment.replyNo}">댓글 달기</a>
+                        <!-- 대댓글 입력 폼 -->
+                        <div class="reply-form" id="reply-form-${comment.replyNo}">
+                            <textarea class="reply-content" rows="3" placeholder="대댓글을 입력하세요"></textarea>
+                            <button class="submit-reply" data-parent-reply-no="${comment.replyNo}">대댓글 작성</button>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
     </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // 일반 댓글 작성 처리
-    document.getElementById("commentForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        
-        var content = document.getElementById('commentContent').value;
-        if (content.trim() === "") {
-            alert("내용을 입력하세요.");
-            return;
-        }
-
-        var formData = {
-            boardNo: document.querySelector('input[name="boardNo"]').value || null,
-            userNo: document.querySelector('input[name="userNo"]').value || null || 4, // null일 경우 기본값 4
-            content: content,
-            parentReplyNo: null // 일반 댓글이므로 parentReplyNo는 null
-        };
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "BoardReplyInsert.do", true);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-        xhr.onload = function() {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                var response = JSON.parse(xhr.responseText);
-                if (response.success) {
-                    location.reload(); // 댓글이 성공적으로 추가된 후 페이지를 새로고침
-                } else {
-                    alert('댓글 등록에 실패했습니다.');
-                }
-            } else {
-                alert('댓글 등록에 실패했습니다.');
-            }
-        };
-
-        xhr.send(JSON.stringify(formData));
-    });
-
-    // 대댓글 폼 토글 처리
     var replyLinks = document.querySelectorAll(".reply-link");
-    
     replyLinks.forEach(function(link) {
         link.addEventListener("click", function(event) {
-            event.preventDefault(); // 기본 동작 방지
+            event.preventDefault();
             var replyNo = event.target.getAttribute("data-reply-no");
-            var replyUserId = event.target.getAttribute("data-user-id");
             var replyForm = document.getElementById("reply-form-" + replyNo);
-            var replyContentPlaceholder = replyForm.querySelector(".reply-content");
-
-            // " ~의 답변"을 placeholder에 설정
-            replyContentPlaceholder.placeholder = replyUserId + "의 답변을 입력하세요";
-
-            // 대댓글 폼을 토글(보이기/숨기기)
             if (replyForm.style.display === "none" || replyForm.style.display === "") {
                 replyForm.style.display = "block";
             } else {
@@ -233,9 +183,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // 대댓글 작성 처리
     var submitReplyButtons = document.querySelectorAll(".submit-reply");
-    
     submitReplyButtons.forEach(function(button) {
         button.addEventListener("click", function(event) {
             var parentReplyNo = event.target.getAttribute("data-parent-reply-no");
@@ -246,11 +194,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
+            // 여기에 AJAX 요청 코드를 추가하여 대댓글을 서버로 전송합니다.
             var formData = {
                 boardNo: document.querySelector('input[name="boardNo"]').value || null,
-                userNo: 4,  // admin 유저 고정
+//                userNo: 4,  // admin 유저 고정
+                userNo: document.querySelector('input[name="userNo"]').value || null,
                 content: content,
-                parentReplyNo: parentReplyNo // 대댓글이므로 parentReplyNo 설정
+                parentReplyNo: parentReplyNo
             };
 
             var xhr = new XMLHttpRequest();
@@ -261,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     var response = JSON.parse(xhr.responseText);
                     if (response.success) {
-                        location.reload(); // 대댓글이 성공적으로 추가된 후 페이지를 새로고침
+                        location.reload(); // 대댓글이 성공적으로 추가된 후 페이지를 새로고침합니다.
                     } else {
                         alert('대댓글 등록에 실패했습니다.');
                     }
@@ -274,7 +224,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-
 </script>
 
 </body>
