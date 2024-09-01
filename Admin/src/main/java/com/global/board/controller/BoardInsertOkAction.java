@@ -20,14 +20,10 @@ public class BoardInsertOkAction implements Action {
 		BoardDTO board = new BoardDTO();
 
 		/* 현재 로그인이 구현 안됐으므로 아래 코드는 임시 주석처리합니다.*/
-		/*
-		int userNo;
-		if(request.getParameter("userNo") != null) {
-			userNo = Integer.parseInt(request.getParameter("userNo"));
-			board.setUserNo(userNo);
-		}
-		*/
 		
+		Integer userNo = request.getParameter("userNo").equals("") ? null : Integer.parseInt(request.getParameter("userNo"));
+		
+		board.setUserNo(userNo);
 		String categoryNo = request.getParameter("categoryNo");
 		String title = request.getParameter("title").trim();
 		String content = request.getParameter("content").trim();
@@ -37,7 +33,7 @@ public class BoardInsertOkAction implements Action {
 		board.setContent(content);
 		
 		
-		int check = BoardDAO.getInstance().insertBoard(board);
+		int check = BoardDAO.getInstance().insertBoard(board,userNo);
 		
 		if(check>0) {
 			ScriptUtil.sendScript(response, "게시글 작성 성공!", "boardList.do");

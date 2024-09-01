@@ -6,21 +6,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">    
 
-<link rel="stylesheet" href="${contextPath }/resources/master.css">
+<link href="${contextPath }/resources/master.css" rel="stylesheet" >
 <link href="${contextPath }/resources/common/css/pwd.css" rel="stylesheet" type="text/css"/>
 <link href="${contextPath }/resources/common/css/table.css" rel="stylesheet" type="text/css"/>
 <link href="${contextPath}/resources/common/css/btn.css" rel="stylesheet">    
 <link href="${contextPath }/resources/common/css/form.css" rel="stylesheet">
+<link href="${contextPath }/resources/common/css/components.css" rel="stylesheet">
+<link href="${contextPath }/resources/common/css/search.css" rel="stylesheet">
+<link href="${contextPath }/resources/common/css/sidebar.css" rel="stylesheet">
+<link href="${contextPath }/resources/board/css/board.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <!-- CKEditor 스크립트 추가 -->
 <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
 <!-- 내비게이션 바 -->
 <!-- 내비게이션 바 -->
 <nav class="navbar">
     <div class="container">
-        <a href="#" class="logo">관리자 대시보드</a>
+        <a href="main.go" class="logo">관리자 대시보드</a>
         <ul class="nav-links">
-            <li><a href="index.html">홈</a></li>
+            <li><a href="main.go">홈</a></li>
             
             <!-- 사용자 관리 -->
             <li class="dropdown">사용자 관리
@@ -53,7 +60,7 @@
             <!-- 게시판 관리 -->
             <li class="dropdown">게시판 관리
                 <ul class="dropdown-menu">
-                    <li><a href="boardList.do">게시글 목록</a></li>
+                    <li><a href="boardList.do?subtitle=게시글 목록">게시글 목록</a></li>
                     <li><a href="boardCategoryList.do">카테고리 관리</a></li>
                     <li><a href="board_stats.html">게시글 통계</a></li>
                 </ul>

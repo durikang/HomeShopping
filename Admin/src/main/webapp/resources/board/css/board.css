@@ -1,4 +1,13 @@
 @charset "UTF-8";
+
+
+/* 레이아웃 스타일 */
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
 /* 전반적인 레이아웃 스타일 */
 .content {
 	max-width: 900px;
@@ -16,7 +25,6 @@
 	font-weight: bold;
 	color: #333;
 	margin-bottom: 15px;
-	border-bottom: 2px solid #eee;
 	padding-bottom: 10px;
 }
 
@@ -51,4 +59,16 @@
 	border-radius: 5px;
 	margin-bottom: 20px;
 	display: inline-block;
+}
+
+
+.board-td {
+    border-left: 0;
+    border-right: 0;
+    /* 다른 td에 필요한 스타일 추가 */
+}
+.border-th{
+	border:0;
+	border-bottom:1px solid #aaa;
+
 }

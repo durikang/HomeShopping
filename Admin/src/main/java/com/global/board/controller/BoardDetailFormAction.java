@@ -16,9 +16,21 @@ public class BoardDetailFormAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		/*
+		 * 테이블의 구조를 보면
+		 * 상위에 USERS라는 테이블과 
+		 * 자식 테이브로 ADMIN 테이블, CUSTOMER테이블이 존재한다.
+		 * 그러므로 선택해서 들어온 게시글의 유저 타입 userType이 ADMIN인지 CUSTOMER인지 구분하여 
+		 * BOARD 테이블, BOARD_CATEGORY테이블 그리고 userType에 따라 ADMIN 테이블 혹은 CUSTOMER테이블을 JOIN하여 갖고온다.
+		 * */
 		int boardNo = Integer.parseInt(request.getParameter("no"));
 		String userType = request.getParameter("userType");
 		
+		/*
+			status와 currenetPage는 처음에 넘어오는 값이 없을 수도 있다.
+			맨 처음 List페이지에 접속했을때. 그러므로 3항 연산자를 이용하여 
+			null값일 경우 처리를 해줬다.
+		*/
 		String status = request.getParameter("status") == null ? "" : request.getParameter("status");
     	int currentPage = request.getParameter("currentPage") == null ? 0 : Integer.parseInt(request.getParameter("currentPage"));
     	
@@ -35,7 +47,7 @@ public class BoardDetailFormAction implements Action {
 					flag = true;
 				}
 			}
-			// bId 쿠키가 없는 경우
+			// boardNo 쿠키가 없는 경우
 			if(!flag) {
 				// 게시글을 처음 클릭했으므로 조회수 증가 + 셀렉
 				
