@@ -12,19 +12,52 @@ import com.global.action.View;
 import com.global.board.model.BoardDAO;
 import com.global.board.model.BoardReplyDTO;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 
-public class BoardReplyInsertOkAction implements Action {
+public class BoardReplyInsertOkAction_20240901 implements Action {
 
     @Override
     public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Integer.class, new TypeAdapter<Integer>() {
+            @Override
+            public void write(JsonWriter out, Integer value) throws IOException {
+                if (value == null) {
+                    out.nullValue();
+                } else {
+                    out.value(value);
+                }
+            }
+
+            @Override
+            public Integer read(JsonReader in) throws IOException {
+                if (in.peek() == JsonToken.NULL) {
+                    in.nextNull();
+                    return null;
+                }
+                try {
+                    String value = in.nextString();
+                    return value.isEmpty() ? null : Integer.parseInt(value);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+        });
+
+        Gson gson = gsonBuilder.create();
+
+        // JSON으로부터 데이터 파싱
         BoardReplyDTO reply = gson.fromJson(request.getReader(), BoardReplyDTO.class);
 
         BoardDAO dao = BoardDAO.getInstance();
 
         if (reply.getParentReplyNo() == null) {
-            // 일반 댓글
+            // 댓글
             dao.insertReply(reply);
         } else {
             // 대댓글
@@ -34,6 +67,7 @@ public class BoardReplyInsertOkAction implements Action {
         // 최신 댓글 리스트를 JSON으로 반환
         List<BoardReplyDTO> comments = dao.getCommentsByBoardNo(reply.getBoardNo());
 
+        // 응답을 JSON으로 처리
         response.setContentType("application/json; charset=UTF-8");
         PrintWriter out = response.getWriter();
 
@@ -58,3 +92,6 @@ public class BoardReplyInsertOkAction implements Action {
         }
     }
 }
+
+
+
