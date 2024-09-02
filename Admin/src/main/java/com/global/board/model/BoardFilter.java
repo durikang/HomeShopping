@@ -7,7 +7,7 @@ public class BoardFilter extends Filter {
     private Integer userNo;       // 사용자 번호
     private Integer minViews;     // 최소 조회수
     private Integer maxViews;     // 최대 조회수
-
+    
     // Getters and Setters
     public String getCategoryNo() {
         return categoryNo;

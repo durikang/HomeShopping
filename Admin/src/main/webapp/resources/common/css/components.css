@@ -66,4 +66,9 @@
     padding: 3px 4px;
     border-radius: 20px;
 }
-
+/* 댓글 수 */
+.commentCount {
+    font-size: 0.9em;
+    color: #007bff;
+    margin-left: 5px;
+}

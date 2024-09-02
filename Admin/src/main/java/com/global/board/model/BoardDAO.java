@@ -1105,6 +1105,38 @@ public class BoardDAO {
 	    return result;
 	}
 
+	public int getCommentCount(int boardNo) {
+	    int count = 0;
+
+	    try {
+	        // 데이터베이스 연결 열기
+	        openConn();
+
+	        // SQL 쿼리 작성: IS_DELETED가 'N'인 댓글의 수를 계산
+	        String sql = "SELECT COUNT(*) FROM BOARD_REPLY WHERE BOARD_NO = ? AND IS_DELETED = 'N'";
+
+	        // PreparedStatement를 사용하여 SQL 쿼리 실행 준비
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, boardNo);
+
+	        // 쿼리 실행 및 결과 획득
+	        rs = pstmt.executeQuery();
+	        
+	        // 결과를 읽어 댓글 수를 count 변수에 저장
+	        if (rs.next()) {
+	            count = rs.getInt(1);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        // 리소스 정리: ResultSet, PreparedStatement, Connection을 닫기
+	        closeConn(rs, pstmt, conn);
+	    }
+
+	    return count;
+	}
+
+
 
 
 
