@@ -78,7 +78,7 @@
             <!-- 관리자 관리 -->
             <li class="dropdown">관리자 관리
                 <ul class="dropdown-menu">
-                    <li><a href="admin_list.html">관리자 목록</a></li>
+                    <li><a href="admin_list.go">관리자 목록</a></li>
                     <li><a href="admin_role.html">역할 관리</a></li>
                     <li><a href="admin_logs.html">시스템 로그</a></li>
                 </ul>
