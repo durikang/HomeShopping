@@ -6,6 +6,10 @@ VALUES (1, 'admin', '1234', '관리자', 'admin@example.com', 'ADMIN', 'N', SYSD
 INSERT INTO ADMIN (USER_NO, ROLE_CODE)
 VALUES (1, 'ADMIN001');
 
+-- ADMIN 테이블에 관리자 역할 데이터 삽입
+INSERT INTO ADMIN_ROLE (USER_NO, ROLE_CODE)
+VALUES ('ADMIN001', '최고 관리자');
+
 -- USERS 테이블에 고객 데이터 삽입
 INSERT INTO USERS (USER_NO, USER_ID, PASSWORD, NAME, EMAIL, USER_TYPE, IS_DELETED, CREATED_AT, UPDATED_AT)
 VALUES (2, 'Tester', '1234', '고객1', 'tester@example.com', 'CUSTOMER', 'N', SYSDATE, SYSDATE);
