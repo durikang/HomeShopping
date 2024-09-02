@@ -1,34 +1,31 @@
-package com.global.order.model;
+package com.global.product.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-public class OrderDAO {
-	
+public class ProductDAO {
 	Connection con = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	String sql = null;
 	
 	// 싱글톤
-	public static OrderDAO instance=null;
+	public static ProductDAO instance=null;
 
 	// 기본생성자
-	public OrderDAO() {}
+	public ProductDAO() {}
 
 
-	public static OrderDAO getInstance() {
+	public static ProductDAO getInstance() {
 
 		if (instance == null) {
-			instance = new OrderDAO();
+			instance = new ProductDAO();
 		}
 		return instance;
 	}
@@ -105,49 +102,96 @@ public class OrderDAO {
 		}
 
 	} // closeConn() end
-	
-	// 전체 주문 목록 조회 메서드.
-	public List<OrderDTO> getOrderList(){
+
+
+	public int insertProduct(ProductDTO dto) {
+
 		
-		List<OrderDTO> list = new ArrayList<OrderDTO>();
+		int result = 0, count = 0;
 		
-		
+		int product_id = 0;
 		
 		try {
+		
+		openConn();
+		
+		sql = "SELECT MAX(PRODUCT_NO) FROM PRODUCT";
+		
+		pstmt = con.prepareStatement(sql);
+		
+		rs = pstmt.executeQuery();
+		
+		if(rs.next()) {
 			
+			count = rs.getInt(1) + 1;
+			
+			
+		}
+		
+		sql = "INSERT INTO PRODUCT VALUES(?,?,?,?,?,?,DEFAULT,SYSDATE,null, 'N',DEFAULT)";
+										
+		
+		
+		pstmt = con.prepareStatement(sql);
+		
+		pstmt.setInt(1,count);
+		pstmt.setString(2, dto.getCategory_no());
+		pstmt.setString(3, dto.getName());
+		pstmt.setString(4, dto.getDescription());
+		pstmt.setInt(5, dto.getPrice());
+		pstmt.setInt(6, dto.getStock_quantity());
+		
+		
+		pstmt.executeUpdate();
+		
+		product_id = count;
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		
+		
+		return product_id;
+	}
+
+
+	public ProductDTO getProduct(int product_id) {
+		ProductDTO product = null;
+		try {
 			openConn();
-			
-			sql = "select * from ORDERS order by ORDER_NO desc";
-			
+			sql = "select * from product where product_id = ?";
 			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setInt(1, product_id);
 			
 			rs = pstmt.executeQuery();
 			
-			while(rs.next()) {
-				OrderDTO dto = new OrderDTO();
-				
-				dto.setOrder_no(rs.getInt("order_no"));
-				dto.setUser_no(rs.getInt("user_no"));
-				dto.setOrder_date(rs.getDate("order_date"));
-				dto.setStatus(rs.getString("status"));
-				dto.setTotal_amount(rs.getInt("total_amount"));
-				
-				list.add(dto);
+			if(rs.next()) {
+				product = new ProductDTO();
+				product.setProduct_no(rs.getInt(1));
+				product.setCategory_no(rs.getString(2));
+				product.setName(rs.getString(3));
+				product.setDescription(rs.getString(4));
+				product.setPrice(rs.getInt(5));
+				product.setStock_quantity(rs.getInt(6));
+				product.setViews(rs.getInt(7));
+				product.setCreated_at(rs.getDate(8));
+				product.setUpdated_at(rs.getDate(9));
+				product.setIs_deleted(rs.getString(10));
+				product.setTotal_sales(rs.getInt(11));
 				
 			}
 			
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally {
-			closeConn(rs, pstmt, con);
 		}
 		
-		
-		return list;
+		return product;
 	}
- 
-	
+
 
 }

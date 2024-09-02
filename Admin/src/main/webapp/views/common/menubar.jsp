@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -41,8 +42,8 @@
             <!-- 상품 관리 -->
             <li class="dropdown">상품 관리
                 <ul class="dropdown-menu">
-                    <li><a href="product_list.do">상품 목록</a></li>
-                    <li><a href="product_add.do">상품 추가</a></li>
+                    <li><a href="productList.do">상품 목록</a></li>
+                    <li><a href="productInsert.do">상품 추가</a></li>
                     <li><a href="productCategory.do">카테고리 관리</a></li>
                     <li><a href="product_stats.html">상품 통계</a></li>
                 </ul>
@@ -57,15 +58,16 @@
                 </ul>
             </li>
             
+
             <!-- 주문 관리 -->
             <li class="dropdown">주문 관리
                 <ul class="dropdown-menu">
-                    <li><a href="order_list.html">주문 목록</a></li>
+                    <li><a href="order_list.do">주문 목록</a></li>
                     <li><a href="order_stats.html">주문 통계</a></li>
                     <li><a href="delivery_status.html">배송 상태 관리</a></li>
                 </ul>
             </li>
-            
+
             <!-- 게시판 관리 -->
             <li class="dropdown">게시판 관리
                 <ul class="dropdown-menu">
@@ -86,7 +88,7 @@
             <!-- 관리자 관리 -->
             <li class="dropdown">관리자 관리
                 <ul class="dropdown-menu">
-                    <li><a href="admin_list.html">관리자 목록</a></li>
+                    <li><a href="admin_list.go">관리자 목록</a></li>
                     <li><a href="admin_role.html">역할 관리</a></li>
                     <li><a href="admin_logs.html">시스템 로그</a></li>
                 </ul>

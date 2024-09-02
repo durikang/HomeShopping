@@ -1,4 +1,4 @@
-package com.global.order.model;
+package com.global.product.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,24 +9,23 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-public class DeliveryDAO {
-	
+public class ProductImageDAO {
 	Connection con = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	String sql = null;
 	
 	// 싱글톤
-	public static DeliveryDAO instance=null;
+	public static ProductImageDAO instance=null;
 
 	// 기본생성자
-	public DeliveryDAO() {}
+	public ProductImageDAO() {}
 
 
-	public static DeliveryDAO getInstance() {
+	public static ProductImageDAO getInstance() {
 
 		if (instance == null) {
-			instance = new DeliveryDAO();
+			instance = new ProductImageDAO();
 		}
 		return instance;
 	}
@@ -103,5 +102,12 @@ public class DeliveryDAO {
 		}
 
 	} // closeConn() end
+
+
+	public int insertImgProduct(ProductDTO prod, ProductImageDTO image) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 }

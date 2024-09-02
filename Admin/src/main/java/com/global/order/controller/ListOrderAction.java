@@ -20,8 +20,9 @@ public class ListOrderAction implements Action{
 		
 		List<OrderDTO> list = dao.getOrderList(); 
 		
+		request.setAttribute("List", list);
 		
-		return null;
+		return new View("main.go").setUrl("/views/order/order_list.jsp");
 	}
 	
 	
