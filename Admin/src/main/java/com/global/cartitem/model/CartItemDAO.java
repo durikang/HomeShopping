@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 public class CartItemDAO {
+	
 	//DB를 연결해주는 객체
 	Connection con = null;
 	//DB에 SQL문을 전송하는 객체
@@ -40,9 +42,13 @@ public class CartItemDAO {
 	public void openConn() {
 		try {
 			Context intntCtx = new InitialContext();
+			
 			Context ctx = (Context)intntCtx.lookup("java:comp/env");
+			
 			DataSource ds = (DataSource) ctx.lookup("jdbc/myoracle");
+			
 			con = ds.getConnection();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -50,13 +56,13 @@ public class CartItemDAO {
 	}//opConn end
 	
 	//DB를 종료해주는 메서드 ( rs,pstmt,con )
-	public void closeConn(ResultSet rs, PreparedStatement pstmt, Connection con) {
+	public void closeConn(ResultSet rs, Statement stmt, Connection con) {
 		
 			try {
 				
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(con != null) con.close(); 
+				if(rs != null && !rs.isClosed()) rs.close();
+				if(stmt != null && !stmt.isClosed()) stmt.close();
+				if(con != null && !con.isClosed()) con.close(); 
 				
 			} catch (SQLException e) {
 				
@@ -66,13 +72,13 @@ public class CartItemDAO {
 	}//closeConn(rs, pstmt, con) end
 	
 	////DB를 종료해주는 메서드 ( pstmt, con )
-	public void closeConn(PreparedStatement pstmt, Connection con) {
+	public void closeConn(Statement stmt, Connection con) {
 		 
 			
 				try {
 					
-					if(pstmt != null) pstmt.close();
-					if(con != null) con.close();
+					if(stmt != null && !stmt.isClosed()) stmt.close();
+					if(con != null && !con.isClosed()) con.close();
 					
 				} catch (SQLException e) {
 					

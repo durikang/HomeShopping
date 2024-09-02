@@ -48,6 +48,15 @@
                 </ul>
             </li>
             
+             <!-- 장바구니 관리 -->
+            <li class="dropdown">장바구니 관리
+                <ul class="dropdown-menu">
+                    <li><a href="cart_list.do">장바구니 목록</a></li>
+                    <li><a href="cart_stats.html">장바구니 추가</a></li>
+                    <li><a href="cart_status.html">장바구니 삭제</a></li>
+                </ul>
+            </li>
+            
             <!-- 주문 관리 -->
             <li class="dropdown">주문 관리
                 <ul class="dropdown-menu">
