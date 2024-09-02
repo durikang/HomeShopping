@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,13 +75,13 @@ public class CartDAO {
 	} //openConn() end
 	
 	//DB연동하는 작업을 종료하는 메서드 (rs,pstmt,con)
-	public void closeConn(ResultSet rs, PreparedStatement pstmt, Connection con) {
+	public void closeConn(ResultSet rs, Statement stmt, Connection con) {
 		
 			try {
 				
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(con != null) con.close();
+				if(rs != null && !rs.isClosed()) rs.close();
+				if(stmt != null && !stmt.isClosed()) stmt.close();
+				if(con != null && !con.isClosed()) con.close();
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -88,12 +89,12 @@ public class CartDAO {
 	}//closeConn(rs,pstmt,con) end
 
 	//DB연동하는 작업을 종료하는 메서드
-	public void closeConn(PreparedStatement pstmt, Connection con) {
+	public void closeConn(Statement stmt, Connection con) {
 			
 				try {
 					
-					if(pstmt != null) pstmt.close();
-					if(con != null) con.close();
+					if(stmt != null && !stmt.isClosed()) stmt.close();
+					if(con != null && ! con.isClosed()) con.close();
 					
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -145,7 +146,7 @@ public class CartDAO {
 		try {
 			
 			openConn();
-			
+			//sql = "select * from (select row_number() over (order by c.CART_NO ASC)AS rnum, c.*, u.NAME AS USER_NO, from CART c left join USERS u ON c.USER_NO = u.USER_NO )";
 			sql = "SELECT * FROM CART ORDER BY CART_NO DESC ";
 			
 			pstmt = con.prepareStatement(sql);
