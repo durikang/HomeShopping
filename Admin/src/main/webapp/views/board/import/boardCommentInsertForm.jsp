@@ -8,7 +8,7 @@
             <h3>댓글 작성</h3>
             <form id="commentForm">
                 <input type="hidden" name="boardNo" value="${info.boardNo}">
-                <input type="hidden" name="userNo" value="${sessionScope.userNo}">
+                <input type="hidden" name="userNo" value="${sessionScope.user.userNo}">
                 <input type="hidden" name="status" value="${status}">
                 <input type="hidden" name="currentPage" value="${currentPage}">
                 <div class="form-group">

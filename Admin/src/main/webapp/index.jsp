@@ -14,7 +14,7 @@
 <%
 //가데이터 생성	
 //관리자 객체 생성
-AdminDTO admin = new AdminDTO();
+ AdminDTO admin = new AdminDTO();
 admin.setUserNo(1);
 admin.setUserId("admin");
 admin.setPassword("1234");
@@ -30,9 +30,9 @@ admin.setRoleCode("ADMIN001");
 admin.setRoleName("최고 관리자");
 
 //세션에 가데이터 저장
-session.setAttribute("user", admin);
+session.setAttribute("user", admin); 
 
-/* 
+ /*
 // 가데이터 생성
 // 고객 객체 생성
 CustomerDTO customer = new CustomerDTO();
@@ -56,8 +56,8 @@ customer.setTotalPurchaseAmount(50000);
 
 // 세션에 가데이터 저장
 session.setAttribute("user", customer);
-
- */
+*/
+ 
 %>
 
 
