@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -41,13 +42,13 @@
             <!-- 상품 관리 -->
             <li class="dropdown">상품 관리
                 <ul class="dropdown-menu">
-                    <li><a href="product_list.do">상품 목록</a></li>
-                    <li><a href="product_add.do">상품 추가</a></li>
+                    <li><a href="productList.do">상품 목록</a></li>
+                    <li><a href="productInsert.do">상품 추가</a></li>
                     <li><a href="productCategory.do">카테고리 관리</a></li>
                     <li><a href="product_stats.html">상품 통계</a></li>
                 </ul>
             </li>
-            
+
             <!-- 주문 관리 -->
             <li class="dropdown">주문 관리
                 <ul class="dropdown-menu">
@@ -56,7 +57,7 @@
                     <li><a href="delivery_status.html">배송 상태 관리</a></li>
                 </ul>
             </li>
-            
+
             <!-- 게시판 관리 -->
             <li class="dropdown">게시판 관리
                 <ul class="dropdown-menu">
