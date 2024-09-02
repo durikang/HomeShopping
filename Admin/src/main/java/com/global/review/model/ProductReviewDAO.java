@@ -68,9 +68,11 @@ public class ProductReviewDAO {
 	} // closeConn() end
 
 	public int getReviewCount(char c) {
-		// TODO Auto-generated method stub
+		
+		int count = 0;
+		
 		return 0;
-	}
+	} // getReviewCount() end
 
 	public List<ProductReviewDTO> selectReviewList(int currentPage, int boardLimit, char c) {
 		// TODO Auto-generated method stub
