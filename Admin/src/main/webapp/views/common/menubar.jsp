@@ -22,7 +22,6 @@
 <!-- CKEditor 스크립트 추가 -->
 <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
 <!-- 내비게이션 바 -->
-<!-- 내비게이션 바 -->
 <nav class="navbar">
     <div class="container">
         <a href="main.go" class="logo">관리자 대시보드</a>

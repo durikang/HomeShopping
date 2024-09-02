@@ -42,7 +42,7 @@
         text-decoration: underline;
     }
 
-    .reply-form {
+    .reply-form, .edit-form {
         margin-top: 10px;
         margin-left: 20px;
         display: none;
@@ -51,7 +51,7 @@
         border-radius: 4px;
     }
 
-    .reply-form textarea {
+    .reply-form textarea, .edit-form textarea {
         width: 100%;
         height: 100px;
         border-radius: 4px;
@@ -61,7 +61,7 @@
         box-sizing: border-box;
     }
 
-    .submit-reply {
+    .submit-reply, .submit-edit, .cancel-edit {
         margin-top: 10px;
         padding: 8px 16px;
         background-color: #007bff;
@@ -71,12 +71,19 @@
         cursor: pointer;
     }
 
-    .submit-reply:hover {
+    .submit-reply:hover, .submit-edit:hover, .cancel-edit:hover {
         background-color: #0056b3;
     }
 
+    .cancel-edit {
+        background-color: #6c757d;
+    }
+
+    .cancel-edit:hover {
+        background-color: #5a6268;
+    }
+
     /* 대댓글 구분 스타일 */
-    /* 추가적으로 필요하면 더 깊은 레벨도 스타일링 가능 */
     .comment[data-node-level="2"] {
         margin-left: 40px;
         background-color: #f0f8ff;
@@ -91,24 +98,24 @@
         margin-left: 80px;
         background-color: #cce0ff;
     }
+
     /* 댓글 액션 버튼 스타일 */
-	.comment-actions {
-	    margin-top: 5px;
-	}
-	
-	.comment-actions a {
-	    margin-right: 10px;
-	    font-size: 14px;
-	    color: #007bff;
-	    cursor: pointer;
-	}
-	
-	.comment-actions a:hover {
-	    text-decoration: underline;
-	}
-	    
-    
+    .comment-actions {
+        margin-top: 5px;
+    }
+
+    .comment-actions a {
+        margin-right: 10px;
+        font-size: 14px;
+        color: #007bff;
+        cursor: pointer;
+    }
+
+    .comment-actions a:hover {
+        text-decoration: underline;
+    }
 </style>
+
 </head>
 <body>
     <div class="content">

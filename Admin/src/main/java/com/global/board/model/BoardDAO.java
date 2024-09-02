@@ -1052,6 +1052,60 @@ public class BoardDAO {
 	    return commentList;
 	}
 
+	public int updateReply(int replyNo, String newContent) {
+	    int res = 0;
+
+	    try {
+	        openConn();
+
+	        // 댓글이 존재하는지 확인
+	        sql = "SELECT COUNT(*) FROM BOARD_REPLY WHERE REPLY_NO = ? AND IS_DELETED = 'N'";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, replyNo);
+	        rs = pstmt.executeQuery();
+
+	        if (rs.next() && rs.getInt(1) > 0) {
+	            // 댓글이 존재하면 내용 업데이트
+	            sql = "UPDATE BOARD_REPLY SET CONTENT = ?, UPDATED_AT = SYSDATE WHERE REPLY_NO = ?";
+	            pstmt = conn.prepareStatement(sql);
+	            pstmt.setString(1, newContent);
+	            pstmt.setInt(2, replyNo);
+
+	            res = pstmt.executeUpdate();
+	        } else {
+	            // 댓글이 존재하지 않거나 삭제된 경우
+	            System.out.println("댓글이 존재하지 않거나 이미 삭제되었습니다.");
+	            return -1;
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(rs, pstmt, conn);
+	    }
+
+	    return res;
+	}
+
+	public int deleteReply(int replyNo) {
+	    int result = 0;
+	    try {
+	        openConn();
+	        // 댓글의 IS_DELETED 필드를 'Y'로 업데이트하여 논리 삭제
+	        sql = "UPDATE BOARD_REPLY SET IS_DELETED = 'Y' WHERE REPLY_NO = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, replyNo);
+
+	        result = pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(pstmt, conn);
+	    }
+	    return result;
+	}
+
+
 
 
 
