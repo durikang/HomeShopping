@@ -48,6 +48,11 @@ public class BoardListAction implements Action {
 			boardList = dao.selectBoardList(currentPage, boardLimit);
 		}
 		
+        // 각 게시글의 댓글 수를 가져와 설정 (필요시 DAO 메서드 수정)
+        for (BoardDTO board : boardList) {
+            board.setCommentCount(dao.getCommentCount(board.getBoardNo()));
+        }
+		
 		// 전체 페이지 수 계산
         int maxPage = (int) Math.ceil((double) listCount / boardLimit);
 

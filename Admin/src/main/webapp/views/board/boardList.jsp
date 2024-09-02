@@ -35,6 +35,11 @@ document.addEventListener('DOMContentLoaded', function() {
  });
 });
 </script>
+
+<style>
+
+</style>
+
 </head>
 <body>
 	<div class="title">
@@ -99,10 +104,13 @@ document.addEventListener('DOMContentLoaded', function() {
 					                    </c:choose>
 					                </td>
 					                <td class="board-td">${board.categoryName} <span class="subtitle">(${board.categoryNo})</span></td>
-					                <td class="board-td">
-					                    <!-- 명확하게 문자열로 출력 -->
-					                    <c:out value="${truncatedTitle}" />
-					                </td>
+									<td class="board-td">
+									    <!-- 제목과 함께 댓글 수 표시 -->
+									    <c:out value="${truncatedTitle}" />
+									    <c:if test="${board.commentCount > 0}">
+									        <span class="commentCount">[${board.commentCount}]</span>
+									    </c:if>
+									</td>
 					                <td class="board-td">
 					                    <!-- stripHtml 메서드 결과를 명확히 문자열로 처리 -->
 					                    <c:out value="${truncatedContent}" />
