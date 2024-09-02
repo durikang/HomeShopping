@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	        <c:otherwise>
 	            <tr>
 	                <td colspan="10" align="center">
-	                    <h3>역활 데이터가 없습니다.</h3>
+	                    <h3>카테고리가 존재하지 않습니다.</h3>
 	                </td>
 	            </tr>
 	        </c:otherwise>

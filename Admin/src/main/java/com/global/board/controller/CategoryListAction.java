@@ -12,7 +12,7 @@ import com.global.board.model.BoardCategoryDTO;
 import com.global.board.model.BoardDAO;
 import com.global.utils.PageInfo;
 
-public class BoardCategoryListAction implements Action {
+public class CategoryListAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -67,7 +67,7 @@ public class BoardCategoryListAction implements Action {
         request.setAttribute("pi", pi);
         request.setAttribute("status", status); // 필터 상태를 JSP로 전달
 
-		return new View("main.go").setUrl("/views/board/boardCategoryList.jsp");
+		return new View("main.go").setUrl("/views/board/CategoryList.jsp");
 	}
 
 }

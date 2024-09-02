@@ -37,7 +37,7 @@
     <div class="content">
         <h2>게시글 작성</h2>
         <form action="boardInsertOk.do" method="post">
-            <input type="hidden" name="userNo" value="${sessionScope.userNo}">
+            <input type="hidden" name="userNo" value="${sessionScope.user.userNo}">
             
             <!-- 카테고리 선택 -->
             <div class="form-group">

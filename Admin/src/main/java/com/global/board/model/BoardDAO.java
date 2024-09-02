@@ -663,7 +663,114 @@ public class BoardDAO {
 
 	    return count;
 	}
+	public List<BoardDTO> searchBoardList(int currentPage, int boardLimit, BoardFilter filter) {
+	    List<BoardDTO> list = new ArrayList<>();
+	    
+	    // 동적 SQL을 구성하기 위해 기본 SELECT 쿼리 작성
+	    sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY b.BOARD_NO ASC) AS rnum, b.*, u.USER_TYPE, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, bc.NAME AS CATEGORY_NAME " +
+	          "FROM BOARD b " +
+	          "LEFT JOIN USERS u ON b.USER_NO = u.USER_NO " +
+	          "JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO " +
+	          "WHERE 1=1";
 
+	    // 필터링 조건 추가
+	    if (filter.getCategoryNo() != null && !filter.getCategoryNo().isEmpty()) {
+	        sql += " AND b.CATEGORY_NO = ?";
+	    }
+	    if (filter.getUserNo() != null) {
+	        sql += " AND b.USER_NO = ?";
+	    }
+	    if (filter.getMinViews() != null) {
+	        sql += " AND b.VIEWS >= ?";
+	    }
+	    if (filter.getMaxViews() != null) {
+	        sql += " AND b.VIEWS <= ?";
+	    }
+	    if (filter.getStartDate() != null) {
+	        sql += " AND b.CREATED_AT >= ?";
+	    }
+	    if (filter.getEndDate() != null) {
+	        sql += " AND b.CREATED_AT <= ?";
+	    }
+	    if (filter.getIsDeleted() != null && !filter.getIsDeleted().isEmpty()) {
+	        sql += " AND b.IS_DELETED = ?";
+	    }
+
+	    // 페이지네이션을 위한 서브 쿼리 조건 추가
+	    sql += ") WHERE rnum BETWEEN ? AND ?";
+
+	    try {
+	        openConn();
+	        pstmt = conn.prepareStatement(sql);
+
+	        int paramIndex = 1;
+
+	        // 필터 파라미터 세팅
+	        if (filter.getCategoryNo() != null && !filter.getCategoryNo().isEmpty()) {
+	            pstmt.setString(paramIndex++, filter.getCategoryNo());
+	        }
+	        if (filter.getUserNo() != null) {
+	            pstmt.setInt(paramIndex++, filter.getUserNo());
+	        }
+	        if (filter.getMinViews() != null) {
+	            pstmt.setInt(paramIndex++, filter.getMinViews());
+	        }
+	        if (filter.getMaxViews() != null) {
+	            pstmt.setInt(paramIndex++, filter.getMaxViews());
+	        }
+	        if (filter.getStartDate() != null) {
+	            pstmt.setDate(paramIndex++, filter.getStartDate());
+	        }
+	        if (filter.getEndDate() != null) {
+	            pstmt.setDate(paramIndex++, filter.getEndDate());
+	        }
+	        if (filter.getIsDeleted() != null && !filter.getIsDeleted().isEmpty()) {
+	            pstmt.setString(paramIndex++, filter.getIsDeleted());
+	        }
+
+	        // 페이지네이션 파라미터 세팅
+	        int startRow = (currentPage - 1) * boardLimit + 1;
+	        int endRow = startRow + boardLimit - 1;
+	        pstmt.setInt(paramIndex++, startRow);
+	        pstmt.setInt(paramIndex++, endRow);
+
+	        rs = pstmt.executeQuery();
+
+	        // 결과를 리스트에 담음
+	        while (rs.next()) {
+	            BoardDTO board = new BoardDTO();
+	            board.setBoardNo(rs.getInt("BOARD_NO"));
+	            board.setTitle(rs.getString("TITLE"));
+	            board.setContent(rs.getString("CONTENT"));
+	            board.setViews(rs.getInt("VIEWS"));
+	            board.setCreateAt(rs.getDate("CREATED_AT"));
+	            board.setUpdateAt(rs.getDate("UPDATED_AT"));
+	            board.setIsDeleted(rs.getString("IS_DELETED"));
+	            board.setCategoryNo(rs.getString("CATEGORY_NO"));
+	            board.setCategoryName(rs.getString("CATEGORY_NAME"));
+			    
+	            // 아직 회원 관련 로직이 구현되지 않았으므로
+			    int userNo = rs.getInt("USER_NO");
+			    if (rs.wasNull()) {
+			        board.setUserNo(null); // USER_NO가 NULL이면 null 설정
+			    } else {
+			        board.setUserNo(userNo); // USER_NO가 NULL이 아니면 해당 값 설정
+			    }
+         
+	            board.setUserId(rs.getString("USER_ID"));
+	            board.setUserEmail(rs.getString("USER_EMAIL"));
+	            board.setUserType(rs.getString("USER_TYPE"));
+	            list.add(board);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(rs, pstmt, conn);
+	    }
+
+	    return list;
+	}
 	
 	public List<BoardDTO> searchBoardList(int currentPage, int boardLimit, String searchKeyword, BoardFilter filter) {
 	    List<BoardDTO> list = new ArrayList<>();

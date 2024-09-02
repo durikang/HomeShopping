@@ -1,3 +1,27 @@
+-- 아래 insert 구문은 board게시글을 테스트하기 위해 필요한 준비물입니다.
+
+-- 1. USERS 테이블에 회원과 관리자를 추가
+INSERT INTO USERS (USER_NO, USER_ID, PASSWORD, NAME, EMAIL, USER_TYPE, IS_DELETED, CREATED_AT, UPDATED_AT)
+VALUES (1, 'test1', '1234', 'John Doe', 'test1@example.com', 'CUSTOMER', 'N', SYSDATE, SYSDATE);
+
+INSERT INTO USERS (USER_NO, USER_ID, PASSWORD, NAME, EMAIL, USER_TYPE, IS_DELETED, CREATED_AT, UPDATED_AT)
+VALUES (4, 'admin', '1234', 'Admin User', 'admin@example.com', 'ADMIN', 'N', SYSDATE, SYSDATE);
+
+-- 2. CUSTOMER 테이블에 회원 정보를 추가
+INSERT INTO CUSTOMER (USER_NO, AGE, JOB, LOCATION, MILEAGE, LAST_LOGIN_DATE, TOTAL_PURCHASE_AMOUNT)
+VALUES (1, 30, 'Software Developer', 'New York', 1000, SYSDATE, 5000);
+
+-- 3. ADMIN_ROLE 테이블에 관리자 역할을 추가
+INSERT INTO ADMIN_ROLE (ROLE_CODE, ROLE_NAME)
+VALUES ('ADMIN001', '최고 관리자');
+
+-- 4. ADMIN 테이블에 관리자 정보를 추가
+INSERT INTO ADMIN (USER_NO, ROLE_CODE)
+VALUES (4, 'ADMIN001');
+
+
+commit;
+
 -- 해당 프로시저는 유저번호 4번인 유저가 게시글 100개를 작성하는 프로시저입니다.
 -- 아래 프로시저를 사용하기 위한 조건으로 유저 번호와 카테고리 코드가 존재해야합니다.
 

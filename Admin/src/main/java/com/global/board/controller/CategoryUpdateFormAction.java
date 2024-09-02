@@ -10,7 +10,7 @@ import com.global.action.View;
 import com.global.board.model.BoardCategoryDTO;
 import com.global.board.model.BoardDAO;
 
-public class BoardCategoryUpdateFormAction implements Action{
+public class CategoryUpdateFormAction implements Action{
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -27,7 +27,7 @@ public class BoardCategoryUpdateFormAction implements Action{
     	request.setAttribute("currentPage", currentPage);
     	request.setAttribute("category", category);
 		
-		return new View("main.go").setUrl("/views/board/boardCategoryUpdateForm.jsp");
+		return new View("main.go").setUrl("/views/board/CategoryUpdateForm.jsp");
 	}
 
 }

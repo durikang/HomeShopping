@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 <!-- 스타일링은 이미 준비된 CSS 파일을 사용 -->
 <link rel="stylesheet" href="${contextPath }/resources/master.css">
-<link href="${contextPath }/resources/common/css/insertTableForm.css" rel="stylesheet" type="text/css" />
+<%-- <link href="${contextPath }/resources/common/css/insertTableForm.css" rel="stylesheet" type="text/css" /> --%>
 <!-- CKEditor 스크립트 추가 -->
 <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
 </head>
