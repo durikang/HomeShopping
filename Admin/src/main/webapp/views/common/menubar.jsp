@@ -51,7 +51,7 @@
             <!-- 주문 관리 -->
             <li class="dropdown">주문 관리
                 <ul class="dropdown-menu">
-                    <li><a href="order_list.html">주문 목록</a></li>
+                    <li><a href="order_list.do">주문 목록</a></li>
                     <li><a href="order_stats.html">주문 통계</a></li>
                     <li><a href="delivery_status.html">배송 상태 관리</a></li>
                 </ul>

@@ -28,8 +28,7 @@
 				<c:forEach items="${list }" var="dto">
 					<tr>
 						<td>${dto.getCategory_No() }</td>
-						<td><a 
-						href="<%=request.getContextPath() %>/productCategoryContent.do?no=${dto.getCategory_No() }">${dto.getName() }</a></td>
+						<td><a href="<%=request.getContextPath() %>/productCategoryContent.do?no=${dto.getCategory_No() }">${dto.getName() }</a></td>
 						<td>${dto.getDescription() }</td>
 					</tr>
 				</c:forEach>

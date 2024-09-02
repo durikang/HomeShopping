@@ -126,7 +126,13 @@ public class OrderDAO {
 			while(rs.next()) {
 				OrderDTO dto = new OrderDTO();
 				
-				dto.setOrder_no(rs.getInt("oreder_no"));
+				dto.setOrder_no(rs.getInt("order_no"));
+				dto.setUser_no(rs.getInt("user_no"));
+				dto.setOrder_date(rs.getDate("order_date"));
+				dto.setStatus(rs.getString("status"));
+				dto.setTotal_amount(rs.getInt("total_amount"));
+				
+				list.add(dto);
 				
 			}
 			
@@ -134,6 +140,8 @@ public class OrderDAO {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			closeConn(rs, pstmt, con);
 		}
 		
 		
