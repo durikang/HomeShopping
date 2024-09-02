@@ -76,6 +76,7 @@
     }
 
     /* 대댓글 구분 스타일 */
+    /* 추가적으로 필요하면 더 깊은 레벨도 스타일링 가능 */
     .comment[data-node-level="2"] {
         margin-left: 40px;
         background-color: #f0f8ff;
@@ -90,8 +91,23 @@
         margin-left: 80px;
         background-color: #cce0ff;
     }
-
-    /* 추가적으로 필요하면 더 깊은 레벨도 스타일링 가능 */
+    /* 댓글 액션 버튼 스타일 */
+	.comment-actions {
+	    margin-top: 5px;
+	}
+	
+	.comment-actions a {
+	    margin-right: 10px;
+	    font-size: 14px;
+	    color: #007bff;
+	    cursor: pointer;
+	}
+	
+	.comment-actions a:hover {
+	    text-decoration: underline;
+	}
+	    
+    
 </style>
 </head>
 <body>
@@ -126,156 +142,14 @@
         <button type="button" onclick="location.href='boardUpdateForm.do?no=${info.boardNo}&userType=${info.userType}&status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">수정하기</button>
 
         <!-- 댓글 입력 폼 -->
-        <div class="comment-section">
-            <h3>댓글 작성</h3>
-            <form id="commentForm">
-                <input type="hidden" name="boardNo" value="${info.boardNo}">
-                <input type="hidden" name="userNo" value="${sessionScope.userNo}">
-                <input type="hidden" name="status" value="${status}">
-                <input type="hidden" name="currentPage" value="${currentPage}">
-                <div class="form-group">
-                    <label for="commentContent">내용:</label>
-                    <textarea id="commentContent" name="content" rows="4" class="input-field" required></textarea>
-                </div>
-                <button type="submit" class="btn btn_primary">댓글 작성</button>
-            </form>
-        </div>
+		<c:import url="board/import/boardCommentInsertForm.jsp"/>
 
         <!-- 기존 댓글 표시 -->
-		<div class="comment-list">
-		    <h3>댓글</h3>
-		    <div id="commentsContainer">
-		        <c:forEach var="comment" items="${comments}">
-		            <div class="comment" data-node-level="${comment.nodeLevel}" style="margin-left: ${comment.nodeLevel * 20}px;">
-		                <div class="comment-info">
-		                    <strong>${comment.userId}</strong>
-		                    <c:if test="${comment.userId == info.userId}">
-		                        <span class="author-label">(작성자)</span>
-		                    </c:if>
-		                    <span><fmt:formatDate value="${comment.createdAt}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
-		                </div>
-		                <div class="comment-content">
-		                    <c:out value="${comment.content}" escapeXml="false"/>
-		                </div>
-		                <!-- 댓글 달기 링크 항상 보임 -->
-		                <a href="#" class="reply-link" data-reply-no="${comment.replyNo}" data-user-id="${comment.userId}">댓글 달기</a>
-		                <!-- 대댓글 입력 폼 -->
-		                <div class="reply-form" id="reply-form-${comment.replyNo}">
-		                    <textarea class="reply-content" rows="3" placeholder="${comment.userId}의 답변을 입력하세요"></textarea>
-		                    <button class="submit-reply" data-parent-reply-no="${comment.replyNo}">대댓글 작성</button>
-		                </div>
-		            </div>
-		        </c:forEach>
-		    </div>
-		</div>
+		<c:import url="board/import/boardCommentList.jsp"/>
 
     </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // 일반 댓글 작성 처리
-    document.getElementById("commentForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        
-        var content = document.getElementById('commentContent').value;
-        if (content.trim() === "") {
-            alert("내용을 입력하세요.");
-            return;
-        }
 
-        var formData = {
-            boardNo: document.querySelector('input[name="boardNo"]').value || null,
-            userNo: document.querySelector('input[name="userNo"]').value || null || 4, // null일 경우 기본값 4
-            content: content,
-            parentReplyNo: null // 일반 댓글이므로 parentReplyNo는 null
-        };
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "BoardReplyInsert.do", true);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-        xhr.onload = function() {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                var response = JSON.parse(xhr.responseText);
-                if (response.success) {
-                    location.reload(); // 댓글이 성공적으로 추가된 후 페이지를 새로고침
-                } else {
-                    alert('댓글 등록에 실패했습니다.');
-                }
-            } else {
-                alert('댓글 등록에 실패했습니다.');
-            }
-        };
-
-        xhr.send(JSON.stringify(formData));
-    });
-
-    // 대댓글 폼 토글 처리
-    var replyLinks = document.querySelectorAll(".reply-link");
-    
-    replyLinks.forEach(function(link) {
-        link.addEventListener("click", function(event) {
-            event.preventDefault(); // 기본 동작 방지
-            var replyNo = event.target.getAttribute("data-reply-no");
-            var replyUserId = event.target.getAttribute("data-user-id");
-            var replyForm = document.getElementById("reply-form-" + replyNo);
-            var replyContentPlaceholder = replyForm.querySelector(".reply-content");
-
-            // " ~의 답변"을 placeholder에 설정
-            replyContentPlaceholder.placeholder = replyUserId + "의 답변을 입력하세요";
-
-            // 대댓글 폼을 토글(보이기/숨기기)
-            if (replyForm.style.display === "none" || replyForm.style.display === "") {
-                replyForm.style.display = "block";
-            } else {
-                replyForm.style.display = "none";
-            }
-        });
-    });
-
-    // 대댓글 작성 처리
-    var submitReplyButtons = document.querySelectorAll(".submit-reply");
-    
-    submitReplyButtons.forEach(function(button) {
-        button.addEventListener("click", function(event) {
-            var parentReplyNo = event.target.getAttribute("data-parent-reply-no");
-            var content = document.querySelector("#reply-form-" + parentReplyNo + " .reply-content").value;
-            
-            if (content.trim() === "") {
-                alert("내용을 입력하세요.");
-                return;
-            }
-
-            var formData = {
-                boardNo: document.querySelector('input[name="boardNo"]').value || null,
-                userNo: 4,  // admin 유저 고정
-                content: content,
-                parentReplyNo: parentReplyNo // 대댓글이므로 parentReplyNo 설정
-            };
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "BoardReplyInsert.do", true);
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-            xhr.onload = function() {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        location.reload(); // 대댓글이 성공적으로 추가된 후 페이지를 새로고침
-                    } else {
-                        alert('대댓글 등록에 실패했습니다.');
-                    }
-                } else {
-                    alert('대댓글 등록에 실패했습니다.');
-                }
-            };
-
-            xhr.send(JSON.stringify(formData));
-        });
-    });
-});
-
-</script>
 
 </body>
 </html>

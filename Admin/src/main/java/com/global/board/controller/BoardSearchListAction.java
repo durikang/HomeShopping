@@ -23,7 +23,7 @@ public class BoardSearchListAction implements Action {
 		// 게시판의 현재 위치
 		String subtitle = request.getParameter("subtitle");
 		// 검색 키워드
-		String searchKeyword = request.getParameter("searchKeyword").trim();
+		String searchKeyword = RequestParameterUtils.parseString(request.getParameter("searchKeyword").trim(), "");
 		
 		// 필터 파라미터들을 설정 및 필터 객체 생성
 		BoardFilter filter = new BoardFilter();
