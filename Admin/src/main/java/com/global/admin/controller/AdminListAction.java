@@ -8,11 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.global.action.Action;
 import com.global.action.View;
 
-public class AdminAction implements Action {
+public class AdminListAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+		
 		
 		return null;
 	}

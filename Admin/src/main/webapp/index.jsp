@@ -12,7 +12,7 @@
 <script src="<%=request.getContextPath() %>/resources/index/js/index.js"></script>
 
 <%
-//가데이터 생성
+//가데이터 생성	
 //관리자 객체 생성
 AdminDTO admin = new AdminDTO();
 admin.setUserNo(1);
