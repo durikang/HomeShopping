@@ -49,7 +49,7 @@
 				</tr>
 				<tr>
 					<th>상품 이미지</th>
-					<td><input type="file" name="product_image"></td>
+					<td><input type="file" name="image_url"></td>
 				</tr>
 				<tr>
 					<td colspan="2" align="center">
