@@ -1,4 +1,4 @@
-package com.global.orderitem.model;
+package com.global.delivery.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +11,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-public class OrderItemDAO {
+
+public class DeliveryDAO {
 	
 	Connection con = null;
 	PreparedStatement pstmt = null;
@@ -19,16 +20,16 @@ public class OrderItemDAO {
 	String sql = null;
 	
 	// 싱글톤
-	public static OrderItemDAO instance=null;
+	public static DeliveryDAO instance=null;
 
 	// 기본생성자
-	public OrderItemDAO() {}
+	public DeliveryDAO() {}
 
 
-	public static OrderItemDAO getInstance() {
+	public static DeliveryDAO getInstance() {
 
 		if (instance == null) {
-			instance = new OrderItemDAO();
+			instance = new DeliveryDAO();
 		}
 		return instance;
 	}
@@ -103,58 +104,47 @@ public class OrderItemDAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-	} // closeConn() end
-
-	public List<OrderItemDTO> getOrderItemList(int no){
 		
-		List<OrderItemDTO> list = null;
-		
+
+	}// closeConn() end
 	
+	public List<DeliveryDTO> getDeliveryList(){
+		
+		List<DeliveryDTO> list = new ArrayList<DeliveryDTO>();
+		
+		
+		
 		try {
 			openConn();
 			
-			sql = "select * from order_item where order_no = ?";
+			sql = "select * from delivery order by order_no asc";
 			
 			pstmt = con.prepareStatement(sql);
 			
-			pstmt.setInt(1, no);
-			
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
-				list = new ArrayList<OrderItemDTO>();
-				OrderItemDTO dto = new OrderItemDTO();
+			while(rs.next()) {
+				DeliveryDTO dto = new DeliveryDTO();
 				
-				dto.setOrder_item_no(rs.getInt("order_item_no"));
-				dto.setOreder_no(rs.getInt("order_no"));
-				dto.setProduct_no(rs.getInt("product_no"));
-				dto.setQuantity(rs.getInt("quantity"));
-				dto.setPrice(rs.getInt("price"));
-			
+				dto.setDelivery_no(rs.getInt("delivery_no"));
+				dto.setOrder_no(rs.getInt("order_no"));
+				dto.setDelivery_date(rs.getDate("delivery_date"));
+				dto.setDelivery_status(rs.getString("delivery_status"));
+				
 				list.add(dto);
-				
 			}
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
+		}finally {
 			closeConn(rs, pstmt, con);
 		}
-			
-		return list;
+		
+	 return list;
 	}// end
+
+	} 
 	
-	public int deleteOrder() {
-		
-		int result = 0;
-		
-		openConn();
-		
-		sql = "deletet";
-		
-		return result;
-	}
 	
-}
+
+
