@@ -35,12 +35,35 @@
 		 	</tr>
 		 	
 		 	<c:set var = "list" value = "${List }"/>
+		 	
+		 	<c:if test = "${!empty list }">
 		 		<c:forEach items = "${list }" var = "dto">
 		 			<tr>
 		 				<td>${dto.getNum() }</td>
+		 				<td>${dto.getName() }</td>
+		 				<td>${dto.getEmail() }</td>
+		 				<td>
+	                  		<input type = "button" value = "상세내역" onclick = "location.href='content.do?num=${dto.getNum()}'">
+	               		</td>
 		 			</tr>
 		 		</c:forEach>
+		 	</c:if>
+		 	
+		 	<c:if test = "${empty list }">
+		 		<tr>
+		 			<td colspan = "3" align = "center">
+		 				<h3>전체 관리자 리스트가 없습니다.</h3>
+		 			</td>
+		 		</tr>
+		 	</c:if>
 		 </table>
+		 
+		 <br>
+		<!-- 로그인한 유저만 게시글 작성 버튼 보이기 -->
+          <c:if test="${not empty sessionScope.user}">
+		 	<input type = "button" value = "등록" onclick = "location.href='adminInsertForm.do'">
+		  </c:if>
+		 
 	</div>
 </body>
 </html>

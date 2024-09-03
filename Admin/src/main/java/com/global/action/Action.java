@@ -1,6 +1,5 @@
 package com.global.action;
 
-
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
