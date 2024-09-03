@@ -8,7 +8,7 @@
     <ul>
         <li><a href="boardList.do?subtitle=${param.subtitle}">전체 게시글</a></li>
         <c:forEach var="category" items="${categoryList}">
-            <li><a href="boardCategoryFilter.do?categoryNo=${category.categoryNo}&subtitle=${category.name}&currentPage=${currentPage}">${category.name}</a></li>
+            <li><a href="boardCategoryFilter.do?categoryNo=${category.categoryNo}&subtitle=${category.name}&currentPage=${pi.currentPage}">${category.name}</a></li>
         </c:forEach>
     </ul>
 </div>
