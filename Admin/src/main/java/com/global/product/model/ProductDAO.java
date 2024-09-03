@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -109,7 +111,7 @@ public class ProductDAO {
 		
 		int result = 0, count = 0;
 		
-		int product_id = 0;
+		int product_no = 0;
 		
 		try {
 		
@@ -123,14 +125,13 @@ public class ProductDAO {
 		
 		if(rs.next()) {
 			
-			count = rs.getInt(1) + 1;
+			count = rs.getInt(1)+1;
 			
 			
 		}
 		
 		sql = "INSERT INTO PRODUCT VALUES(?,?,?,?,?,?,DEFAULT,SYSDATE,null, 'N',DEFAULT)";
 										
-		
 		
 		pstmt = con.prepareStatement(sql);
 		
@@ -144,7 +145,7 @@ public class ProductDAO {
 		
 		pstmt.executeUpdate();
 		
-		product_id = count;
+		product_no = count;
 		
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -154,18 +155,20 @@ public class ProductDAO {
 		}
 		
 		
-		return product_id;
+		return product_no;
 	}
 
 
-	public ProductDTO getProduct(int product_id) {
+	public ProductDTO getProduct(int product_no) {
 		ProductDTO product = null;
 		try {
 			openConn();
-			sql = "select * from product where product_id = ?";
+			
+			sql = "SELECT * FROM PRODUCT WHERE PRODUCT_NO = ?";
+			
 			pstmt = con.prepareStatement(sql);
 			
-			pstmt.setInt(1, product_id);
+			pstmt.setInt(1, product_no);
 			
 			rs = pstmt.executeQuery();
 			
@@ -191,6 +194,59 @@ public class ProductDAO {
 		}
 		
 		return product;
+	}
+
+
+	public List<ProductDTO> getProudctList() {
+		
+		List<ProductDTO> list = new ArrayList<ProductDTO>();
+		
+ 		
+		try {
+
+		openConn();
+		
+		sql = "SELECT P.PRODUCT_NO, P.CATEGORY_NO, I.IMAGE_URL, P.NAME, P.DESCRIPTION, "
+				+ "P.PRICE, P.STOCK_QUANTITY, P.VIEWS, P.CREATED_AT, P.UPDATED_AT, P.IS_DELETED, P.TOTAL_SALES "
+				+ "FROM PRODUCT P INNER JOIN PRODUCT_IMAGE I ON P.PRODUCT_NO = I.PRODUCT_NO";
+		
+		pstmt = con.prepareStatement(sql);
+		
+		rs = pstmt.executeQuery();
+		
+		while (rs.next()) {
+			ProductDTO dto = new ProductDTO();
+			
+			
+			dto.setProduct_no(rs.getInt("product_no"));
+			dto.setCategory_no(rs.getString("category_no"));
+			dto.setImage_url(rs.getString("image_url"));
+			dto.setName(rs.getString("name"));
+			dto.setDescription(rs.getString("description"));
+			dto.setPrice(rs.getInt("price"));
+			dto.setStock_quantity(rs.getInt("stock_quantity"));
+			dto.setViews(rs.getInt("views"));
+			dto.setCreated_at(rs.getDate("created_at"));
+			dto.setUpdated_at(rs.getDate("updated_at"));
+			dto.setIs_deleted(rs.getString("is_deleted"));
+			dto.setTotal_sales(rs.getInt("total_sales"));
+			
+			list.add(dto);
+			
+		}
+			
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+			
+		}
+		
+		
+		return list;
+		
 	}
 
 
