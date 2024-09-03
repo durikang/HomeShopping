@@ -20,8 +20,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- CKEditor 스크립트 추가 -->
-<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+<!-- CKEditor 5 스크립트 추가 -->
+<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
 <!-- 내비게이션 바 -->
 <nav class="navbar">
     <div class="container">

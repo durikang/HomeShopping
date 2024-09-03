@@ -4,7 +4,7 @@
     테이블 영역
  */
 table {
-    width: 90%;
+    width: 100%;
     max-width: 1380px;
     border-collapse: separate; /* 분리된 테이블 셀로 변경 */
     border-spacing: 0; /* 셀 간의 간격 제거 */

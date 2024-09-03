@@ -22,6 +22,9 @@ DROP TABLE ADMIN_ROLE CASCADE CONSTRAINTS;
 DROP TABLE CUSTOMER CASCADE CONSTRAINTS;
 DROP TABLE USERS CASCADE CONSTRAINTS;
 DROP TABLE USER_LOG CASCADE CONSTRAINTS; -- 추가된 로그 테이블
+DROP TABLE USER_WALLET CASCADE CONSTRAINTS; -- 유저 지갑 관리 테이블 삭제 구문
+DROP TABLE COMPANY_REVENUE CASCADE CONSTRAINTS; -- 회사 수익 관리 테이블 삭제 구문
+DROP TABLE BOARD_VISIT CASCADE CONSTRAINTS; 
 
 -- 1. 사용자 정보를 관리하는 테이블
 CREATE TABLE USERS (
@@ -119,13 +122,16 @@ CREATE TABLE PRODUCT (
     DESCRIPTION VARCHAR2(4000),  -- 상품 정보
     PRICE NUMBER NOT NULL,  -- 가격
     STOCK_QUANTITY NUMBER,  -- 재고 수량
-    VIEWS NUMBER DEFAULT 0,  -- 조회수 추가
+    VIEWS NUMBER DEFAULT 0,  -- 조회수
     CREATED_AT DATE DEFAULT SYSDATE,  -- 상품 등록일
     UPDATED_AT DATE,  -- 상품 수정일
     IS_DELETED CHAR(1) DEFAULT 'N' CHECK (IS_DELETED IN ('Y', 'N')), -- 상품 삭제 유무  
     TOTAL_SALES NUMBER DEFAULT 0,  -- 상품 판매량
-    FOREIGN KEY (CATEGORY_NO) REFERENCES PRODUCT_CATEGORY(CATEGORY_NO)  
+    USER_NO NUMBER,  -- 상품을 등록한 어드민의 USER_NO
+    FOREIGN KEY (CATEGORY_NO) REFERENCES PRODUCT_CATEGORY(CATEGORY_NO),  
+    FOREIGN KEY (USER_NO) REFERENCES USERS(USER_NO)  -- 어드민 정보를 참조
 );
+
 
 -- 10. 상품 이미지를 관리하는 테이블 (PRODUCT 테이블 참조)
 CREATE TABLE PRODUCT_IMAGE (
@@ -270,3 +276,46 @@ CREATE TABLE USER_LOG (
     CREATED_AT DATE DEFAULT SYSDATE,  -- 행동 발생 시각 (기본값: 현재 날짜)
     FOREIGN KEY (USER_NO) REFERENCES USERS(USER_NO)  -- USERS 테이블 참조
 );
+-- 23. 게시판 방문 기록
+CREATE TABLE BOARD_VISIT (
+    VISIT_ID NUMBER PRIMARY KEY,
+    USER_NO NUMBER,
+    BOARD_NO NUMBER,
+    VISIT_DATE DATE DEFAULT SYSDATE,
+    FOREIGN KEY (USER_NO) REFERENCES USERS(USER_NO),
+    FOREIGN KEY (BOARD_NO) REFERENCES BOARD(BOARD_NO)
+);
+
+
+--유저 지갑 관리 테이블 (USER_WALLET)
+--설명:
+--
+--USER_WALLET 테이블은 각 유저의 지갑 정보를 관리합니다.
+--유저가 쇼핑몰에서 구매할 때 사용되는 잔액이 기록됩니다.
+--잔액이 변동될 때마다 LAST_UPDATED 날짜가 갱신됩니다
+CREATE TABLE USER_WALLET (
+    WALLET_NO NUMBER PRIMARY KEY,  -- 지갑 고유 번호
+    USER_NO NUMBER NOT NULL,  -- 사용자 번호 (USERS 테이블 참조)
+    BALANCE NUMBER DEFAULT 0,  -- 지갑 잔액 (기본값 0) BALANCE 컬럼을 통해 유저가 물건을 구매할 때 차감되거나, 환불될 때 다시 추가되는 금액을 관리합니다.
+    LAST_UPDATED DATE DEFAULT SYSDATE,  -- 지갑 잔액이 마지막으로 업데이트된 날짜 LAST_UPDATED 컬럼을 통해 마지막으로 지갑이 갱신된 시점을 기록하여 유저의 최근 활동을 추적할 수 있습니다.
+    FOREIGN KEY (USER_NO) REFERENCES USERS(USER_NO)  -- USERS 테이블을 참조하는 외래 키
+);
+
+-- 회사 수익 관리 테이블 (COMPANY_REVENUE)
+--설명:
+--
+--COMPANY_REVENUE 테이블은 각 주문으로 인해 발생한 회사의 수익을 기록합니다.
+--각 수익 항목은 주문 번호(ORDER_NO)와 연결되며, 언제 수익이 발생했는지 기록합니다.
+
+CREATE TABLE COMPANY_REVENUE (
+    REVENUE_NO NUMBER PRIMARY KEY,  -- 수익 고유 번호
+    ORDER_NO NUMBER,  -- 주문 번호 (ORDERS 테이블 참조)
+    AMOUNT NUMBER NOT NULL,  -- 수익 금액
+    REVENUE_DATE DATE DEFAULT SYSDATE,  -- 수익 발생 날짜
+    FOREIGN KEY (ORDER_NO) REFERENCES ORDERS(ORDER_NO)  -- ORDERS 테이블을 참조하는 외래 키
+);
+--수익 기록: AMOUNT 컬럼을 통해 각 주문에서 발생한 수익을 기록합니다. 이는 총 매출 분석에 중요한 데이터를 제공합니다.
+--수익 발생 시점 추적: REVENUE_DATE 컬럼을 통해 수익이 발생한 날짜를 기록, 이를 통해 특정 기간 동안의 매출 분석이 가능합니다.
+
+
+
