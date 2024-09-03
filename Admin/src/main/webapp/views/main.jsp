@@ -8,9 +8,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="${contextPath }/resources/master.css" rel ="stylesheet" type="text/css"/>
 <title>관리지 페이지</title>
-<style>
-</style>
+<script type="text/javascript">
+/* window.addEventListener('load', adjustMainContentHeight);
+window.addEventListener('resize', adjustMainContentHeight);
 
+function adjustMainContentHeight() {
+    var boardContainer = document.querySelector('.board-container');
+    var mainContent = document.querySelector('.main-content');
+
+    if (boardContainer && mainContent) {
+        // mainContent의 높이를 boardContainer 높이의 90%로 설정
+        boardContainer.style.height = (mainContent.offsetHeight - 1000) + 'px';
+    }
+} */
+
+
+</script>
 
 </head>
 <body>
