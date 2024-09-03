@@ -16,12 +16,13 @@ public class CartItemListAction implements Action {
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
-		int no = Integer.parseInt(request.getParameter("no").trim());
+		int No = Integer.parseInt(request.getParameter("no").trim());
 		
 		CartItemDAO dao = CartItemDAO.getInstanceCartItem();	
 		
-		List<CartItemDTO> cartItemList = dao.getCartItemList(no);
+		List<CartItemDTO> cartItemList = dao.getCartItemList(No);
 		
+		request.setAttribute("no", No);
 		request.setAttribute("CartItemList", cartItemList);
 		
 		return new View("main.go").setUrl("/views/cartitem/cartitemList.jsp");

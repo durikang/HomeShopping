@@ -135,8 +135,15 @@ public class CartItemDAO {
 		try {
 			openConn();
 			
-			sql ="select * from users join cart using(user_no) join cart_item using(cart_no) join product using(product_no) join product_category using(CATEGORY_NO) where user_no = ?";
-			
+			sql ="select ci.CART_ITEM_NO,c.CART_NO,p.PRODUCT_NO,ci.QUANTITY,ci.ADDED_AT,ci.UPDATED_AT,p.NAME,p.PRICE from cart c join cart_item ci on(c.cart_no=ci.cart_no) join product p on(ci.product_no = p.product_no) join product_category pc on(p.CATEGORY_NO = pc.CATEGORY_NO) where user_no = ?";
+			/*
+			sql ="select ci.CART_ITEM_NO,c.CART_NO,p.PRODUCT_NO,ci.QUANTITY,ci.ADDED_AT,ci.UPDATED_AT,p.NAME,p.PRICE"
+					+ "from cart c "
+					+ "join cart_item ci on(c.cart_no=ci.cart_no) "
+					+ "join product p on(ci.product_no = p.product_no) "
+					+ "join product_category pc on(p.CATEGORY_NO = pc.CATEGORY_NO)"
+					+ "where user_no = ?";
+			*/
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, no);
 			
@@ -145,6 +152,7 @@ public class CartItemDAO {
 			while (rs.next()) {
 				CartItemDTO dto = new CartItemDTO();
 				
+	
 				dto.setCartItem_no(rs.getInt("CART_ITEM_NO"));
 				dto.setCartItem_cartNo(rs.getInt("CART_NO"));
 				dto.setCartItem_productNo(rs.getInt("PRODUCT_NO"));
@@ -152,8 +160,8 @@ public class CartItemDAO {
 				dto.setCartItem_addedAt(rs.getDate("ADDED_AT"));
 				dto.setCartItem_updatedAt(rs.getDate("UPDATED_AT"));
 				
-				dto.setCartItem_userNo(rs.getInt("USER_NO"));
-				
+				dto.setCartItem_productName(rs.getString("NAME"));
+				dto.setCartItem_productPrice(rs.getInt("PRICE"));
 				
 				list.add(dto);
 			}

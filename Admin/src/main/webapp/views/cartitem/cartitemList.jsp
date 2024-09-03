@@ -9,8 +9,17 @@
 </head>
 <body>
 	<div align="center">
-	<c:set var="list" value="${CartItemList }"/>
-		<h3>님</h3>
+		<h3>장바구니 목록</h3>
+		<br><br>
+		<table>
+			<c:forEach var ="item" items="${ CartItemList }">
+				<tr>
+					<td>${ item.cartItem_cartNo }</td>
+				</tr>
+			</c:forEach>
+		</table>
+		
+		
 	</div>
 </body>
 </html>
