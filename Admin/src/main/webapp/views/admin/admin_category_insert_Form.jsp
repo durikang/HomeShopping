@@ -9,45 +9,31 @@
 <body>
 	<div align = "center">
 		<hr width = "50%" color = "red">
-			<h3>관리자 등록 페이지</h3>
+			<h3>관리자 직책 등록 페이지</h3>
 		<hr width = "50%" color = "red">
 		
 		<br><br>
 		
-		<form method = "post" action = "<%= request.getContextPath() %>/insert_ok.do">
+		<form method = "post" action = "${contextPath }/">
 			<table border = "1" width = "auto">
 			<tr>
-				<th>아이디</th>
+				<th>직책 코드</th>
 				<td>
-					<input type = "text" name = "id">
+					<input type = "text" name = "role_code">
 				</td>
 			</tr>
 			
 			<tr>
-				<th>비밀번호</th>
+				<th>직책 이름</th>
 				<td>
-					<input type = "password" name = "pwd">
+					<input type = "text" name = "role_name">
 				</td>
 			</tr>
-			
-			<tr>
-				<th>이름</th>
-				<td>
-					<input type = "text" name = "name">
-				</td>
-			</tr>
-			
-			<tr>
-				<th>이메일</th>
-				<td>
-					<input type = "text" name = "email">
-				</td>
-			</tr>
-			
+
 			<tr>
 				<td colspan = "2" align = "center">
 					<input type = "submit" value = "등록">&nbsp;
-					<input type = "submit" value = "다시">
+					<input type = "reset" value = "다시">
 				</td>
 			</tr>
 			</table>
