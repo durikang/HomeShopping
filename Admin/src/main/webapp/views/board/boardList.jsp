@@ -74,11 +74,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				        <td class="table_header info" colspan="9" align="right">전체 게시글 수: ${count}</td>
 				    </tr>
 				    <tr>
-				        <th class="border-th">BoardNo.</th>
-				        <th class="border-th">UserID. <span class="subtitle">(userNo)</span></th>
+				        <th class="border-th board-th-boardNo">BoardNo.</th>
 				        <th class="border-th">Category <span class="subtitle">(categoryCode)</span></th>
-				        <th class="border-th">제목</th>
-				        <th class="border-th">내용</th>
+				        <th class="border-th">UserID. <span class="subtitle">(userNo)</span></th>
+				        <th class="border-th board-th-title">제목</th>
+				        <!-- <th class="border-th">내용</th> -->
 				        <th class="border-th board-th-createAt">작성일</th>
 				        <th class="border-th board-th-updateAt">수정일</th>
 				        <th class="border-th board-th-views">조회수</th>
@@ -89,12 +89,13 @@ document.addEventListener('DOMContentLoaded', function() {
 					        <c:forEach items="${list}" var="board" varStatus="status">
 					            <!-- 제목과 내용을 잘라서 변수에 저장 -->
  
-								<c:set var="truncatedTitle" value="${StringUtils.truncateWithEllipsis(board.title, 20)}" />
+								<c:set var="truncatedTitle" value="${StringUtils.truncateWithEllipsis(board.title, 17)}" />
 								<c:set var="truncatedContent" value="${StringUtils.truncateWithEllipsis(board.content, 14)}" />
 					
 					            <!-- 각 행의 데이터를 출력 -->
 					            <tr class="trlist" data-id="${board.boardNo}" data-user-type="${board.userType}">
 					                <td class="board-td">${board.boardNo}</td>
+					                <td class="board-td">${board.categoryName} <span class="subtitle">(${board.categoryNo})</span></td>
 					                <td class="board-td">
 					                    <c:choose>
 					                        <c:when test="${board.userNo == null}">
@@ -106,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					                        </c:otherwise>
 					                    </c:choose>
 					                </td>
-					                <td class="board-td">${board.categoryName} <span class="subtitle">(${board.categoryNo})</span></td>
 									<td class="board-td">
 									    <!-- 제목과 함께 댓글 수 표시 -->
 									    <c:out value="${truncatedTitle}" />
@@ -114,10 +114,10 @@ document.addEventListener('DOMContentLoaded', function() {
 									        <span class="commentCount">[${board.commentCount}]</span>
 									    </c:if>
 									</td>
-					                <td class="board-td">
+<%-- 					                <td class="board-td">
 					                    <!-- stripHtml 메서드 결과를 명확히 문자열로 처리 -->
 					                    <c:out value="${truncatedContent}" />
-					                </td>
+					                </td> --%>
 					                <td class="board-td"><fmt:formatDate value="${board.createAt}" /></td>
 					                <td class="board-td"><fmt:formatDate value="${board.updateAt}" /></td>
 					                <td class="board-td">${board.views}</td>
