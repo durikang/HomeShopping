@@ -14,78 +14,88 @@ public class CartItemDTO {
 	private String cartItem_productName;
 	private int cartItem_productPrice;
 	
+	private int cartItem_userNo;
 	private String cartItem_userName;
-
+	
 	public int getCartItem_no() {
 		return cartItem_no;
 	}
-
+	
 	public void setCartItem_no(int cartItem_no) {
 		this.cartItem_no = cartItem_no;
 	}
-
+	
 	public int getCartItem_cartNo() {
 		return cartItem_cartNo;
 	}
-
+	
 	public void setCartItem_cartNo(int cartItem_cartNo) {
 		this.cartItem_cartNo = cartItem_cartNo;
 	}
-
+	
 	public int getCartItem_productNo() {
 		return cartItem_productNo;
 	}
-
+	
 	public void setCartItem_productNo(int cartItem_productNo) {
 		this.cartItem_productNo = cartItem_productNo;
 	}
-
+	
 	public int getCartItem_quantity() {
 		return cartItem_quantity;
 	}
-
+	
 	public void setCartItem_quantity(int cartItem_quantity) {
 		this.cartItem_quantity = cartItem_quantity;
 	}
-
+	
 	public Date getCartItem_addedAt() {
 		return cartItem_addedAt;
 	}
-
+	
 	public void setCartItem_addedAt(Date cartItem_addedAt) {
 		this.cartItem_addedAt = cartItem_addedAt;
 	}
-
+	
 	public Date getCartItem_updatedAt() {
 		return cartItem_updatedAt;
 	}
-
+	
 	public void setCartItem_updatedAt(Date cartItem_updatedAt) {
 		this.cartItem_updatedAt = cartItem_updatedAt;
 	}
-
+	
 	public String getCartItem_productName() {
 		return cartItem_productName;
 	}
-
+	
 	public void setCartItem_productName(String cartItem_productName) {
 		this.cartItem_productName = cartItem_productName;
 	}
-
+	
 	public int getCartItem_productPrice() {
 		return cartItem_productPrice;
 	}
-
+	
 	public void setCartItem_productPrice(int cartItem_productPrice) {
 		this.cartItem_productPrice = cartItem_productPrice;
 	}
-
+	
+	public int getCartItem_userNo() {
+		return cartItem_userNo;
+	}
+	
+	public void setCartItem_userNo(int cartItem_userNo) {
+		this.cartItem_userNo = cartItem_userNo;
+	}
+	
 	public String getCartItem_userName() {
 		return cartItem_userName;
 	}
-
+	
 	public void setCartItem_userName(String cartItem_userName) {
 		this.cartItem_userName = cartItem_userName;
 	}
+
 	
 }

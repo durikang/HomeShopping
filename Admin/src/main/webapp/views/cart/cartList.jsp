@@ -10,31 +10,41 @@
 </head>
 <body>
 	<div align="center">
-		<hr width="50%" color="red">
-			<h3>장바구니 전체리스트</h3>
-		<hr width="50%" color="red">
+		<h3>장바구니 전체리스트</h3>
+
 		<br><br>
-		<c:set var="list" value="CartList"></c:set>
-		<table border="1" width="300">
 		
+		<table width="300">
+		
+		<c:set var="list" value="${CartList }" />
 			<tr>
 				<th>장바구니 No.</th>
 				<th>유저이름</th>
 				<th>장바구니 생성일</th>
+				<th>장바구니 수정</th>
+				<th>장바구니 삭제</th>
 			</tr>
 			
-			<c:if test="${not empty list }">
+			<c:if test="${!empty list }">
 				<c:forEach  items="${list }" var="dto" >
 					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
+						<td><a href="<%=request.getContextPath()%>/cartItem_list.do?no=${dto.getCart_userNo() }">${dto.getCart_no() }</a></td>
+						<td>${dto.getCart_userNo() }</td>
+						<td>
+							<fmt:formatDate value="${dto.getCart_createdAt() }"/>
+						</td>
+						<td>
+							<input type="button" value="수정" onclick="location.href='cartItem_update.do?no=${dto.getCart_userNo()}'">
+						</td>
+						<td>
+							<input type="button" value="삭제" onclick="location.href='cartItem_delete.do?no=${dto.getCart_userNo()}'">
+						</td>
 					</tr>
 				</c:forEach>
 			</c:if>
 				<c:if test="${empty list }">
 				<tr>
-					<td colspan="3" align="center">
+					<td colspan="5" align="center">
 						<h3>장바구니가 비어있습니다.</h3>
 					</td>
 					</tr>

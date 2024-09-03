@@ -12,6 +12,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.global.cart.model.CartDAO;
+
 public class CartItemDAO {
 	
 	//DB를 연결해주는 객체
@@ -30,8 +32,8 @@ public class CartItemDAO {
 	// 외부에서 접근할 수 있도록 해 주는 메서드
 	public static CartItemDAO getInstanceCartItem() {
 		
-		if(instance != null) {
-			instance = new CartItemDAO(); 
+		if(instance==null) {
+			instance = new CartItemDAO();
 		}
 		
 		return instance; 
@@ -126,16 +128,17 @@ public class CartItemDAO {
 	} //insertCartItem end
 	
 	//cartItem 테이블 정보 전체 조회하는 메서드 
-	public List<CartItemDTO> getCartItemList(){
+	public List<CartItemDTO> getCartItemList(int no){
+		
 		List<CartItemDTO> list = new ArrayList<CartItemDTO>();
 		
-	
 		try {
 			openConn();
 			
-			sql ="SELECT * FROM CART_ITEM ORDER BY  CART_ITEM_NO DESC ";
+			sql ="select * from users join cart using(user_no) join cart_item using(cart_no) join product using(product_no) join product_category using(CATEGORY_NO) where user_no = ?";
 			
 			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, no);
 			
 			rs = pstmt.executeQuery();
 			
@@ -149,13 +152,16 @@ public class CartItemDAO {
 				dto.setCartItem_addedAt(rs.getDate("ADDED_AT"));
 				dto.setCartItem_updatedAt(rs.getDate("UPDATED_AT"));
 				
+				dto.setCartItem_userNo(rs.getInt("USER_NO"));
+				
+				
 				list.add(dto);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-				}finally {
-						closeConn(rs, pstmt, con);
-					}
+		}finally {
+			closeConn(rs, pstmt, con);
+		}
 		
 		return list;
 		
