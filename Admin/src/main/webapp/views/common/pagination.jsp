@@ -7,7 +7,7 @@
     <%-- 이전 버튼 --%>
     <c:if test="${pi.currentPage > 1}">
         <a
-            href="${contextPath}/${address}?currentPage=${pi.currentPage - 1}&isDeleted=${filter.isDeleted}"
+            href="${contextPath}/${address}?currentPage=${pi.currentPage - 1}&status=${status}&subtitle=${subtitle}"
             class="pagination-button">이전</a>
     </c:if>
 
@@ -19,7 +19,7 @@
             </c:when>
             <c:otherwise>
                 <a
-                    href="${contextPath}/${address}?currentPage=${pageNum}&isDeleted=${filter.isDeleted}"
+                    href="${contextPath}/${address}?currentPage=${pageNum}&status=${status}&subtitle=${subtitle}"
                     class="pagination-button">${pageNum}</a>
             </c:otherwise>
         </c:choose>
@@ -28,7 +28,7 @@
     <%-- 다음 버튼 --%>
     <c:if test="${pi.currentPage < pi.maxPage}">
         <a
-            href="${contextPath}/${address}?currentPage=${pi.currentPage + 1}&isDeleted=${filter.isDeleted}"
+            href="${contextPath}/${address}?currentPage=${pi.currentPage + 1}&status=${status}&subtitle=${subtitle}"
             class="pagination-button">다음</a>
     </c:if>
 </div>

@@ -1,3 +1,4 @@
+<%@page import="com.global.admin.model.UsersDTO"%>
 <%@ page import="com.global.board.model.BoardDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
@@ -6,40 +7,42 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>게시판 리스트</title>
 <script type="text/javascript">
-
-//JavaScript 함수: 클릭한 행의 ID와 userType을 가져와서 상세 페이지로 이동
+// JavaScript 함수: 클릭한 행의 ID와 userType을 가져와서 상세 페이지로 이동
 function goToDetailPage(event) {
- const target = event.currentTarget;
- const No = target.getAttribute('data-id');
- const userType = target.getAttribute('data-user-type');
- const currentPage = ${pi.currentPage};  // pi.currentPage를 자바스크립트 변수로 설정
- const status = '${status}';
- 
- if (No) {
-     window.location.href = '${contextPath}/boardDetailForm.do?boardNo=' + No + '&userType=' + userType + '&status=' + status + '&currentPage=' + currentPage;
- }
+    const target = event.currentTarget;
+    const No = target.getAttribute('data-id');
+    const userType = target.getAttribute('data-user-type');
+    const currentPage = ${pi.currentPage};  // pi.currentPage를 자바스크립트 변수로 설정
+    const status = '${status}';
+
+    if (No) {
+        // 서버에 방문 기록 저장 요청
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '${contextPath}/boardSaveVisit.do', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        
+        xhr.send('userNo=${sessionScope.user.userNo}&boardNo=' + No);
+        
+        // 페이지 이동
+        window.location.href = '${contextPath}/boardDetailForm.do?boardNo=' + No + '&userType=' + userType + '&status=' + status + '&currentPage=' + currentPage;
+    }
 }
 
-//모든 행에 클릭 이벤트 리스너 추가
+// 모든 행에 클릭 이벤트 리스너 추가
 document.addEventListener('DOMContentLoaded', function() {
- const rows = document.querySelectorAll('table tr[data-id]');
-
- rows.forEach(row => {
-     row.addEventListener('click', goToDetailPage);
- });
+    const rows = document.querySelectorAll('table tr[data-id]');
+    rows.forEach(row => {
+        row.addEventListener('click', goToDetailPage);
+    });
 });
 </script>
-
-<style>
-
-</style>
-
 </head>
 <body>
 	<div class="title">
@@ -65,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			<c:import url="board/import/boardFilter.jsp" />
 
             <!-- 게시판 테이블 -->
-            <div class="table-container">
+            <div class="table-container board-container">
                 <table>
 				    <tr>
 				        <td class="table_header info" colspan="9" align="right">전체 게시글 수: ${count}</td>
@@ -76,10 +79,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				        <th class="border-th">Category <span class="subtitle">(categoryCode)</span></th>
 				        <th class="border-th">제목</th>
 				        <th class="border-th">내용</th>
-				        <th class="border-th">작성일</th>
-				        <th class="border-th">수정일</th>
-				        <th class="border-th">조회수</th>
-				        <th class="border-th">상태</th>
+				        <th class="border-th board-th-createAt">작성일</th>
+				        <th class="border-th board-th-updateAt">수정일</th>
+				        <th class="border-th board-th-views">조회수</th>
+				        <th class="border-th board-th-status">상태</th>
 				    </tr>
 				    <c:choose>
 					    <c:when test="${not empty list}">
@@ -87,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					            <!-- 제목과 내용을 잘라서 변수에 저장 -->
  
 								<c:set var="truncatedTitle" value="${StringUtils.truncateWithEllipsis(board.title, 20)}" />
-								<c:set var="truncatedContent" value="${StringUtils.truncateWithEllipsis(board.content, 30)}" />
+								<c:set var="truncatedContent" value="${StringUtils.truncateWithEllipsis(board.content, 14)}" />
 					
 					            <!-- 각 행의 데이터를 출력 -->
 					            <tr class="trlist" data-id="${board.boardNo}" data-user-type="${board.userType}">
@@ -132,14 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					            </tr>
 					        </c:forEach>
 					    </c:when>
-					    <c:otherwise>
-							<!-- 빈 행 추가 -->
-							<c:forEach var="rowIndex" begin="${list.size() + 1}" end="100">
-							    <tr class="trlist">
-						            <td colspan="9" class="board-td" style="height: 40px;">데이터가 존재하지 않습니다</td> <!-- 빈 셀 생성 -->
-							    </tr>
-							</c:forEach>
-					    </c:otherwise>
 					</c:choose>
 				    <tr>
 				        <td class="table_bottom button" colspan="9" align="center">

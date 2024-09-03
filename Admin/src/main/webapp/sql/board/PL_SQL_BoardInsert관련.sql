@@ -1,143 +1,81 @@
 -- 아래 insert 구문은 board게시글을 테스트하기 위해 필요한 준비물입니다.
 
--- 1. USERS 테이블에 회원과 관리자를 추가
+-- USERS 테이블에 관리자 데이터 삽입
 INSERT INTO USERS (USER_NO, USER_ID, PASSWORD, NAME, EMAIL, USER_TYPE, IS_DELETED, CREATED_AT, UPDATED_AT)
-VALUES (1, 'test1', '1234', 'John Doe', 'test1@example.com', 'CUSTOMER', 'N', SYSDATE, SYSDATE);
+VALUES (1, 'admin', '1234', '관리자', 'admin@example.com', 'ADMIN', 'N', SYSDATE, SYSDATE);
 
-INSERT INTO USERS (USER_NO, USER_ID, PASSWORD, NAME, EMAIL, USER_TYPE, IS_DELETED, CREATED_AT, UPDATED_AT)
-VALUES (4, 'admin', '1234', 'Admin User', 'admin@example.com', 'ADMIN', 'N', SYSDATE, SYSDATE);
-
--- 2. CUSTOMER 테이블에 회원 정보를 추가
-INSERT INTO CUSTOMER (USER_NO, AGE, JOB, LOCATION, MILEAGE, LAST_LOGIN_DATE, TOTAL_PURCHASE_AMOUNT)
-VALUES (1, 30, 'Software Developer', 'New York', 1000, SYSDATE, 5000);
-
--- 3. ADMIN_ROLE 테이블에 관리자 역할을 추가
-INSERT INTO ADMIN_ROLE (ROLE_CODE, ROLE_NAME)
+-- ADMIN 테이블에 관리자 역할 데이터 삽입
+INSERT INTO ADMIN_ROLE
 VALUES ('ADMIN001', '최고 관리자');
 
--- 4. ADMIN 테이블에 관리자 정보를 추가
-INSERT INTO ADMIN (USER_NO, ROLE_CODE)
-VALUES (4, 'ADMIN001');
 
+-- ADMIN 테이블에 관리자 역할 데이터 삽입
+INSERT INTO ADMIN (USER_NO, ROLE_CODE)
+VALUES (1, 'ADMIN001');
+
+-- USERS 테이블에 고객 데이터 삽입
+INSERT INTO USERS (USER_NO, USER_ID, PASSWORD, NAME, EMAIL, USER_TYPE, IS_DELETED, CREATED_AT, UPDATED_AT)
+VALUES (2, 'Tester', '1234', '고객1', 'tester@example.com', 'CUSTOMER', 'N', SYSDATE, SYSDATE);
+
+-- CUSTOMER 테이블에 고객 정보 데이터 삽입
+INSERT INTO CUSTOMER (USER_NO, AGE, JOB, LOCATION, MILEAGE, LAST_LOGIN_DATE, TOTAL_PURCHASE_AMOUNT)
+VALUES (2, 30, '프로그래머', '서울', 1000, SYSDATE, 50000);
 
 commit;
 
 -- 해당 프로시저는 유저번호 4번인 유저가 게시글 100개를 작성하는 프로시저입니다.
 -- 아래 프로시저를 사용하기 위한 조건으로 유저 번호와 카테고리 코드가 존재해야합니다.
 
-
 DECLARE
-    v_user_no NUMBER := 4;
-    v_category_code VARCHAR2(10);
-    v_title VARCHAR2(100);
-    v_content CLOB;
+    v_user_no NUMBER;
+    v_category_no VARCHAR2(300);
+    v_title VARCHAR2(200);
+    v_content VARCHAR2(4000);
+    v_created_at DATE;
+    v_random_index NUMBER;
     
-    -- 랜덤 한글 문자열 생성 함수
-    FUNCTION random_korean_string(p_length IN NUMBER) RETURN VARCHAR2 IS
-        v_result VARCHAR2(1000);
-        v_choseong NUMBER;
-        v_jungseong NUMBER;
-        v_jongseong NUMBER;
-        v_korean_char NUMBER;
-    BEGIN
-        FOR i IN 1..p_length LOOP
-            -- 초성, 중성, 종성 랜덤 선택
-            v_choseong := TRUNC(DBMS_RANDOM.VALUE(0, 19));
-            v_jungseong := TRUNC(DBMS_RANDOM.VALUE(0, 21));
-            v_jongseong := TRUNC(DBMS_RANDOM.VALUE(0, 28));
-            
-            -- 유니코드 한글 계산
-            v_korean_char := 44032 + (v_choseong * 588) + (v_jungseong * 28) + v_jongseong;
-            
-            -- 결과 문자열에 추가
-            v_result := v_result || CHR(v_korean_char);
-        END LOOP;
-        RETURN v_result;
-    END;
+    -- 제목 및 내용 예시
+    TYPE t_lorem_array IS TABLE OF VARCHAR2(4000);
+    v_titles t_lorem_array := t_lorem_array(
+        '안녕하세요, 새로운 공지가 있습니다',
+        '중요: 필독 공지사항 안내',
+        '업데이트: 필수 항목 변경 안내',
+        '이벤트 소식: 참여하세요!',
+        '긴급 공지: 서버 점검 안내'
+    );
+    
+    v_contents t_lorem_array := t_lorem_array(
+        '이 공지사항은 중요한 정보를 담고 있습니다. 자세한 내용을 확인하시고 필요한 조치를 취해주세요.',
+        '여러분, 이번 공지사항에서는 새로운 업데이트에 대해 다루고 있습니다. 반드시 읽어주시기 바랍니다.',
+        '안녕하세요, 필수 항목에 대한 변경 사항을 안내드립니다. 이 변경 사항은 다음 주부터 적용됩니다.',
+        '이벤트가 곧 시작됩니다! 많은 참여 부탁드리며, 참여 방법은 아래와 같습니다.',
+        '긴급: 이번 서버 점검은 예정된 시간보다 길어질 수 있습니다. 미리 양해 부탁드립니다.'
+    );
 BEGIN
     FOR i IN 1..100 LOOP
-        -- 카테고리 코드 랜덤 선택
-        v_category_code := CASE MOD(i, 2) 
-                             WHEN 0 THEN 'B.C1000' 
-                             ELSE 'B.C1010' 
-                           END;
-        
-        -- 랜덤 제목 생성 (4~5자)
-        v_title := random_korean_string(TRUNC(DBMS_RANDOM.VALUE(4, 6)));
-        
-        -- 디버깅을 위한 로그 출력
-        DBMS_OUTPUT.PUT_LINE('Generated Title: ' || v_title);
-        
-        -- 랜덤 내용 생성 (10줄 이상)
-        v_content := '';
-        FOR j IN 1..10 LOOP
-            v_content := v_content || random_korean_string(30) || CHR(10); -- 한 줄에 30자
-        END LOOP;
-        
+        -- USER_NO와 CATEGORY_NO를 랜덤하게 선택
+        v_user_no := CASE WHEN MOD(i, 2) = 0 THEN 1 ELSE 2 END;
+        v_category_no := CASE WHEN MOD(i, 2) = 0 THEN 'B.C1000' ELSE 'B.C1010' END;
+
+        -- 랜덤한 제목과 내용 선택
+        v_random_index := TRUNC(DBMS_RANDOM.VALUE(1, 6));  -- 1부터 5까지의 값 중 랜덤하게 선택
+        v_title := v_titles(v_random_index);
+        v_random_index := TRUNC(DBMS_RANDOM.VALUE(1, 6));
+        v_content := v_contents(v_random_index);
+
+        -- CREATED_AT 날짜를 랜덤하게 생성 (지난 30일 내의 날짜)
+        v_created_at := TRUNC(SYSDATE) - DBMS_RANDOM.VALUE(0, 30);
+
         -- 데이터 삽입
-        INSERT INTO board (BOARD_NO, USER_NO, CATEGORY_NO, TITLE, CONTENT, VIEWS, CREATED_AT, UPDATED_AT, IS_DELETED)
-        VALUES (seq_board_no.nextval, v_user_no, v_category_code, v_title, v_content, DEFAULT ,sysdate, NULL, 'N');
+        INSERT INTO BOARD (BOARD_NO, USER_NO, CATEGORY_NO, TITLE, CONTENT, CREATED_AT, UPDATED_AT, IS_DELETED)
+        VALUES (SEQ_BOARD_NO.NEXTVAL, v_user_no, v_category_no, v_title, v_content, v_created_at, NULL, 'N');
     END LOOP;
-    
-    -- 트랜잭션 커밋
+
+    -- 변경 사항 커밋
     COMMIT;
 END;
 /
 
-
--- 현재 위에 있는 코드 내용중 한글이 깨지는 문제가 발생. 임시로 아래 영문으로 작성하는걸로 대체
-
-DECLARE
-    v_user_no NUMBER := 4;
-    v_category_code VARCHAR2(10);
-    v_title VARCHAR2(100);
-    v_content CLOB;
-    
-    -- 랜덤 영어 문자열 생성 함수
-    FUNCTION random_english_string(p_length IN NUMBER) RETURN VARCHAR2 IS
-        v_result VARCHAR2(1000) := '';
-    BEGIN
-        FOR i IN 1..p_length LOOP
-            -- 랜덤 영어 문자 생성 (a~z)
-            v_result := v_result || CHR(TRUNC(DBMS_RANDOM.VALUE(97, 123)));
-        END LOOP;
-        RETURN v_result;
-    END;
-BEGIN
-    FOR i IN 1..100 LOOP
-        -- 카테고리 코드 랜덤 선택
-        v_category_code := CASE MOD(i, 2) 
-                             WHEN 0 THEN 'B.C1000' 
-                             ELSE 'B.C1010' 
-                           END;
-        
-        -- 랜덤 제목 생성 (4~5자)
-        v_title := random_english_string(TRUNC(DBMS_RANDOM.VALUE(4, 6)));
-        
-        -- 랜덤 내용 생성 (10줄 이상)
-        v_content := '';
-        FOR j IN 1..10 LOOP
-            v_content := v_content || random_english_string(30) || CHR(10); -- 한 줄에 30자
-        END LOOP;
-        
-        -- TITLE 또는 CONTENT가 NULL일 경우 기본값을 할당
-        IF v_title IS NULL OR LENGTH(v_title) = 0 THEN
-            v_title := 'Default Title';  -- 기본 제목 설정
-        END IF;
-        
-        IF v_content IS NULL OR LENGTH(v_content) = 0 THEN
-            v_content := 'Default Content';  -- 기본 내용 설정
-        END IF;
-        
-        -- 데이터 삽입
-        INSERT INTO board (BOARD_NO, USER_NO, CATEGORY_NO, TITLE, CONTENT, VIEWS, CREATED_AT, UPDATED_AT, IS_DELETED)
-        VALUES (seq_board_no.nextval, v_user_no, v_category_code, v_title, v_content, DEFAULT ,sysdate, NULL, 'N');
-    END LOOP;
-    
-    -- 트랜잭션 커밋
-    COMMIT;
-END;
-/
 
 
 

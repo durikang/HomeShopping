@@ -30,7 +30,7 @@
 	       	<!-- Include the pagination JSP -->
 	       	<!-- pi객체가 존재한다면. List페이지 이므로 페이지네이션 import -->
 	        <c:if test="${not empty pi }"> 
-			    <jsp:include page="/views/common/pagination.jsp"/>
+			    <c:import url="/views/common/pagination.jsp"/>
 	        </c:if>
 	    </c:when>
 	    <c:otherwise>
