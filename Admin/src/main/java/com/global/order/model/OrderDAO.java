@@ -117,7 +117,7 @@ public class OrderDAO {
 			
 			openConn();
 			
-			sql = "select * from ORDERS order by ORDER_NO desc";
+			sql = "select * from ORDERS order by ORDER_NO asc";
 			
 			pstmt = con.prepareStatement(sql);
 			

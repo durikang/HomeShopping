@@ -1,42 +1,43 @@
 package com.global.orderitem.model;
 
 public class OrderItemDTO {
-	private int orderItem_no;			// 주문 항복 번호
-	private int orderItem_orderNo;		// 주문
-	private int orderItem_productNo;	// 수량
-	private int orderItem_price;		// 가격
+	private int order_item_no;			// 주문 항목 번호
+	private int oreder_no;		// 주문
+	private int product_no;	   // 상품 번호
+	private int quantity;   // 수량 
+	private int price; 		// 가격
 	
-	public int getOrderItem_no() {
-		return orderItem_no;
+	public int getOrder_item_no() {
+		return order_item_no;
+	}
+	public void setOrder_item_no(int order_item_no) {
+		this.order_item_no = order_item_no;
+	}
+	public int getOreder_no() {
+		return oreder_no;
+	}
+	public void setOreder_no(int oreder_no) {
+		this.oreder_no = oreder_no;
+	}
+	public int getProduct_no() {
+		return product_no;
+	}
+	public void setProduct_no(int product_no) {
+		this.product_no = product_no;
+	}
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
 	}
 	
-	public void setOrderItem_no(int orderItem_no) {
-		this.orderItem_no = orderItem_no;
-	}
-	
-	public int getOrderItem_orderNo() {
-		return orderItem_orderNo;
-	}
-	
-	public void setOrderItem_orderNo(int orderItem_orderNo) {
-		this.orderItem_orderNo = orderItem_orderNo;
-	}
-	
-	public int getOrderItem_productNo() {
-		return orderItem_productNo;
-	}
-	
-	public void setOrderItem_productNo(int orderItem_productNo) {
-		this.orderItem_productNo = orderItem_productNo;
-	}
-	
-	public int getOrderItem_price() {
-		return orderItem_price;
-	}
-	
-	public void setOrderItem_price(int orderItem_price) {
-		this.orderItem_price = orderItem_price;
-	}
 	
 	
 }

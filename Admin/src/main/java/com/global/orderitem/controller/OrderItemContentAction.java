@@ -16,13 +16,16 @@ public class OrderItemContentAction implements Action {
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
+		int order_no = Integer.parseInt(request.getParameter("no").trim());
+		
 		
 		OrderItemDAO dao = OrderItemDAO.getInstance();
 		
-		List<OrderItemDTO> list = dao.getOrderItemList();
+		List<OrderItemDTO> list = dao.getOrderItemList(order_no);
 		
+		request.setAttribute("Content", list);
 		
-		return null;
+		return new View("main.go").setUrl("/views/order/order_content.jsp");
 	}
 
 }
