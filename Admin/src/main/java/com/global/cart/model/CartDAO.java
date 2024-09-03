@@ -12,6 +12,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.global.board.model.BoardCategoryDTO;
+
 public class CartDAO {
 	
 	//DB와 연결하는 객체
@@ -102,7 +104,7 @@ public class CartDAO {
 	}//closeConn(pstmt, con) end
 	
 	//cart 테이블 정보를 추가하는 메서드
-	public int insertCart(CartDTO dto) {
+	public int getCartCount(CartDTO dto) {
 		int result=0, count=0; 
 		
 		try {
@@ -138,22 +140,23 @@ public class CartDAO {
 		
 	} //insertCart end
 	
+
 	//cart 테이블 전체 정보 조회 메서드
 	public List<CartDTO> getCartList(){
-		List<CartDTO> list = new ArrayList<CartDTO>();
-		
+		List<CartDTO> list = new ArrayList<>();
 		
 		try {
 			
 			openConn();
-			//sql = "select * from (select row_number() over (order by c.CART_NO ASC)AS rnum, c.*, u.NAME AS USER_NO, from CART c left join USERS u ON c.USER_NO = u.USER_NO )";
-			sql = "SELECT * FROM CART ORDER BY CART_NO DESC ";
+		
+			sql = "select * from CART ";
 			
 			pstmt = con.prepareStatement(sql);
 		
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
+				
 				CartDTO dto = new CartDTO();
 				
 				dto.setCart_no(rs.getInt("CART_NO"));
@@ -172,6 +175,8 @@ public class CartDAO {
 		return list;
 	}//getCartList end
 
+	
+	
 	// cart 테이블 user_no로 해당하는 정보를 조회하는 메서드
 	public CartDTO contentCart(int no) {
 		CartDTO dto = null;

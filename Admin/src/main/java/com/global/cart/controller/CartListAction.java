@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.global.action.Action;
 import com.global.action.View;
+import com.global.board.model.BoardDTO;
 import com.global.cart.model.CartDAO;
 import com.global.cart.model.CartDTO;
+import com.global.utils.PageInfo;
 
 public class CartListAction implements Action {
 
