@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.naming.Context;
@@ -67,26 +68,78 @@ public class ProductReviewDAO {
 
 	} // closeConn() end
 
-	public int getReviewCount(char c) {
+	public int getReviewCount() {
 		
 		int count = 0;
 		
-		return 0;
+		try {
+			openConn();
+			
+			sql = "select count(*) from product_review";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		
+		return count;
+		
 	} // getReviewCount() end
 
-	public List<ProductReviewDTO> selectReviewList(int currentPage, int boardLimit, char c) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int getReviewCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
+	// 전체 리뷰 수를 확인하는 메서드
 	public List<ProductReviewDTO> selectReviewList(int currentPage, int boardLimit) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		
+		List<ProductReviewDTO> list = new ArrayList<ProductReviewDTO>();
+		
+		try {
+			openConn();
+			
+			sql = "select * from (select row_number() over(order by review_no desc) as rnum, b.* from product_review b) where rnum >= ? and rnum <= ?";
+			
+			int paramIndex = 1;
+			int startRow = (currentPage - 1) * boardLimit + 1;
+			int endRow = startRow + boardLimit - 1;
+			
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(paramIndex++, startRow);
+			pstmt.setInt(paramIndex++, endRow);
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+			
+				ProductReviewDTO review = new ProductReviewDTO();
+				
+				review.setReview_No(rs.getInt("Review_No"));
+				review.setProduct_No(rs.getInt("Product_No"));
+				review.setUser_No(rs.getInt("User_No"));
+				review.setRating(rs.getInt("Rating"));
+				review.setComm(rs.getString("Comm"));
+				review.setCreated_At(rs.getDate("Created_At"));
+				review.setUpdated_At(rs.getDate("Updated_At"));
+				review.setIs_Deleted(rs.getString("Is_Deleted"));
+				
+				list.add(review);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		
+		return list;
+		
+	} // selectReviewList() end
+	
+	
 	
 }

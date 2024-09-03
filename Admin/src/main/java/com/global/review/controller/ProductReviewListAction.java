@@ -19,7 +19,6 @@ public class ProductReviewListAction implements Action{
 
 		ProductReviewDAO dao = ProductReviewDAO.getInstance();
 		
-		String status = request.getParameter("status");
 		
 		int listCount;
 		
@@ -35,16 +34,10 @@ public class ProductReviewListAction implements Action{
 		// 페이지 하단에 보여질 페이지 수
 		int pageLimit = 10;
 		List<ProductReviewDTO> list;
-		if("N".equals(status)) {
-			listCount = dao.getReviewCount('N');
-			list = dao.selectReviewList(currentPage, boardLimit, 'N');
-		}else if("Y".equals(status)) {
-			listCount = dao.getReviewCount('Y');
-			list = dao.selectReviewList(currentPage, boardLimit, 'Y');
-		}else {
-			listCount = dao.getReviewCount();
-			list = dao.selectReviewList(currentPage, boardLimit);
-		}
+
+		listCount = dao.getReviewCount();
+		list = dao.selectReviewList(currentPage, boardLimit);
+
 		
 		// 전체 페이지 수 계산
         int maxPage = (int) Math.ceil((double) listCount / boardLimit);
@@ -65,7 +58,7 @@ public class ProductReviewListAction implements Action{
         request.setAttribute("count", pi.getListCount());
         request.setAttribute("list", list);
         request.setAttribute("pi", pi);
-        request.setAttribute("status", status); // 필터 상태를 JSP로 전달
+        request.setAttribute("address", "productReviewList.do"); // 필터 상태를 JSP로 전달
 		
 		return new View("main.go").setUrl("/views/review/product_review_list.jsp");
 	}
