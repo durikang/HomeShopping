@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </head>
 <body>
 	<div class="title">
-	    <h1>게시판</h1>
+	    <h1>리뷰 게시판</h1>
 	    <c:if test="${ not empty param.subtitle}">
 	        <nav aria-label="breadcrumb">
 	            <ol class="breadcrumb">
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				        <td class="table_bottom button" colspan="9" align="center">
    				            <!-- 로그인한 유저만 게시글 작성 버튼 보이기 -->
 				            <c:if test="${not empty sessionScope.user}">
-				                <input type="button" class="btn" value="게시글 작성" onclick="location.href='breviewInsert.do'">
+				                <input type="button" class="btn" value="리뷰 작성" onclick="location.href='breviewInsert.do'">
 				            </c:if>
 				        </td>
 				    </tr>

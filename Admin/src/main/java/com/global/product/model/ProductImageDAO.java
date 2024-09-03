@@ -104,10 +104,78 @@ public class ProductImageDAO {
 	} // closeConn() end
 
 
-	public int insertImgProduct(ProductDTO prod, ProductImageDTO image) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insertImgProduct(ProductDTO product, ProductImageDTO image) {
+
+		int result = 0, count = 0;
+
+		try {
+		
+		openConn();
+		
+		sql = "SELECT MAX(PRODUCT_NO) FROM PRODUCT_IMAGE";
+		
+		pstmt = con.prepareStatement(sql);
+		
+		rs = pstmt.executeQuery();
+		
+		if(rs.next()) {
+			
+			count = rs.getInt(1) + 1;
+			
+			
+		}
+		
+		
+		sql = "INSERT INTO PRODUCT_IMAGE VALUES(?,?,?,?)";
+		
+		pstmt = con.prepareStatement(sql);
+		
+		pstmt.setInt(1, count);
+		pstmt.setInt(2, product.getProduct_no());
+		pstmt.setString(3, image.getImage_url());
+		pstmt.setString(4, product.getDescription());
+		
+		result = pstmt.executeUpdate();
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		
+		return result;
 	}
+
+
+	public int insertNullProduct(ProductDTO product) {
+		int result = 0;
+
+		try {
+		
+		openConn();
+		
+		sql = "INSERT INTO PRODUCT_IMAGE VALUES(SEQ_PRODUCT_NO.NEXTVAL,?,'',?)";
+		
+		pstmt = con.prepareStatement(sql);
+		
+		
+		pstmt.setInt(1, product.getProduct_no());
+		pstmt.setString(2, product.getDescription());
+		
+		result = pstmt.executeUpdate();
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(pstmt, con);
+		}
+		
+		return result;
+	}
+
+
 
 
 }

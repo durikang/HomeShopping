@@ -64,7 +64,7 @@
                 <ul class="dropdown-menu">
                     <li><a href="order_list.do">주문 목록</a></li>
                     <li><a href="order_stats.html">주문 통계</a></li>
-                    <li><a href="delivery_status.html">배송 상태 관리</a></li>
+                    <li><a href="delivery_list.do">배송 상태 관리</a></li>
                 </ul>
             </li>
 
@@ -80,7 +80,7 @@
             <!-- 리뷰 관리 -->
             <li class="dropdown">리뷰 관리
                 <ul class="dropdown-menu">
-                    <li><a href="review_list.html">리뷰 목록</a></li>
+                    <li><a href="productReviewList.do">리뷰 목록</a></li>
                     <li><a href="review_stats.html">리뷰 통계</a></li>
                 </ul>
             </li>

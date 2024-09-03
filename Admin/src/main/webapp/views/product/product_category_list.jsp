@@ -5,12 +5,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>카테고리 리스트 페이지</title>
+<title>카테고리 목록 페이지</title>
 </head>
 <body>
 	<div align="center">
 		<hr width="50%" color="red">
-		<h3>카테고리 전체 리스트 페이지</h3>
+		<h3>카테고리 목록 페이지</h3>
 		<hr width="50%" color="red">
 		<br> <br>
 
@@ -41,7 +41,7 @@
 				</tr>
 			</c:if>
 			<tr>
-				<td colspan="3" align="center">
+				<td colspan="1" align="center">
 					<input type="button" value="카테고리 등록" onclick="location.href='productCategoryInsert.go'">
 				</td>
 			</tr>

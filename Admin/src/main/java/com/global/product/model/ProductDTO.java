@@ -11,7 +11,33 @@ public class ProductDTO {
 	private int price;
 	private int stock_quantity;
 	private int views;
-	private Date created_at;
+	private Date created_at;	
+	
+	/*product_img join용*/
+	private int image_no;
+	private String image_url;
+	private String img_description;
+	
+	
+	
+	public int getImage_no() {
+		return image_no;
+	}
+	public void setImage_no(int image_no) {
+		this.image_no = image_no;
+	}
+	public String getImage_url() {
+		return image_url;
+	}
+	public void setImage_url(String image_url) {
+		this.image_url = image_url;
+	}
+	public String getImg_description() {
+		return img_description;
+	}
+	public void setImg_description(String img_description) {
+		this.img_description = img_description;
+	}
 	public int getViews() {
 		return views;
 	}
