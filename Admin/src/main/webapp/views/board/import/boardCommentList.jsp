@@ -29,8 +29,8 @@
                     <!-- 수정 폼 (초기에는 숨김 상태) -->
                     <div class="edit-form" id="edit-form-${comment.replyNo}" style="display: none;">
                         <textarea class="edit-content" rows="3">${comment.content}</textarea>
-                        <button class="btn" data-reply-no="${comment.replyNo}">수정 완료</button>
-                        <button class="btn btn-cancel" data-reply-no="${comment.replyNo}">취소</button>
+                        <button class="btn submit-edit" data-reply-no="${comment.replyNo}">수정 완료</button>
+                        <button class="btn btn-cancel cancel-edit" data-reply-no="${comment.replyNo}">취소</button>
                     </div>
                     
                     <div class="comment-actions">
@@ -47,7 +47,7 @@
                     <!-- 대댓글 입력 폼 -->
                     <div class="reply-form" id="reply-form-${comment.replyNo}">
                         <textarea class="reply-content" rows="3" placeholder="${comment.userId}의 답변을 입력하세요"></textarea>
-                        <button class="btn" data-parent-reply-no="${comment.replyNo}">대댓글 작성</button>
+                        <button class="btn submit-reply" data-parent-reply-no="${comment.replyNo}">대댓글 작성</button>
                     </div>
                 </div>
             </c:if>

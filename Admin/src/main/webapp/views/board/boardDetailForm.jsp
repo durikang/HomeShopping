@@ -77,7 +77,7 @@ function restoreBoard(boardNo) {
         box-sizing: border-box;
     }
 
-    .submit-reply, .submit-edit, .cancel-edit {
+    /* .submit-reply, .submit-edit, .cancel-edit {
         margin-top: 10px;
         padding: 8px 16px;
         background-color: #007bff;
@@ -97,7 +97,7 @@ function restoreBoard(boardNo) {
 
     .cancel-edit:hover {
         background-color: #5a6268;
-    }
+    } */
 
     /* 대댓글 구분 스타일 */
     .comment[data-node-level="2"] {
