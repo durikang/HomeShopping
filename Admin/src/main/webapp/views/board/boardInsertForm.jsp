@@ -17,7 +17,7 @@
 	}
 	
 	.content {
-		max-width: 800px;
+		max-width: 1250px;
 		margin: 50px auto;
 		padding: 20px;
 		background-color: #ffffff;

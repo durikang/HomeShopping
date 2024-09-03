@@ -31,7 +31,7 @@ public class BoardListAction implements Action {
 		}
 
 		// 한 페이지에 보여질 게시글 최대 수
-		int boardLimit = 100;
+		int boardLimit = 30;
 
 		// 페이지 하단에 보여질 페이지 수
 		int pageLimit = 10;

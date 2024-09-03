@@ -65,6 +65,10 @@
 	text-align: right !important;
 }
 
+.board-container{
+	width:1250px;
+}
+
 .board-td {
     border-left: 0;
     border-right: 0;
@@ -73,5 +77,22 @@
 .border-th{
 	border:0;
 	border-bottom:1px solid #aaa;
+}
+.board-th-createAt{
+  	width: 85px;	
+}
+.board-th-updateAt{
+	width:70px;
+	
+}
+.board-th-views{
+	width: 55px;
+}
+.board-th-status{
+    width: 45px;
+    
+}
 
+.board-th-createAt, .board-th-updateAt, .board-th-views, .board-th-status{
+	padding: 10px;
 }

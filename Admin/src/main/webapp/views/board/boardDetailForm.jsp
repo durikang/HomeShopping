@@ -8,6 +8,22 @@
 <title>게시글 상세보기</title>
 <link rel="stylesheet" href="${contextPath}/resources/board/css/board.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+//게시글 삭제
+function deleteBoard(boardNo) {
+    if (confirm("정말 이 게시글을 삭제하시겠습니까?")) {
+        location.href = 'boardDeleteOk.do?boardNo=' + boardNo + '&currentPage=${currentPage}';
+    }
+}
+
+//게시글 삭제 취소
+function restoreBoard(boardNo) {
+    if (confirm("정말 이 게시글의 삭제를 취소하시겠습니까?")) {
+        location.href = 'boardRestoreOk.do?boardNo=' + boardNo + '&currentPage=${currentPage}';
+    }
+}
+</script>
+
 <style>
     /* 댓글 및 대댓글 스타일링 */
     .comment {
@@ -122,6 +138,9 @@
         <!-- 카테고리 이름 -->
         <div class="category-label">${info.categoryName}</div>
 
+        <!-- 게시글 번호 -->
+        <div class="board-no">게시글 번호: ${info.boardNo}</div>
+
         <!-- 제목 -->
         <h2 class="content-title">${info.title}</h2>
 
@@ -138,6 +157,9 @@
             </c:choose>
         </div>
 
+        <!-- 조회수 -->
+        <div class="content-views">조회수: ${info.views}</div>
+
         <!-- 본문 내용 -->
         <div class="content-body">
             <c:out value="${info.content}" escapeXml="false"/>
@@ -145,18 +167,23 @@
 
         <!-- 뒤로가기 버튼 -->
         <button type="button" onclick="location.href='boardList.do?status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">뒤로가기</button>
-        <!-- 수정하기 버튼 -->
-        <button type="button" onclick="location.href='boardUpdateForm.do?no=${info.boardNo}&userType=${info.userType}&status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">수정하기</button>
+        
+        <!-- 수정하기 및 삭제하기 버튼: 작성자와 관리자만 가능 -->
+        <c:if test="${sessionScope.user.userType == 'ADMIN' || sessionScope.user.userNo == info.userNo}">
+            <button type="button" onclick="location.href='boardUpdateForm.do?no=${info.boardNo}&userType=${info.userType}&status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">수정하기</button>
+            <button type="button" onclick="deleteBoard(${info.boardNo})" class="btn btn_space_tb">삭제하기</button>
+        </c:if>
+
+        <!-- 삭제된 게시글의 경우, 삭제 취소 버튼을 표시 (관리자만 가능) -->
+        <c:if test="${info.isDeleted == 'Y' && sessionScope.user.userType == 'ADMIN'}">
+            <button type="button" onclick="restoreBoard(${info.boardNo})" class="btn btn_space_tb">삭제 취소</button>
+        </c:if>
 
         <!-- 댓글 입력 폼 -->
-		<c:import url="board/import/boardCommentInsertForm.jsp"/>
+        <c:import url="board/import/boardCommentInsertForm.jsp"/>
 
         <!-- 기존 댓글 표시 -->
-		<c:import url="board/import/boardCommentList.jsp"/>
-
+        <c:import url="board/import/boardCommentList.jsp"/>
     </div>
-
-
-
 </body>
 </html>
