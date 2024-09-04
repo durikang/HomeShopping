@@ -33,7 +33,7 @@ public class ProductModifyCategoryOkAction implements Action {
 		int check = dao.ModifyCategory(dto);
 		
 		if (check > 0) {
-			ScriptUtil.sendScript(response, "카테고리 수정 성공", "productCategory.do");
+			ScriptUtil.sendScript(response, "카테고리 수정 성공", "productCategoryList.do");
 		} else {
 			ScriptUtil.sendScript(response, "카테고리 수정 실패!!!", null);
 		}

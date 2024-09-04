@@ -44,7 +44,7 @@
                 <ul class="dropdown-menu">
                     <li><a href="productList.do">상품 목록</a></li>
                     <li><a href="productInsert.do">상품 추가</a></li>
-                    <li><a href="productCategory.do">카테고리 관리</a></li>
+                    <li><a href="productCategoryList.do">카테고리 관리</a></li>
                     <li><a href="product_stats.html">상품 통계</a></li>
                 </ul>
             </li>

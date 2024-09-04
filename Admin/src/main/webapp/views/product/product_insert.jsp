@@ -12,8 +12,8 @@
 	<div align="center">
 		<h3>상품 등록</h3>
 
-		<form action="${ contextPath }/productInsertOk.do" method="post"
-			enctype="multipart/form-data" onsubmit="return validatePasswords()">
+		<form action="productInsertOk.do" method="post"
+			enctype="multipart/form-data">
 			<table class="insertTableForm">
 				<c:set var="catlist" value="${CategoryList }" />
 				<tr>

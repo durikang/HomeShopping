@@ -17,7 +17,7 @@
 
 		<table border="1" width="650">
 			<tr>
-
+				<th>유저 번호</th>
 				<th>상품 번호</th>
 				<th>카테고리 번호</th>
 				<th>상품 이름</th>
@@ -36,10 +36,13 @@
 			<c:if test="${!empty list }">
 				<c:forEach items="${list }" var="dto">
 					<tr>
+						<td>${dto.getUser_no() }</td>
 						<td>${dto.getProduct_no()}</td>
 						<td>${dto.getCategory_no() }</td>
 						<td><a href="<%=request.getContextPath() %>/productContent.do?no=${dto.getProduct_no() }">${dto.getName() }</a></td>
-						<td>${dto.productImage.getImage_url() }</td>
+						<td>
+							<img src="${contextPath }/${dto.getImage_url()}">
+						</td>
 						<td>${dto.getDescription() }</td>
 						<td>${dto.getPrice() }</td>
 						<td>${dto.getStock_quantity() }</td>
