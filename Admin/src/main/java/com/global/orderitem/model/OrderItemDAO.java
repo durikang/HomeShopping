@@ -114,7 +114,19 @@ public class OrderItemDAO {
 		try {
 			openConn();
 			
-			sql = "select * from order_item where order_no = ?";
+			sql = "SELECT "
+				    + "    oi.ORDER_ITEM_NO,"
+				    + "    oi.ORDER_NO,"
+				    + "    p.PRODUCT_NO,"
+				    + "    oi.QUANTITY,"
+				    + "    oi.PRICE "
+				    + "FROM "
+				    + "    ORDER_ITEM oi "
+				    + "JOIN "
+				    + "    ORDERS o ON oi.ORDER_NO = o.ORDER_NO "
+				    + "JOIN "
+				    + "    PRODUCT p ON oi.PRODUCT_NO = p.PRODUCT_NO "
+				    + "WHERE oi.ORDER_NO = ?";
 			
 			pstmt = con.prepareStatement(sql);
 			
@@ -146,15 +158,43 @@ public class OrderItemDAO {
 		return list;
 	}// end
 	
-	public int deleteOrder() {
+	public int DeleteOrderItem(int no) {
 		
 		int result = 0;
+
+		 try {
+		 
+		 openConn();
+		  
+		 sql = "SELECT * FROM order_item WHERE order_no = ?";
+		 
 		
-		openConn();
+		 pstmt = con.prepareStatement(sql);
+		 
+		 pstmt.setInt(1, no);
+		 
+		 rs = pstmt.executeQuery();
+		 
+		 if(rs.next()) {
+			 sql = "DELETE FROM order_item WHERE order_no = ?";
+			 
+			 pstmt = con.prepareStatement(sql);
+			 
+			 pstmt.setInt(1, no);
+			 
+			 result = pstmt.executeUpdate();
+		 }
+		 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			closeConn(rs, pstmt, con);
+		}
+		 
+	return result;
 		
-		sql = "deletet";
-		
-		return result;
 	}
+
 	
 }

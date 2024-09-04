@@ -117,7 +117,11 @@ public class DeliveryDAO {
 		try {
 			openConn();
 			
-			sql = "select * from delivery order by order_no asc";
+			sql = "SELECT d.DELIVERY_NO, o.ORDER_NO, d.DELIVERY_DATE, d.DELIVERY_STATUS "
+				    + "FROM ORDERS o "
+				    + "LEFT JOIN DELIVERY d ON o.ORDER_NO = d.ORDER_NO "
+				    + "ORDER BY o.ORDER_DATE DESC, d.DELIVERY_DATE ASC";
+
 			
 			pstmt = con.prepareStatement(sql);
 			

@@ -10,8 +10,7 @@
 </head>
 <body>
 		<div align="center">
-		<c:set var="dto" value="${Content }"></c:set>
-		
+
 		<h3>주문 목록 상세 페이지</h3>
 		<table border="1">
 			<tr>
@@ -20,18 +19,26 @@
 				<th>카테고리 번호</th>
 				<th>주문 갯수</th>
 				<th>개당 금액</th>
+				<th>설 정</th>
 			</tr>
 
-			<c:if test="${not empty dto }">
+			<c:if test="${not empty Content }">
+				<c:forEach items="${Content }" var="dto">
 				<tr>
-					<td>${dto.order_item_no }</td>
+				  	<td>${dto.order_item_no }</td>
 					<td>${dto.oreder_no }</td>
 					<td>${dto.product_no }</td>
 					<td>${dto.quantity }</td>
-					<td>${dto.price }</td>
+					<td><fmt:formatNumber value="${dto.price}"></fmt:formatNumber>원</td>
+					<td>
+						<c:if test="${sessionScope.user.userType == 'ADMIN'}">
+							<input type="button" value="주문목록삭제" onclick="location.href='orderitem_delete.do?no=${dto.oreder_no}'">
+						</c:if>
+					</td> 
 				</tr>
+				</c:forEach>
 			</c:if>
-			<c:if test="${empty dto}">
+			<c:if test="${empty Content}">
 				<tr>
 					<td colspan="5" align="center">
 						<h3>상세 목록이 없습니다.</h3>
@@ -41,8 +48,8 @@
 
 		</table>
 		<br>
-			<%-- <input type="button" value="주문목록삭제"
-	        onclick="location.href='orderitem_delete.do?no=${dto.getOreder_no()}'"> --%>
+			 
+			
 	</div>
 
 </body>
