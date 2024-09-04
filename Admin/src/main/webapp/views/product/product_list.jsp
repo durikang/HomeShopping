@@ -56,17 +56,11 @@
 			</c:if>
 			<c:if test="${empty list }">
 				<tr>
-					<td colspan="12" align="center">
+					<td colspan="13" align="center">
 						<h3>카테고리가 없습니다.</h3>
 					</td>
 				</tr>
 			</c:if>
-			<tr>
-				<td colspan="12" align="center">
-					<input type="button" value="상품 등록" onclick="location.href='productInsert.go'">
-				</td>
-			</tr>
-
 		</table>
 	</div>
 </body>

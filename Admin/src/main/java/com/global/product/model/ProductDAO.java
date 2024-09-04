@@ -236,4 +236,121 @@ public class ProductDAO {
 	}
 
 
+	public ProductDTO getProductContent(String product_no) {
+		
+		ProductDTO dto = null;
+		
+		try {
+
+		openConn();
+
+		
+		
+		sql = "SELECT P.PRODUCT_NO, P.CATEGORY_NO, I.IMAGE_URL, P.NAME, P.DESCRIPTION,"
+				+ "P.PRICE, P.STOCK_QUANTITY, P.VIEWS, P.CREATED_AT, P.UPDATED_AT, P.IS_DELETED, P.TOTAL_SALES"
+				+ "FROM PRODUCT P INNER JOIN PRODUCT_IMAGE I ON P.PRODUCT_NO = I.PRODUCT_NO WHERE P.PRODUCT_NO = ?";
+//		sql = "SELECT P.PRODUCT_NO, P.CATEGORY_NO, I.IMAGE_URL, P.NAME, P.DESCRIPTION,"
+//				+ "P.PRICE, P.STOCK_QUANTITY, P.VIEWS, P.CREATED_AT, P.UPDATED_AT, P.IS_DELETED, P.TOTAL_SALES"
+//				+ "FROM PRODUCT P, PRODUCT_IMAGE I WHERE P.PRODUCT_NO = I.PRODUCT_NO AND P.PRODUCT_NO = ?";
+		
+		
+		pstmt = con.prepareStatement(sql);
+		
+		pstmt.setString(1, product_no);
+		
+		rs = pstmt.executeQuery();
+		
+		if(rs.next()) {
+			
+			dto = new ProductDTO();
+			
+			dto.setUser_no(rs.getInt("user_no"));
+			dto.setProduct_no(rs.getInt("product_no"));
+			dto.setCategory_no(rs.getString("category_no"));
+			dto.setName(rs.getString("name"));
+			dto.setImage_url(rs.getString("image_url"));
+			dto.setDescription(rs.getString("description"));
+			dto.setPrice(rs.getInt("price"));
+			dto.setStock_quantity(rs.getInt("stock_quantity"));
+			dto.setViews(rs.getInt("views"));
+			dto.setCreated_at(rs.getDate("created_at"));
+			dto.setUpdated_at(rs.getDate("update_at"));
+			dto.setIs_deleted(rs.getString("is_deleted"));
+			dto.setTotal_sales(rs.getInt("total_sales"));
+		}
+		
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		
+		
+		return dto;
+	}
+
+
+	public int getProductListCount() {
+		int count = 0;
+		
+		try {
+		
+			openConn();
+			
+			sql = "SELECT COUNT(*) FROM PRODUCT ORDER BY 1";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+			
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			closeConn(rs, pstmt, con);
+		}
+		return count;
+	
+	}
+
+
+	public List<ProductDTO> getProductPage(int currentPage, int boardLimit) {
+
+			
+			List<ProductDTO> list = new ArrayList<>();
+			
+			try {
+
+		    int startRow = (currentPage - 1) * boardLimit + 1;
+		    int endRow = startRow + boardLimit - 1;
+				
+			openConn();
+			
+			sql = "SELECT COUNT(*) FROM PRODUCT ORDER BY 1";
+
+			pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, startRow);
+	        pstmt.setInt(2, endRow);
+			
+	        rs = pstmt.executeQuery();
+			
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+		        closeConn(rs, pstmt, con);
+		    }
+			
+			
+			
+			return list;
+	}
+
+
 }
