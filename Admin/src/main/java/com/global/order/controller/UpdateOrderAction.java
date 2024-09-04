@@ -19,10 +19,11 @@ public class UpdateOrderAction implements Action {
 		
 		OrderDAO dao = OrderDAO.getInstance();
 		
-		OrderDTO dto = dao.getOrderList();
+		OrderDTO dto = dao.getOrder(order_no);
 		
+		request.setAttribute("Modify", dto);
 		
-		return null;
+		return new View("main.go").setUrl("/views/order/order_Modify.jsp");
 	}
 
 }

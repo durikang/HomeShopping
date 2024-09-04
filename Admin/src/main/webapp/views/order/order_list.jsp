@@ -40,12 +40,13 @@
 						<td>배송 취소</td>
 					</c:if>
 						<td><fmt:formatNumber value="${dto.getTotal_amount()}"></fmt:formatNumber>원</td>
-					</tr>
+					
 						<td>
 						<c:if test="${sessionScope.user.userType == 'ADMIN'}">
-							<input type="button" value="배송상태설정" onclick="location.href='orderModify.do?no=${dto.oreder_no}'">
+							<input type="button" value="배송상태설정" onclick="location.href='orderModify.do?no=${dto.order_no}'">
 						</c:if>
 					</td> 
+					</tr>
 				</c:forEach>
 			</c:if>
 			<c:if test="${empty List }">

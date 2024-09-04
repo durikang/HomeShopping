@@ -188,6 +188,40 @@ public class OrderDAO {
 	return result;
 }
 		
+	public OrderDTO getOrder(int no) {
+		OrderDTO dto =null;
+		
+
+		
+		try {
+			openConn();
+			
+			sql = "select * from orders where order_no = ?";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setInt(1, no);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dto = new OrderDTO();
+				
+				dto.setOrder_no(rs.getInt("order_no"));
+				dto.setUser_no(rs.getInt("user_no"));
+				dto.setOrder_date(rs.getDate("order_date"));
+				dto.setStatus(rs.getString("status"));
+				dto.setTotal_amount(rs.getInt("total_amount"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			closeConn(rs, pstmt, con);
+		}
+		
+		return dto;
+	}
 	
 
 }
