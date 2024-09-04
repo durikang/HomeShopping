@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				        <td class="table_header info" colspan="9" align="right">전체 리뷰 수: ${count}</td>
 				    </tr>
 				    <tr>
-				        <th class="border-th">BoardNo.</th>
+				        <th class="border-th">ReviewNo.</th>
 				        <th class="border-th">UserID. <span class="subtitle">(userNo)</span></th>
 				        <th class="border-th">Category <span class="subtitle">(categoryCode)</span></th>
 				        <th class="border-th">제목</th>
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				        <td class="table_bottom button" colspan="9" align="center">
    				            <!-- 로그인한 유저만 게시글 작성 버튼 보이기 -->
 				            <c:if test="${not empty sessionScope.user}">
-				                <input type="button" class="btn" value="리뷰 작성" onclick="location.href='breviewInsert.do'">
+				                <input type="button" class="btn" value="리뷰 작성" onclick="location.href='productReviewinsert.do'">
 				            </c:if>
 				        </td>
 				    </tr>

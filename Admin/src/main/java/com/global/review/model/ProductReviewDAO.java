@@ -67,6 +67,20 @@ public class ProductReviewDAO {
 		}
 
 	} // closeConn() end
+	
+	public void closeConn(PreparedStatement pstmt, Connection con) {
+		
+		try {
+			
+			if(pstmt != null) pstmt.close();
+			
+			if(con != null) con.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	} // closeConn() 메서드 end
 
 	public int getReviewCount() {
 		
@@ -140,6 +154,12 @@ public class ProductReviewDAO {
 		
 	} // selectReviewList() end
 	
-	
+	// 리뷰 작성 메서드 (예: 성공 or 실패)
+	public int insertReview(ProductReviewDTO review, int userNo) {
+		
+		
+		
+		return 0;
+	}
 	
 }

@@ -11,6 +11,9 @@ public class ProductReviewDTO {
 	private Date Created_At;
 	private Date Updated_At;
 	private String Is_Deleted;
+	
+	private int categoryNo;
+	
 
 	public int getReview_No() {
 		return Review_No;
@@ -75,5 +78,6 @@ public class ProductReviewDTO {
 	public void setIs_Deleted(String is_Deleted) {
 		Is_Deleted = is_Deleted;
 	}
+
 
 }
