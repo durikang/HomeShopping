@@ -216,9 +216,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	        </c:otherwise>
 	    </c:choose>  
 	    <tr>
+	    
 	        <td class="table_bottom button" colspan="9" align="center">
-	            <input type="button" class="btn" value="카테고리 등록" onclick="location.href='${contextPath}/boardCategoryInsert.go'">
+	        	<!-- 로그인한 유저만 게시글 작성 버튼 보이기 -->
+            	<c:if test="${not empty sessionScope.user and sessionScope.user.userType == 'ADMIN'}">
+	            	<input type="button" class="btn" value="카테고리 등록" onclick="location.href='${contextPath}/boardCategoryInsertForm.do'">
+	            </c:if>
 	        </td>
+	        
 	    </tr>
 	</table>
 	
