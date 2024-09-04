@@ -50,12 +50,22 @@
         <h2>리뷰 작성</h2>
 		<form id="myform" action="productReviewInsertOk.do" method="post" onsubmit="syncEditorContent()">
 		    
-		    <!-- 카테고리 선택 -->
+		    <!-- 상품 카테고리 선택 -->
 		    <div class="form-group">
 		        <label for="categoryNo">카테고리</label>
 		        <select name="categoryNo" id="categoryNo" required>
-		            <c:forEach items="${list }" var="dto">
+		            <c:forEach items="${productCategoryList }" var="dto">
 		                <option value="${dto.getCategory_No()}">${dto.getName()}</option>
+		            </c:forEach>
+		        </select>
+		    </div>
+
+		    <!-- 게시판 카테고리 선택 -->
+		    <div class="form-group">
+		        <label for="categoryNo">리뷰 카테고리</label>
+		        <select name="categoryNo" id="categoryNo" required>
+		            <c:forEach items="${ boardCategoryList }" var="dto">
+		                <option value="${dto.getCategoryNo()}">${dto.getName()}</option>
 		            </c:forEach>
 		        </select>
 		    </div>
