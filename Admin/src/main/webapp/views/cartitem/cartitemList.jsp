@@ -29,7 +29,7 @@
 						<input type="button" value="수정" onclick="location.href='cartItem_update.do?no=${item.cartItem_no}'">
 					</td>
 					<td>
-						<input type="button" value="삭제" onclick="location.href='cartItem_selectdelete.do?no=${item.cartItem_no}'">
+						<input type="button" value="삭제" onclick="location.href='cartItem_delete.do?no=${item.cartItem_no}'">
 					</td>
 				</tr>
 			</c:forEach>

@@ -32,8 +32,9 @@
 						<td>
 							<fmt:formatDate value="${dto.cart_createdAt }"/>
 						</td>
-						<td>
-							<input type="button" value="삭제" onclick="location.href='cartItem_delete.do?no=${dto.cart_no}'">
+						<td>											
+							<input type="button" value="삭제" onclick="if(confirm('정말로 게시글을 삭제하시겠습니까?')){
+											location.href='cart_delete.do?no=${dto.cart_no}'} else{return;}">
 						</td>
 					</tr>
 				</c:forEach>

@@ -213,8 +213,9 @@ public class CartDAO {
 		int result =0;
 		
 		try {
-			openConn();
 			
+			openConn();
+		
 			sql=" DELETE FROM cart_item where cart_no= ? ";
 			
 			
@@ -231,7 +232,7 @@ public class CartDAO {
 			pstmt.setInt(1, no);
 			
 			result = pstmt.executeUpdate();
-			
+		
 		} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
@@ -248,7 +249,15 @@ public class CartDAO {
 		try {
 			openConn();
 			
-			sql="UPDATE CART SET CART_NO = CART_NO-1 WHERE CART_NO > ?";
+			sql="update cart set CART_NO = CART_NO -1 where CART_NO > ?";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setInt(1, no);
+			
+			pstmt.executeUpdate();
+			
+			sql="update cart_item set CART_NO = CART_NO -1 where CART_NO > ?";
 			
 			pstmt = con.prepareStatement(sql);
 			

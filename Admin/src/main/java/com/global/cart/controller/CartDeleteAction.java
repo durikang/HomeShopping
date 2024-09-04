@@ -1,6 +1,7 @@
-package com.global.cartitem.controller;
+package com.global.cart.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,11 +11,11 @@ import javax.servlet.http.HttpSession;
 import com.global.action.Action;
 import com.global.action.View;
 import com.global.admin.model.UsersDTO;
-import com.global.cartitem.model.CartItemDAO;
-import com.global.cartitem.model.CartItemDTO;
+import com.global.cart.model.CartDAO;
+import com.global.cart.model.CartDTO;
 import com.global.utils.ScriptUtil;
 
-public class CartItemListAction implements Action {
+public class CartDeleteAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -27,17 +28,20 @@ public class CartItemListAction implements Action {
             return null;
         }
 		
-		
+        
 		int No = Integer.parseInt(request.getParameter("no").trim());
 		
-		CartItemDAO dao = CartItemDAO.getInstanceCartItem();	
+		CartDAO dao = CartDAO.getInstanceCart();
 		
-		List<CartItemDTO> cartItemList = dao.getCartItemList(No);
 		
-		request.setAttribute("no", No);
-		request.setAttribute("CartItemList", cartItemList);
+		dao.deleteCart(No);
 		
-		return new View("main.go").setUrl("/views/cartitem/cartitemList.jsp");
+		dao.updateSequenceCart(No);
+		
+		List<CartDTO> cartList = dao.getCartList();
+		
+		request.setAttribute("CartList", cartList);	
+		return new View("main.go").setUrl("/views/cart/cartList.jsp");
 	}
 
 }
