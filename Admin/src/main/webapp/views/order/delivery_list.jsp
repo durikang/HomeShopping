@@ -16,6 +16,7 @@
 				<th>주문 번호</th>
 				<th>배송일</th>
 				<th>배송 상태</th>
+				<th>설 정</th>
 			</tr>
 
 			<c:if test="${not empty List }">
@@ -24,7 +25,24 @@
 						<td>${dto.getDelivery_no() }</td>
 						<td>${dto.getOrder_no()}</td>
 						<td>${dto.getDelivery_date()}</td>
-						<td>${dto.getDelivery_status()}</td>
+						<c:if test="${dto.delivery_status eq 'PENDING'}">
+						<td>배송 대기</td>
+						</c:if>
+						<c:if test="${dto.delivery_status eq 'SHIPPED'}">
+							<td>배송 중</td>
+						</c:if>
+						<c:if test="${dto.delivery_status eq 'DELIVERED'}">
+							<td>배송 완료</td>
+						</c:if>
+						<c:if test="${dto.delivery_status eq 'CANCELLED'}">
+							<td>배송 취소</td>
+						</c:if>
+							<td>
+						<c:if test="${sessionScope.user.userType == 'ADMIN'}">
+							<input type="button" value="배송상태설정" onclick="location.href='orderitem_delete.do?no=${dto.oreder_no}'">
+						</c:if>
+					</td> 
+						
 					</tr>
 				</c:forEach>
 			</c:if>

@@ -12,8 +12,7 @@ import com.global.product.model.ProductDTO;
 import com.global.product.model.ProductImageDAO;
 import com.global.product.model.ProductImageDTO;
 import com.global.utils.ScriptUtil;
-import com.oreilly.servlet.MultipartRequest;
-import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
+
 
 public class InsertProductOkAction implements Action {
 
@@ -26,7 +25,7 @@ public class InsertProductOkAction implements Action {
 		int fileSize = 10 * 1024 * 1024; // 10MB
 
 		// 파일 업로드를 위한 MultipartRequest 객체 생성
-		MultipartRequest multi = new MultipartRequest(request, saveFolder, fileSize, "UTF-8",
+		MultipartRequset multi = new MultipartRequest(request, saveFolder, fileSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 
 		// 파라미터 가져오기 및 null 체크

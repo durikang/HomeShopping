@@ -117,7 +117,10 @@ public class OrderDAO {
 			
 			openConn();
 			
-			sql = "select * from ORDERS order by ORDER_NO asc";
+			sql = "SELECT ORDER_NO, u.user_no, ORDER_DATE, STATUS, TOTAL_AMOUNT "
+			           + "FROM orders o "
+			           + "JOIN users u ON o.user_no = u.user_no "
+			           + "ORDER BY ORDER_NO ASC";
 			
 			pstmt = con.prepareStatement(sql);
 			
@@ -148,6 +151,43 @@ public class OrderDAO {
 		return list;
 	}
  
+	public int DeleteOrder(int no) {
+		
+		int result = 0;
+
+		 try {
+		 
+		 openConn();
+		  
+		 sql = "SELECT * FROM orders WHERE order_no = ?";
+		 
+		
+		 pstmt = con.prepareStatement(sql);
+		 
+		 pstmt.setInt(1, no);
+		 
+		 rs = pstmt.executeQuery();
+		 
+		 if(rs.next()) {
+			 sql = "DELETE FROM orders WHERE order_no = ?";
+			 
+			 pstmt = con.prepareStatement(sql);
+			 
+			 pstmt.setInt(1, no);
+			 
+			 result = pstmt.executeUpdate();
+		 }
+		 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			closeConn(rs, pstmt, con);
+		}
+		 
+	return result;
+}
+		
 	
 
 }
