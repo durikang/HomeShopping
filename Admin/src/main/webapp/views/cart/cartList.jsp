@@ -19,25 +19,21 @@
 		<c:set var="list" value="${CartList }" />
 			<tr>
 				<th>장바구니 No.</th>
-				<th>유저이름</th>
+				<th>유저No.</th>
 				<th>장바구니 생성일</th>
-				<th>장바구니 수정</th>
 				<th>장바구니 삭제</th>
 			</tr>
 			
 			<c:if test="${!empty list }">
 				<c:forEach  items="${list }" var="dto" >
 					<tr>
-						<td><a href="<%=request.getContextPath()%>/cartItem_list.do?no=${dto.getCart_userNo() }">${dto.getCart_no() }</a></td>
-						<td>${dto.getCart_userNo() }</td>
+						<td><a href="<%=request.getContextPath()%>/cartItem_list.do?no=${dto.cart_no }">${dto.cart_no }</a></td>
+						<td>${dto.cart_userNo }</td>
 						<td>
-							<fmt:formatDate value="${dto.getCart_createdAt() }"/>
+							<fmt:formatDate value="${dto.cart_createdAt }"/>
 						</td>
 						<td>
-							<input type="button" value="수정" onclick="location.href='cartItem_update.do?no=${dto.getCart_userNo()}'">
-						</td>
-						<td>
-							<input type="button" value="삭제" onclick="location.href='cartItem_delete.do?no=${dto.getCart_userNo()}'">
+							<input type="button" value="삭제" onclick="location.href='cartItem_delete.do?no=${dto.cart_no}'">
 						</td>
 					</tr>
 				</c:forEach>

@@ -135,7 +135,7 @@ public class CartItemDAO {
 		try {
 			openConn();
 			
-			sql ="select ci.CART_ITEM_NO,c.CART_NO,p.PRODUCT_NO,ci.QUANTITY,ci.ADDED_AT,ci.UPDATED_AT,p.NAME,p.PRICE from cart c join cart_item ci on(c.cart_no=ci.cart_no) join product p on(ci.product_no = p.product_no) join product_category pc on(p.CATEGORY_NO = pc.CATEGORY_NO) where user_no = ?";
+			sql ="select u.USER_NO , ci.CART_ITEM_NO, c.CART_NO,p.PRODUCT_NO,ci.QUANTITY,ci.ADDED_AT,ci.UPDATED_AT,p.NAME,p.PRICE from USERS u join cart c on (c.USER_NO = u.USER_NO) join cart_item ci on(c.cart_no=ci.cart_no) join product p on(ci.product_no = p.product_no) join product_category pc on(p.CATEGORY_NO = pc.CATEGORY_NO) where c.cart_no = ?";
 			/*
 			sql ="select ci.CART_ITEM_NO,c.CART_NO,p.PRODUCT_NO,ci.QUANTITY,ci.ADDED_AT,ci.UPDATED_AT,p.NAME,p.PRICE"
 					+ "from cart c "
