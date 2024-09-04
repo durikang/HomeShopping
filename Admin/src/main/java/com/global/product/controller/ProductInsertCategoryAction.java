@@ -33,7 +33,7 @@ public class ProductInsertCategoryAction implements Action {
 			int check = dao.insertCategory(dto);
 			
 			if (check > 0) {
-				ScriptUtil.sendScript(response, "카테고리 추가 성공", "product_category.do");
+				ScriptUtil.sendScript(response, "카테고리 추가 성공", "productCategoryList.do");
 			} else {
 				ScriptUtil.sendScript(response, "카테고리 추가 실패!!!", null);
 			}

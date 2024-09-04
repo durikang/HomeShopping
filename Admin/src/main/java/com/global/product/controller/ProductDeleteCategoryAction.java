@@ -22,7 +22,7 @@ public class ProductDeleteCategoryAction implements Action {
 		int check = dao.DeleteCategory(category_no);
 		
 		if (check > 0) {
-			ScriptUtil.sendScript(response, "카테고리 삭제 성공", "productCategory.do");
+			ScriptUtil.sendScript(response, "카테고리 삭제 성공", "productCategoryList.do");
 		} else {
 			ScriptUtil.sendScript(response, "카테고리 삭제 실패!!!", null);
 		}

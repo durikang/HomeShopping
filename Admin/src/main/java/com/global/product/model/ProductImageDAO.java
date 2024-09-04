@@ -104,41 +104,23 @@ public class ProductImageDAO {
 	} // closeConn() end
 
 
-	public int insertImgProduct(ProductDTO product, ProductImageDTO image) {
+	public int insertImgProduct(ProductImageDTO image) {
 
-		int result = 0, count = 0;
-
+		int result = 0;
+		int paramIndex=1;
 		try {
 		
 		openConn();
 		
-		sql = "SELECT MAX(PRODUCT_NO) FROM PRODUCT_IMAGE";
+		sql = "INSERT INTO PRODUCT_IMAGE VALUES(SEQ_IMAGE_NO.NEXTVAL,SEQ_PRODUCT_NO.currval,?,null)";
 		
 		pstmt = con.prepareStatement(sql);
 		
-		rs = pstmt.executeQuery();
-		
-		if(rs.next()) {
-			
-			count = rs.getInt(1) + 1;
-			
-			
-		}
-		
-		
-		sql = "INSERT INTO PRODUCT_IMAGE VALUES(?,?,?,?)";
-		
-		pstmt = con.prepareStatement(sql);
-		
-		pstmt.setInt(1, count);
-		pstmt.setInt(2, product.getProduct_no());
-		pstmt.setString(3, image.getImage_url());
-		pstmt.setString(4, product.getDescription());
+		pstmt.setString(paramIndex++, image.getImage_url());
 		
 		result = pstmt.executeUpdate();
 		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			closeConn(rs, pstmt, con);

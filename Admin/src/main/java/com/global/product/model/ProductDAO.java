@@ -11,6 +11,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.global.admin.model.AdminDTO;
+
 public class ProductDAO {
 	Connection con = null;
 	PreparedStatement pstmt = null;
@@ -109,53 +111,37 @@ public class ProductDAO {
 	public int insertProduct(ProductDTO dto) {
 
 		
-		int result = 0, count = 0;
-		
-		int product_no = 0;
+		int result = 0;
+		int paramIndex = 1;
 		
 		try {
 		
 		openConn();
 		
-		sql = "SELECT MAX(PRODUCT_NO) FROM PRODUCT";
+
 		
-		pstmt = con.prepareStatement(sql);
-		
-		rs = pstmt.executeQuery();
-		
-		if(rs.next()) {
-			
-			count = rs.getInt(1)+1;
-			
-			
-		}
-		
-		sql = "INSERT INTO PRODUCT VALUES(?,?,?,?,?,?,DEFAULT,SYSDATE,null, 'N',DEFAULT)";
+		sql = "INSERT INTO PRODUCT VALUES(SEQ_PRODUCT_NO.NEXTVAL,?,?,?,?,?,DEFAULT,SYSDATE,null, 'N',DEFAULT,?)";
 										
 		
 		pstmt = con.prepareStatement(sql);
 		
-		pstmt.setInt(1,count);
-		pstmt.setString(2, dto.getCategory_no());
-		pstmt.setString(3, dto.getName());
-		pstmt.setString(4, dto.getDescription());
-		pstmt.setInt(5, dto.getPrice());
-		pstmt.setInt(6, dto.getStock_quantity());
+		pstmt.setString(paramIndex++, dto.getCategory_no());
+		pstmt.setString(paramIndex++, dto.getName());
+		pstmt.setString(paramIndex++, dto.getDescription());
+		pstmt.setInt(paramIndex++, dto.getPrice());
+		pstmt.setInt(paramIndex++, dto.getStock_quantity());
+		pstmt.setInt(paramIndex++, dto.getUser_no());
 		
-		
-		pstmt.executeUpdate();
-		
-		product_no = count;
+		result = pstmt.executeUpdate();
 		
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			closeConn(rs, pstmt, con);
+			closeConn(pstmt, con);
 		}
 		
-		
-		return product_no;
+		return result;
 	}
 
 
@@ -185,7 +171,7 @@ public class ProductDAO {
 				product.setUpdated_at(rs.getDate(9));
 				product.setIs_deleted(rs.getString(10));
 				product.setTotal_sales(rs.getInt(11));
-				
+				product.setUser_no(rs.getInt(12));
 			}
 			
 			

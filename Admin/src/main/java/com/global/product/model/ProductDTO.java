@@ -17,9 +17,24 @@ public class ProductDTO {
 	private int image_no;
 	private String image_url;
 	private String img_description;
+	/* Admin join용 */
+	private int user_no;
+	private String role_code;
 	
 	
 	
+	public String getRole_code() {
+		return role_code;
+	}
+	public void setRole_code(String role_code) {
+		this.role_code = role_code;
+	}
+	public int getUser_no() {
+		return user_no;
+	}
+	public void setUser_no(int user_no) {
+		this.user_no = user_no;
+	}
 	public int getImage_no() {
 		return image_no;
 	}
