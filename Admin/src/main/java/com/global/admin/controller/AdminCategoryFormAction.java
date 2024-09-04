@@ -8,11 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.global.action.Action;
 import com.global.action.View;
 
-public class AdminCategoryInsertFormAction implements Action {
+public class AdminCategoryFormAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		return null;
+		return new View("main.go").setUrl("/views/admin/admin_category_Form.jsp");
 	}
 }

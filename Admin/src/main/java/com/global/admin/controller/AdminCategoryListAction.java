@@ -18,11 +18,10 @@ public class AdminCategoryListAction implements Action {
 
 		AdminDAO dao = AdminDAO.getInstance();
 		
-		List<AdminDTO> list = dao.getAdminList();
+		List<AdminDTO> list = dao.getAdminCategoryList();
 		
 		request.setAttribute("List", list);
 		
-		
-		return new View("main.go").setUrl("/views/admin/admin_categorylist.jsp");
+		return new View("main.go").setUrl("/views/admin/admin_category_list.jsp");
 	}
 }
