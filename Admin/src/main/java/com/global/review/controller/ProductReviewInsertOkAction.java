@@ -36,10 +36,11 @@ public class ProductReviewInsertOkAction implements Action{
 		String title = request.getParameter("title").trim();
 		String content = request.getParameter("content").trim();
 		int reviewStar = Integer.parseInt(request.getParameter("reviewStar"));
-		
-		review.setCategoryNo(categoryNo);
+
+		review.setCategory_no(categoryNo);
 		review.setTitle(title);
 		review.setContent(content);
+		review.setRating(reviewStar);
 		
 		int check = ProductReviewDAO.getInstance().insertReview(review, user.getUserNo());
 		
