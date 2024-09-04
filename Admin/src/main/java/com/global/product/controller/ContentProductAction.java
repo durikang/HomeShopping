@@ -7,26 +7,29 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.global.action.Action;
 import com.global.action.View;
-import com.global.product.model.ProductCategoryDAO;
-import com.global.product.model.ProductCategoryDTO;
+import com.global.product.model.ProductDAO;
+import com.global.product.model.ProductDTO;
 
-public class ProductContentCategoryAction implements Action {
+public class ContentProductAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String category_no = request.getParameter("no").trim(); 
 		
-		ProductCategoryDAO dao = ProductCategoryDAO.getInstance();
+		String product_no = request.getParameter("no").trim(); 
+		
+		ProductDAO dao = ProductDAO.getInstance();
 		
 		// 조회하는 메서드 호출
-		ProductCategoryDTO cont = dao.getCategoryContent(category_no);
+		ProductDTO cont = dao.getProductContent(product_no);
 		
 		request.setAttribute("Content", cont);
 		
 		
 		
 		
-		return new View("main.go").setUrl("/views/product/product_category_content.jsp");
+		return new View("main.go").setUrl("/views/product/product_content.jsp");
+
+		
 	}
 
 }
