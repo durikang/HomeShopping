@@ -103,7 +103,7 @@ public class CartDAO {
 				}
 	}//closeConn(pstmt, con) end
 	
-	//cart 테이블 정보를 추가하는 메서드
+	//cart 테이블 정보를 추가하는 메서드 ( 장바구니 버튼에서 user가 처음 장바구니 담기를 할때 (장바구니No가 null일때 ))
 	public int getCartCount(CartDTO dto) {
 		int result=0, count=0; 
 		
@@ -215,9 +215,18 @@ public class CartDAO {
 		try {
 			openConn();
 			
-			sql="DELETE FROM CART WHERE CART_NO=? ";
+			sql=" DELETE FROM cart_item where cart_no= ? ";
+			
 			
 			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setInt(1, no);
+			
+			result = pstmt.executeUpdate();
+			
+			sql = "delete from cart where cart_no =?";
+			
+			pstmt =con.prepareStatement(sql);
 			
 			pstmt.setInt(1, no);
 			
