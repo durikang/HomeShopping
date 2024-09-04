@@ -60,6 +60,147 @@ public class AdminDAO {
 			}
 	} // closeConn() 메서드 end
 	
+	// 전체 게시물 수를 확인하는 메서드.
+	public int getCategoryCount() {
+			
+		int count = 0;
+			
+		try {
+			openConn();
+				
+			sql = "select count(*) from admin_role";
+				
+			pstmt = con.prepareStatement(sql);
+				
+			rs = pstmt.executeQuery();
+				
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+		} 
+		
+		catch (SQLException e) {
+			
+			e.printStackTrace();
+		} 
+		
+		finally {
+			closeConn(rs, pstmt, con);
+		}
+			
+		return count;
+	} // getCategoryCount() end
+	
+	// 직책 전체 리스트를 조회하는 메서드
+	public List<AdminDTO> getAdminCategoryList() {
+			
+		List<AdminDTO> list = new ArrayList<AdminDTO>();
+			
+		try {
+			openConn();
+				
+			sql = "select * from admin_role order by role_code desc";
+				
+			pstmt = con.prepareStatement(sql);
+				
+			rs = pstmt.executeQuery();
+				
+			while(rs.next()) {
+				AdminDTO dto = new AdminDTO();
+					
+				dto.setRoleCode(rs.getString("role_code"));
+				dto.setRoleName(rs.getString("role_name"));
+					
+				list.add(dto);
+			}
+		} 
+			
+		catch (SQLException e) {
+			e.printStackTrace();
+		} 
+			
+		finally {
+			closeConn(rs, pstmt, con);
+		}
+			
+		return list;
+	} // getAdminCategoryList() 메서드 end
+		
+	// 직책 추가하는 메서드
+	public int insertAdminCategory(AdminDTO dto) {
+		
+		int result = 0, count = 0;
+			
+		try {
+			openConn();
+				
+			sql = "select max(role_code) from admin_role";
+				
+			pstmt = con.prepareStatement(sql);
+				
+			rs = pstmt.executeQuery();
+				
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+				
+			sql = "insert into admin_role values(?, ?)";
+				
+			pstmt = con.prepareStatement(sql);
+				
+			pstmt.setString(1, dto.getRoleCode());
+			pstmt.setString(2, dto.getRoleName());
+				
+			result = pstmt.executeUpdate();
+		} 
+			
+		catch (SQLException e) {
+			e.printStackTrace();
+		} 
+			
+		finally {
+			closeConn(rs, pstmt, con);
+		}
+			
+		return result;
+	} // insertAdminCategory() 메서드 end
+		
+	// 관리자 직책의 정보를 조회하는 메서드
+	public AdminDTO contentAdminCategory(String code, String name) {
+			
+		AdminDTO dto = null;
+			
+		try {
+			openConn();
+				
+			sql = "select * from admin_role where role_name = ?";
+				
+			pstmt = con.prepareStatement(sql);
+				
+			pstmt.setString(1, code);
+			pstmt.setString(2, name);
+				
+			rs = pstmt.executeQuery();
+				
+			if(rs.next()) {
+				dto = new AdminDTO();
+					
+				dto.setRoleCode(rs.getString("roleCode"));
+				dto.setRoleName(rs.getString("roleName"));
+			}
+		} 
+			
+		catch (SQLException e) {
+			e.printStackTrace();
+		} 
+			
+		finally {
+			closeConn(rs, pstmt, con);
+		}
+			
+		return dto;
+	} // contentAdminCategory() 메서드 end
+	
 	// 전체 리스트를 조회하는 메서드
 	public List<AdminDTO> getAdminList() {
 		
@@ -68,7 +209,9 @@ public class AdminDAO {
 		try {
 			openConn();
 			
-			sql = "select * from admin order by num desc";
+			sql = "select * from users order by num desc";
+			sql = "select * from admin_role order by num desc";
+			
 			
 			pstmt = con.prepareStatement(sql);
 			
@@ -82,10 +225,10 @@ public class AdminDAO {
 				dto.setPassword(rs.getString("password"));
 				dto.setName(rs.getString("name"));
 				dto.setEmail(rs.getString("email"));
-				dto.setRoleCode(rs.getString("roleCode"));
-				dto.setRoleName(rs.getString("roleName"));
-				dto.setCreatedAt(rs.getDate("createdAt"));
-				dto.setUpdatedAt(rs.getDate("updatedAt"));
+				dto.setRoleCode(rs.getString("role_code"));
+				dto.setRoleName(rs.getString("role_name"));
+				dto.setCreatedAt(rs.getDate("created_At"));
+				dto.setUpdatedAt(rs.getDate("updated_At"));
 				
 				list.add(dto);
 			}
