@@ -134,12 +134,12 @@ public class ProductReviewDAO {
 				
 				review.setReview_No(rs.getInt("Review_No"));
 				review.setProduct_No(rs.getInt("Product_No"));
-				review.setUser_No(rs.getInt("User_No"));
+				review.setUserNo(null);
 				review.setRating(rs.getInt("Rating"));
-				review.setComm(rs.getString("Comm"));
-				review.setCreated_At(rs.getDate("Created_At"));
-				review.setUpdated_At(rs.getDate("Updated_At"));
-				review.setIs_Deleted(rs.getString("Is_Deleted"));
+				/* review.setcomm(rs.getString("Comm")); */
+				review.setCreateAt(null);
+				review.setUpdateAt(null);
+				review.setIsDeleted(sql);
 				
 				list.add(review);
 			}
@@ -157,7 +157,28 @@ public class ProductReviewDAO {
 	// 리뷰 작성 메서드 (예: 성공 or 실패)
 	public int insertReview(ProductReviewDTO review, int userNo) {
 		
+		int result = 0; // 게시글 등록유무 확인 변수
+		int count = 0; // 게시글 중 가장 큰 확인 변수
 		
+		try {
+			openConn();
+			
+			sql = "select max(review_no) from product_review";
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+			
+			sql = "insert into product_review values()";
+			
+			pstmt = con.prepareStatement(sql);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return 0;
 	}
