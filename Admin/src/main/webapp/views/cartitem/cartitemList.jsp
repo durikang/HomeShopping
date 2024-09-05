@@ -29,7 +29,8 @@
 						<input type="button" value="수정" onclick="location.href='cartItem_update.do?no=${item.cartItem_no}'">
 					</td>
 					<td>
-						<input type="button" value="삭제" onclick="location.href='cartItem_delete.do?no=${item.cartItem_no}'">
+						<input type="button" value="삭제" onclick="if(confirm('정말로 게시글을 삭제하시겠습니까?')){
+											location.href='cartItem_delete.do?no=${item.cartItem_no}'} else{return;}">
 					</td>
 				</tr>
 			</c:forEach>

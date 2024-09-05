@@ -88,45 +88,6 @@ public class CartItemDAO {
 					}
 	}//closeConn(pstmt, con)end
 	
-	//cartItem 테이블 정보를 추가하는 메서드
-	public int insertCartItem(CartItemDTO dto) {
-		int result = 0, count =0;
-		
-	
-		try {
-			openConn();
-			
-			sql ="SELECT MAX(CART_ITEM_NO) FROM CART_ITEM";
-			
-			pstmt = con.prepareStatement(sql);
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				count = rs.getInt(1)+1;
-			}
-			
-			sql="INSERT INTO CART_ITEM VALUES(?, ?, ?, ?, SYSDATE, SYSDATE)";
-			
-			pstmt = con.prepareStatement(sql);
-			
-			pstmt.setInt(1, count);
-			pstmt.setInt(2, dto.getCartItem_cartNo());
-			pstmt.setInt(3, dto.getCartItem_productNo());
-			pstmt.setInt(4, dto.getCartItem_quantity());
-			
-			result = pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-					e.printStackTrace();
-				}finally {
-						closeConn(rs, pstmt, con);
-						}
-		
-		return result;
-		
-	} //insertCartItem end
-	
 	//cartItem 테이블 정보 전체 조회하는 메서드 
 	public List<CartItemDTO> getCartItemList(int no){
 		
@@ -135,15 +96,15 @@ public class CartItemDAO {
 		try {
 			openConn();
 			
-			sql ="select u.USER_NO , ci.CART_ITEM_NO, c.CART_NO,p.PRODUCT_NO,ci.QUANTITY,ci.ADDED_AT,ci.UPDATED_AT,p.NAME,p.PRICE from USERS u join cart c on (c.USER_NO = u.USER_NO) join cart_item ci on(c.cart_no=ci.cart_no) join product p on(ci.product_no = p.product_no) join product_category pc on(p.CATEGORY_NO = pc.CATEGORY_NO) where c.cart_no = ?";
-			/*
-			sql ="select ci.CART_ITEM_NO,c.CART_NO,p.PRODUCT_NO,ci.QUANTITY,ci.ADDED_AT,ci.UPDATED_AT,p.NAME,p.PRICE"
-					+ "from cart c "
+			sql ="select u.USER_NO , ci.CART_ITEM_NO, c.CART_NO,p.PRODUCT_NO,ci.QUANTITY,ci.ADDED_AT,ci.UPDATED_AT,p.NAME,p.PRICE "
+					+ "from USERS u "
+					+ "join cart c on (c.USER_NO = u.USER_NO) "
 					+ "join cart_item ci on(c.cart_no=ci.cart_no) "
 					+ "join product p on(ci.product_no = p.product_no) "
-					+ "join product_category pc on(p.CATEGORY_NO = pc.CATEGORY_NO)"
-					+ "where user_no = ?";
-			*/
+					+ "join product_category pc on(p.CATEGORY_NO = pc.CATEGORY_NO) "
+					+ "where c.cart_no = ? "
+					+ "order by  cart_no desc";
+		
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, no);
 			
@@ -175,41 +136,30 @@ public class CartItemDAO {
 		
 	}//getCartItemList end
 	
-	//cartItem 테이블  CART_NO 검색하여 해당 정보를 조회하는 메서드 
-	public CartItemDTO contentCartItem(int no) {
-		CartItemDTO dto = null;
+	//cartItem 테이블  CART_NO 검색하여 해당 정보를 삭제하는 메서드 
+	public int deleteCartItem(int no) {
+		int result =0;
 		
 	
 		try {
 			openConn();
 			
-			sql ="SELECT * FROM CART_ITEM WHERE CART_NO =? ";
+			sql ="delete from cart_item where CART_NO =? ";
 			
 			pstmt = con.prepareStatement(sql);
 			
 			pstmt.setInt(1, no);
 			
-			rs = pstmt.executeQuery();
+			result =pstmt.executeUpdate();
 			
-			if(rs.next()) {
-				dto = new CartItemDTO();
-				
-				dto.getCartItem_no();
-				dto.getCartItem_cartNo();
-				dto.getCartItem_productNo();
-				dto.getCartItem_quantity();
-				dto.getCartItem_addedAt();
-				dto.getCartItem_updatedAt();
-	
-			}
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
 				}finally {
-						closeConn(rs, pstmt, con);
+						closeConn(pstmt, con);
 					}
 	
-		return dto;
+		return result;
 	}
 	
 	//cartItem 테이블 삭제하는  메서드 
