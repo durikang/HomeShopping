@@ -40,7 +40,7 @@
 			 	<c:if test = "${!empty List }">
 				 	<c:forEach var="adminRole" items="${list }">
 			 			<tr>
-			 				<td>${adminRole.row_num() }</td>
+			 				<!-- <td>${adminRole.row_num() }</td> -->
 			 				<td>${adminRole.getRoleCode() }</td>
 			 				<td>${adminRole.getRoleName() }</td>
 			 			</tr>

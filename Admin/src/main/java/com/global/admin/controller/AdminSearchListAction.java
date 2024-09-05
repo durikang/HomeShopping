@@ -11,17 +11,24 @@ import com.global.action.View;
 import com.global.admin.model.AdminDAO;
 import com.global.admin.model.AdminDTO;
 
-public class AdminContentAction implements Action {
+public class AdminSearchListAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
+		return null;
+
+		/*
+		String search_field = request.getParameter("field").trim();
+		String search_keyword = request.getParameter("keyword").trim();
+		
 		AdminDAO dao = AdminDAO.getInstance();
 		
-		List<AdminDTO> list = dao.getAdminList();
+		List<AdminDTO> searchList = dao.searchAdminList(search_field, search_keyword);
 		
-		request.setAttribute("List", list);
+		request.setAttribute("Search", searchList);
 		
 		return new View("main.go").setUrl("/views/admin/admin_search_list.jsp");
+		*/
 	}
 }
