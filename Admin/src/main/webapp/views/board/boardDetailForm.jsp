@@ -77,28 +77,6 @@ function restoreBoard(boardNo) {
         box-sizing: border-box;
     }
 
-    /* .submit-reply, .submit-edit, .cancel-edit {
-        margin-top: 10px;
-        padding: 8px 16px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .submit-reply:hover, .submit-edit:hover, .cancel-edit:hover {
-        background-color: #0056b3;
-    }
-
-    .cancel-edit {
-        background-color: #6c757d;
-    }
-
-    .cancel-edit:hover {
-        background-color: #5a6268;
-    } */
-
     /* 대댓글 구분 스타일 */
     .comment[data-node-level="2"] {
         margin-left: 40px;
@@ -129,6 +107,25 @@ function restoreBoard(boardNo) {
 
     .comment-actions a:hover {
         text-decoration: underline;
+    }
+
+    /* 파일 다운로드 버튼 스타일 */
+    .file-download {
+        margin: 20px 0;
+        text-align: left;
+    }
+
+    .file-download a {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .file-download a:hover {
+        background-color: #0056b3;
     }
 </style>
 
@@ -164,6 +161,13 @@ function restoreBoard(boardNo) {
         <div class="content-body">
             <c:out value="${info.content}" escapeXml="false"/>
         </div>
+
+        <!-- 파일 다운로드 버튼 (파일이 있을 경우에만 표시) -->
+        <c:if test="${not empty info.imageUrl}">
+            <div class="file-download">
+                <a href="${contextPath}/fileDownload.do?fileUrl=${info.imageUrl}" class="btn btn_space_tb">파일 다운로드</a>
+            </div>
+        </c:if>
 
         <!-- 뒤로가기 버튼 -->
         <button type="button" onclick="location.href='boardList.do?status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">뒤로가기</button>
