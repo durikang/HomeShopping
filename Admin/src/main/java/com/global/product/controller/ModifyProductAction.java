@@ -10,30 +10,22 @@ import com.global.action.View;
 import com.global.product.model.ProductDAO;
 import com.global.product.model.ProductDTO;
 
-public class ContentProductAction implements Action {
+public class ModifyProductAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
-		String product_no = request.getParameter("no").trim(); 
+		String product_no = request.getParameter("no").trim();
 		
 		ProductDAO dao = ProductDAO.getInstance();
 		
-		// 조회하는 메서드 호출
-		ProductDTO cont = dao.getProductContent(product_no);
+		ProductDTO dto = dao.getProductContent(product_no);
+		
+		request.setAttribute("Modify", dto);
+		
+		return new View("main.go").setUrl("/views/product/productModify.jsp");
 		
 		
-		
-		System.out.println(cont.getIs_deleted());
-		
-		
-		request.setAttribute("Content", cont);
-		
-		
-		
-		
-		return new View("main.go").setUrl("/views/product/product_content.jsp");
-
 		
 	}
 

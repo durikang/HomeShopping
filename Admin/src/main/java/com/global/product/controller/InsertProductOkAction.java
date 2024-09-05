@@ -6,6 +6,7 @@ import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.global.action.Action;
 import com.global.action.View;
@@ -42,12 +43,12 @@ public class InsertProductOkAction implements Action {
 		String product_info = getParameterSafe(multi, "product_info");
 		int product_price = parseIntSafe(multi.getParameter("product_price"));
 		int stock_quantity = parseIntSafe(multi.getParameter("stock_quantity"));
+		int user_no = parseIntSafe(multi.getParameter("user_no")); 
 		
 		UsersDTO user = (UsersDTO)request.getSession().getAttribute("user");
 		
 		
 		
-		int user_no = user.getUserNo();
 		
 		
 		
@@ -87,6 +88,7 @@ public class InsertProductOkAction implements Action {
 			product.setImage_url(fileDBName);
 			
 		}
+		
 		
 		product.setName(product_name);
 		product.setCategory_no(category_no);
