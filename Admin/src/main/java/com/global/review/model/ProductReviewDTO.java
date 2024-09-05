@@ -6,12 +6,7 @@ public class ProductReviewDTO {
 	private int Review_No;
 	private int Board_No;
 	private int Product_No;
-	private int User_No;
 	private int Rating;
-	private String Comm;
-	private Date Created_At;
-	private Date Updated_At;
-	private String Is_Deleted;
 	
 	/*상품 정보 조인용*/
 	private String category_no;
@@ -19,11 +14,15 @@ public class ProductReviewDTO {
 	private String description;
 	private int price;
 	private int stock_quantity;
-	private int views;
 	
 	/*상품 조인용*/
+	private Integer userNo;
 	private String title;
 	private String content;
+	private int views; // 조회수
+	private Date createAt;
+	private Date updateAt;
+	private String isDeleted;
 	
 	public int getReview_No() {
 		return Review_No;
@@ -49,52 +48,12 @@ public class ProductReviewDTO {
 		Product_No = product_No;
 	}
 	
-	public int getUser_No() {
-		return User_No;
-	}
-	
-	public void setUser_No(int user_No) {
-		User_No = user_No;
-	}
-	
 	public int getRating() {
 		return Rating;
 	}
 	
 	public void setRating(int rating) {
 		Rating = rating;
-	}
-	
-	public String getComm() {
-		return Comm;
-	}
-	
-	public void setComm(String comm) {
-		Comm = comm;
-	}
-	
-	public Date getCreated_At() {
-		return Created_At;
-	}
-	
-	public void setCreated_At(Date created_At) {
-		Created_At = created_At;
-	}
-	
-	public Date getUpdated_At() {
-		return Updated_At;
-	}
-	
-	public void setUpdated_At(Date updated_At) {
-		Updated_At = updated_At;
-	}
-	
-	public String getIs_Deleted() {
-		return Is_Deleted;
-	}
-	
-	public void setIs_Deleted(String is_Deleted) {
-		Is_Deleted = is_Deleted;
 	}
 	
 	public String getCategory_no() {
@@ -137,6 +96,30 @@ public class ProductReviewDTO {
 		this.stock_quantity = stock_quantity;
 	}
 	
+	public Integer getUserNo() {
+		return userNo;
+	}
+	
+	public void setUserNo(Integer userNo) {
+		this.userNo = userNo;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public String getContent() {
+		return content;
+	}
+	
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
 	public int getViews() {
 		return views;
 	}
@@ -144,21 +127,29 @@ public class ProductReviewDTO {
 	public void setViews(int views) {
 		this.views = views;
 	}
-
-	public String getTitle() {
-		return title;
+	
+	public Date getCreateAt() {
+		return createAt;
 	}
-
-	public void setTitle(String title) {
-		this.title = title;
+	
+	public void setCreateAt(Date createAt) {
+		this.createAt = createAt;
 	}
-
-	public String getContent() {
-		return content;
+	
+	public Date getUpdateAt() {
+		return updateAt;
 	}
-
-	public void setContent(String content) {
-		this.content = content;
+	
+	public void setUpdateAt(Date updateAt) {
+		this.updateAt = updateAt;
 	}
-
+	
+	public String getIsDeleted() {
+		return isDeleted;
+	}
+	
+	public void setIsDeleted(String isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+	
 }
