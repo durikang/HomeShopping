@@ -119,4 +119,15 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+### 추가된 부분 (이미지 파일 무시 설정) ###
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+
 # End of https://www.toptal.com/developers/gitignore/api/java,eclipse,windows
+
+# lib 디렉토리 내 JAR 파일은 무시하지 않음
+!lib/*.jar
