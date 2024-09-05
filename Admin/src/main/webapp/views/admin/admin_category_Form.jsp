@@ -14,7 +14,7 @@
 		
 		<br><br>
 		
-		<form method = "post" action = "${contextPath }/adminCategoryInsert_ok.do">
+		<form method = "post" action = "${contextPath }/adminCategory_ok.do">
 			<table border = "1" width = "auto">
 			<tr>
 				<th>직책 코드</th>

@@ -165,7 +165,7 @@ public class AdminDAO {
 		return result;
 	} // insertAdminCategory() 메서드 end
 		
-	// 관리자 직책의 정보를 조회하는 메서드
+	// 코드로 관리자 직책의 정보를 조회하는 메서드
 	public AdminDTO contentAdminCategory(String code, String name) {
 			
 		AdminDTO dto = null;
@@ -173,18 +173,18 @@ public class AdminDAO {
 		try {
 			openConn();
 				
-			sql = "select * from admin_role where role_name = ?";
+			sql = "select * from admin_role where role_code = ?";
 				
 			pstmt = con.prepareStatement(sql);
 				
 			pstmt.setString(1, code);
-			pstmt.setString(2, name);
 				
 			rs = pstmt.executeQuery();
 				
 			if(rs.next()) {
 				dto = new AdminDTO();
 					
+				// dto.setRow_Num(rs.getInt("rowNum"));
 				dto.setRoleCode(rs.getString("roleCode"));
 				dto.setRoleName(rs.getString("roleName"));
 			}
