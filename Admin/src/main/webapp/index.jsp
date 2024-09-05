@@ -8,10 +8,8 @@
 <head>
 <meta charset="UTF-8">
 <title>쇼핑몰 관리자 페이지</title>
-<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/index/css/index.css">
-<script src="<%=request.getContextPath() %>/resources/index/js/index.js"></script>
-
 <%
+
 //가데이터 생성	
 //관리자 객체 생성
   AdminDTO admin = new AdminDTO();

@@ -225,7 +225,7 @@ public class BoardDAO {
 
 				/* USERS 정보도 필요하므로 SET*/
 				
-				board.setUserNo(rs.getObject("USER_NO"));
+				board.setUserNo(rs.getInt("USER_NO"));
 				
 				board.setUserId(rs.getString("USER_ID"));
 				board.setUserEmail(rs.getString("USEr_EMAIL"));
@@ -407,43 +407,55 @@ public class BoardDAO {
 		return res;
 	}
 
-	public int insertBoard(BoardDTO board,Integer userNo) {
-		int res = 0;
-		
-		openConn();
-		/* 현재 로그인이 구현 안됐으므로 아래 코드는 임시 주석처리합니다.*/
-		/*
-		 * sql = "insert into board values(seq_board_no.nextval,?,?,?,?,sysdate,null,'N')";
-		 */
-		
-		sql = "insert into board values(seq_board_no.nextval,?,?,?,?,default,sysdate,null,'N')";
-		
-		try {
-			pstmt = conn.prepareStatement(sql);
-			int paramIndex=1;
-			/* 현재 로그인이 구현 안됐으므로 아래 코드는 임시 주석처리합니다.*/
-			/*
-			 * pstmt.setInt(1, board.getUserNo());
-			 */
-			
-	        if (userNo == null) {
-	            pstmt.setNull(paramIndex++, java.sql.Types.INTEGER); // userNo가 null일 때 처리
-	        } else {
-	            pstmt.setInt(paramIndex++, userNo); // userNo가 null이 아닐 때 처리
+	public int insertBoard(BoardDTO board, Integer userNo) {
+	    int res = 0;
+	    
+
+	    try {
+	        openConn();
+
+	        // 1. BOARD 테이블에 게시글 저장
+	        String insertBoardSQL = "INSERT INTO board (BOARD_NO, USER_NO, CATEGORY_NO, TITLE, CONTENT, VIEWS, CREATED_AT, UPDATED_AT, IS_DELETED) " +
+	                                "VALUES (seq_board_no.nextval, ?, ?, ?, ?, default, sysdate, null, 'N')";
+
+	        pstmt = conn.prepareStatement(insertBoardSQL, Statement.RETURN_GENERATED_KEYS);
+	        int paramIndex = 1;
+	        pstmt.setInt(paramIndex++, userNo);              // USER_NO
+	        pstmt.setString(paramIndex++, board.getCategoryNo());  // CATEGORY_NO
+	        pstmt.setString(paramIndex++, board.getTitle());       // TITLE
+	        pstmt.setString(paramIndex++, board.getContent());     // CONTENT
+
+	        res = pstmt.executeUpdate();
+
+	        // 2. 게시글이 정상적으로 삽입되었는지 확인 후, 게시글 번호를 가져옴
+	        if (res > 0) {
+	            rs = pstmt.getGeneratedKeys();
+	            if (rs.next()) {
+	                int boardNo = rs.getInt(1);  // 삽입된 게시글의 BOARD_NO를 가져옴
+
+	                // 3. 파일이 첨부된 경우, BOARD_IMAGE 테이블에 이미지 정보 저장
+	                if (board.getImageUrl() != null && !board.getImageUrl().isEmpty()) {
+	                    String insertImageSQL = "INSERT INTO board_image (IMAGE_NO, BOARD_NO, IMAGE_URL, DESCRIPTION, UPLOADED_AT) " +
+	                                            "VALUES (seq_board_image_no.nextval, ?, ?, ?, sysdate)";
+	                    pstmt = conn.prepareStatement(insertImageSQL);
+	                    pstmt.setInt(1, boardNo);                   // BOARD_NO
+	                    pstmt.setString(2, board.getImageUrl());     // IMAGE_URL
+	                    pstmt.setString(3, "");                      // DESCRIPTION (필요시 추가 가능)
+
+	                    pstmt.executeUpdate();
+	                }
+	            }
 	        }
-			pstmt.setString(paramIndex++, board.getCategoryNo());
-			pstmt.setString(paramIndex++, board.getTitle());
-			pstmt.setString(paramIndex++, board.getContent());
-			
-			res = pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			closeConn(pstmt, conn);
-		}
-		
-		return res;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(rs, pstmt, conn);
+	    }
+
+	    return res;
 	}
+
 
 	public BoardDTO selectBoard(int no, String userType) {
 		BoardDTO board = null;

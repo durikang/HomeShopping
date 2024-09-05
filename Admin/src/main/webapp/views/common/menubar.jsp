@@ -10,7 +10,7 @@
 <link href="${contextPath }/resources/master.css" rel="stylesheet" >
 <link href="${contextPath }/resources/common/css/pwd.css" rel="stylesheet" type="text/css"/>
 <link href="${contextPath }/resources/common/css/table.css" rel="stylesheet" type="text/css"/>
-<link href="${contextPath}/resources/common/css/btn.css" rel="stylesheet">    
+<link href="${contextPath }/resources/common/css/btn.css" rel="stylesheet">    
 <link href="${contextPath }/resources/common/css/form.css" rel="stylesheet">
 <link href="${contextPath }/resources/common/css/components.css" rel="stylesheet">
 <link href="${contextPath }/resources/common/css/search.css" rel="stylesheet">
@@ -19,9 +19,9 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <!-- CKEditor 5 스크립트 추가 -->
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
 
 <!-- 내비게이션 바 -->
 <nav class="navbar">
@@ -103,7 +103,7 @@
             </li>
 
             <!-- 로그아웃 -->
-            <li><a href="logout.html">로그아웃</a></li>
+            <li><a href="userLogout.do">로그아웃</a></li>
         </ul>
     </div>
 </nav>
