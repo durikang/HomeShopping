@@ -37,8 +37,6 @@
 						value="${dto.order_no }"></td>
 				<td><input name="user_no" readonly
 					value="${dto.user_no }"></td>
-				<td><input name="order_date" readonly
-					value="${dto.order_date }"></td>
 				<td>
 					<select name="status" >
 			            <option value="PENDING">배송 대기</option>

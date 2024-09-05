@@ -223,5 +223,32 @@ public class OrderDAO {
 		return dto;
 	}
 	
+	public int ModifyOrder(OrderDTO dto) {
+		int result = 0;
+		
+	
+		
+		try {
+			
+			openConn();
+			
+			sql = "update orders set status = ? where order_no = ?";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getStatus());
+			pstmt.setInt(2, dto.getOrder_no());
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			closeConn(rs, pstmt, con);
+		}
+		
+		return result;
+	}
+	
 
 }
