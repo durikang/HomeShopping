@@ -12,6 +12,10 @@ public class ProductDTO {
 	private int stock_quantity;
 	private int views;
 	private Date created_at;	
+	private Date updated_at;
+	private String is_deleted;
+	private int total_sales;
+	
 	
 	/*product_img join용*/
 	private int image_no;
@@ -59,10 +63,7 @@ public class ProductDTO {
 	public void setViews(int views) {
 		this.views = views;
 	}
-	private Date updated_at;
-	private String is_deleted;
-	private int total_sales;
-	
+
 	public int getProduct_no() {
 		return product_no;
 	}

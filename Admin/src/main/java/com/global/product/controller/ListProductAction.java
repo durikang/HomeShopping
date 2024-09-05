@@ -57,7 +57,7 @@ public class ListProductAction implements Action {
         request.setAttribute("count", pi.getListCount());
         request.setAttribute("list", list);
         request.setAttribute("pi", pi);
-		request.setAttribute("address", "productCategory.do");
+		request.setAttribute("address", "productList.do");
 		
 		return new View("main.go").setUrl("/views/product/product_list.jsp");
 	}

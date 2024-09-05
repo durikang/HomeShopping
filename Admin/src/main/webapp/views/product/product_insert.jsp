@@ -14,6 +14,7 @@
 
 		<form action="productInsertOk.do" method="post"
 			enctype="multipart/form-data">
+		 <input type="hidden" name="user_no" value="${sessionScope.user.userNo}">
 			<table class="insertTableForm">
 				<c:set var="catlist" value="${CategoryList }" />
 				<tr>

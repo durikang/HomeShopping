@@ -31,7 +31,7 @@
 
 			<tr>
 				<th>상품 번호</th>
-				<td>${dto.getProduct_No() }</td>
+				<td>${dto.getProduct_no() }</td>
 			</tr>
 		
 			<tr>
@@ -111,10 +111,10 @@
 		<br>
 		
 		<input type="button" value="상품수정"
-	        onclick="location.href='productModify.do?no=${dto.getProduct_No() }'">
+	        onclick="location.href='productModify.do?no=${dto.getProduct_no() }'">
 	   &nbsp;&nbsp;
 	   <input type="button" value="상품삭제"
-	        onclick="location.href='productDelete.do?no=${dto.getProduct_No() }'">
+	        onclick="location.href='productDelete.do?no=${dto.getProduct_no() }'">
 	   &nbsp;&nbsp;
 	   <input type="button" value="전체목록"
 	        onclick="location.href='productList.do'">

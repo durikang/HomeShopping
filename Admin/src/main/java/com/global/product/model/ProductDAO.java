@@ -192,9 +192,9 @@ public class ProductDAO {
 
 		openConn();
 		
-		sql = "SELECT P.PRODUCT_NO, P.CATEGORY_NO, I.IMAGE_URL, P.NAME, P.DESCRIPTION, "
-				+ "P.PRICE, P.STOCK_QUANTITY, P.VIEWS, P.CREATED_AT, P.UPDATED_AT, P.IS_DELETED, P.TOTAL_SALES "
-				+ "FROM PRODUCT P INNER JOIN PRODUCT_IMAGE I ON P.PRODUCT_NO = I.PRODUCT_NO";
+		sql = "SELECT * "
+				+ "FROM PRODUCT "
+				+ "JOIN PRODUCT_IMAGE using(PRODUCT_NO) ";
 		
 		pstmt = con.prepareStatement(sql);
 		
@@ -216,6 +216,7 @@ public class ProductDAO {
 			dto.setUpdated_at(rs.getDate("updated_at"));
 			dto.setIs_deleted(rs.getString("is_deleted"));
 			dto.setTotal_sales(rs.getInt("total_sales"));
+			dto.setUser_no(rs.getInt("user_no"));
 			
 			list.add(dto);
 			
@@ -246,9 +247,10 @@ public class ProductDAO {
 
 		
 		
-		sql = "SELECT P.PRODUCT_NO, P.CATEGORY_NO, I.IMAGE_URL, P.NAME, P.DESCRIPTION,"
-				+ "P.PRICE, P.STOCK_QUANTITY, P.VIEWS, P.CREATED_AT, P.UPDATED_AT, P.IS_DELETED, P.TOTAL_SALES"
-				+ "FROM PRODUCT P INNER JOIN PRODUCT_IMAGE I ON P.PRODUCT_NO = I.PRODUCT_NO WHERE P.PRODUCT_NO = ?";
+		sql = "SELECT * "
+				+ "FROM PRODUCT "
+				+ "JOIN PRODUCT_IMAGE using(PRODUCT_NO) "
+				+ "WHERE PRODUCT_NO = ?";
 //		sql = "SELECT P.PRODUCT_NO, P.CATEGORY_NO, I.IMAGE_URL, P.NAME, P.DESCRIPTION,"
 //				+ "P.PRICE, P.STOCK_QUANTITY, P.VIEWS, P.CREATED_AT, P.UPDATED_AT, P.IS_DELETED, P.TOTAL_SALES"
 //				+ "FROM PRODUCT P, PRODUCT_IMAGE I WHERE P.PRODUCT_NO = I.PRODUCT_NO AND P.PRODUCT_NO = ?";
@@ -264,7 +266,6 @@ public class ProductDAO {
 			
 			dto = new ProductDTO();
 			
-			dto.setUser_no(rs.getInt("user_no"));
 			dto.setProduct_no(rs.getInt("product_no"));
 			dto.setCategory_no(rs.getString("category_no"));
 			dto.setName(rs.getString("name"));
@@ -274,9 +275,10 @@ public class ProductDAO {
 			dto.setStock_quantity(rs.getInt("stock_quantity"));
 			dto.setViews(rs.getInt("views"));
 			dto.setCreated_at(rs.getDate("created_at"));
-			dto.setUpdated_at(rs.getDate("update_at"));
+			dto.setUpdated_at(rs.getDate("UPDATED_AT"));
 			dto.setIs_deleted(rs.getString("is_deleted"));
 			dto.setTotal_sales(rs.getInt("total_sales"));
+			dto.setUser_no(rs.getInt("user_no"));
 		}
 		
 		
