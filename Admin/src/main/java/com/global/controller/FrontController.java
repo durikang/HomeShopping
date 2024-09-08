@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.global.action.Action;
 import com.global.action.ActionFactory;
 import com.global.action.View;
@@ -17,6 +20,10 @@ import com.global.utils.RequestUtils;
 public class FrontController extends HttpServlet {
     private static final long serialVersionUID = -1934459167346141964L;
 
+    // SLF4J Logger 선언
+    private static final Logger logger = LoggerFactory.getLogger(FrontController.class);
+
+    
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // 한글 처리 작업 진행
@@ -33,8 +40,10 @@ public class FrontController extends HttpServlet {
         // 커맨드에 해당하는 클래스 이름을 가져온다.
         String namePath = prop.getProperty(command);
 
-        System.out.println("Command: " + command);
-        System.out.println("NamePath: " + namePath);
+        // 로그 출력
+        logger.info("Command: {}", command);
+        logger.info("NamePath: {}", namePath);
+        
         View view = null;
         if (namePath.endsWith(".jsp")) {
             // 비즈니스 로직 메서드 호출 및 결과 처리

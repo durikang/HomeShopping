@@ -186,7 +186,7 @@ public class BoardDAO {
 			sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY b.BOARD_NO ASC) AS rnum, b.*, u.USER_TYPE, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, bc.NAME AS CATEGORY_NAME FROM BOARD b JOIN USERS u ON b.USER_NO = u.USER_NO JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO) WHERE rnum BETWEEN ? AND ?";
 		*/
 		// 현재 회원 관련된 로직이 미구현 상태이므로 임시로 아래 쿼리를 사용합니다.
-		sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY b.BOARD_NO ASC) AS rnum, b.*, u.USER_TYPE, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, bc.NAME AS CATEGORY_NAME FROM BOARD b LEFT JOIN USERS u ON b.USER_NO = u.USER_NO JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO) WHERE rnum BETWEEN ? AND ?";
+		sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY b.BOARD_NO DESC) AS rnum, b.*, u.USER_TYPE, u.USER_ID, u.NAME AS USER_NAME, u.EMAIL AS USER_EMAIL, bc.NAME AS CATEGORY_NAME FROM BOARD b LEFT JOIN USERS u ON b.USER_NO = u.USER_NO JOIN BOARD_CATEGORY bc ON b.CATEGORY_NO = bc.CATEGORY_NO) WHERE rnum BETWEEN ? AND ?";
 		
 		try {
 			openConn();
@@ -407,53 +407,63 @@ public class BoardDAO {
 		return res;
 	}
 
-	public int insertBoard(BoardDTO board, Integer userNo) {
-	    int res = 0;
-	    
-
+	public int insertBoard(BoardDTO board, Integer userNo, List<BoardFileUploadDTO> fileUploads) {
+	    int boardNo = 0;
 	    try {
 	        openConn();
+	        conn.setAutoCommit(false);  // 트랜잭션 시작
 
-	        // 1. BOARD 테이블에 게시글 저장
-	        String insertBoardSQL = "INSERT INTO board (BOARD_NO, USER_NO, CATEGORY_NO, TITLE, CONTENT, VIEWS, CREATED_AT, UPDATED_AT, IS_DELETED) " +
-	                                "VALUES (seq_board_no.nextval, ?, ?, ?, ?, default, sysdate, null, 'N')";
-
-	        pstmt = conn.prepareStatement(insertBoardSQL, Statement.RETURN_GENERATED_KEYS);
+	        // 게시글 삽입
+	        sql = "INSERT INTO BOARD (BOARD_NO, USER_NO, CATEGORY_NO, TITLE, CONTENT, VIEWS, CREATED_AT, UPDATED_AT, IS_DELETED) " +
+	              "VALUES (SEQ_BOARD_NO.nextval, ?, ?, ?, ?, default, sysdate, null, 'N')";
+	        pstmt = conn.prepareStatement(sql);
 	        int paramIndex = 1;
-	        pstmt.setInt(paramIndex++, userNo);              // USER_NO
-	        pstmt.setString(paramIndex++, board.getCategoryNo());  // CATEGORY_NO
-	        pstmt.setString(paramIndex++, board.getTitle());       // TITLE
-	        pstmt.setString(paramIndex++, board.getContent());     // CONTENT
+	        pstmt.setInt(paramIndex++, userNo);
+	        pstmt.setString(paramIndex++, board.getCategoryNo());
+	        pstmt.setString(paramIndex++, board.getTitle());
+	        pstmt.setString(paramIndex++, board.getContent());
 
-	        res = pstmt.executeUpdate();
-
-	        // 2. 게시글이 정상적으로 삽입되었는지 확인 후, 게시글 번호를 가져옴
+	        int res = pstmt.executeUpdate();
 	        if (res > 0) {
-	            rs = pstmt.getGeneratedKeys();
+	            // 게시글 번호 가져오기
+	            sql = "SELECT SEQ_BOARD_NO.CURRVAL FROM dual";
+	            pstmt = conn.prepareStatement(sql);
+	            rs = pstmt.executeQuery();
 	            if (rs.next()) {
-	                int boardNo = rs.getInt(1);  // 삽입된 게시글의 BOARD_NO를 가져옴
+	                boardNo = rs.getInt(1);
+	            }
 
-	                // 3. 파일이 첨부된 경우, BOARD_IMAGE 테이블에 이미지 정보 저장
-	                if (board.getImageUrl() != null && !board.getImageUrl().isEmpty()) {
-	                    String insertImageSQL = "INSERT INTO board_image (IMAGE_NO, BOARD_NO, IMAGE_URL, DESCRIPTION, UPLOADED_AT) " +
-	                                            "VALUES (seq_board_image_no.nextval, ?, ?, ?, sysdate)";
-	                    pstmt = conn.prepareStatement(insertImageSQL);
-	                    pstmt.setInt(1, boardNo);                   // BOARD_NO
-	                    pstmt.setString(2, board.getImageUrl());     // IMAGE_URL
-	                    pstmt.setString(3, "");                      // DESCRIPTION (필요시 추가 가능)
-
+	            // 파일 업로드 정보 저장
+	            if (fileUploads != null && !fileUploads.isEmpty()) {
+	                for (BoardFileUploadDTO fileDTO : fileUploads) {
+	                    sql = "INSERT INTO BOARD_FILEUPLOADS (FILE_NO, BOARD_NO, FILE_URL, FILE_NAME, FILE_SIZE, FILE_TYPE, DESCRIPTION, UPLOADED_AT) " +
+	                          "VALUES (SEQ_BOARD_FILEUPLOADS_NO.NEXTVAL, ?, ?, ?, ?, ?, ?, SYSDATE)";
+	                    pstmt = conn.prepareStatement(sql);
+	                    pstmt.setInt(1, boardNo);
+	                    pstmt.setString(2, fileDTO.getFileUrl());
+	                    pstmt.setString(3, fileDTO.getFileName());
+	                    pstmt.setLong(4, fileDTO.getFileSize());
+	                    pstmt.setString(5, fileDTO.getFileType());
+	                    pstmt.setString(6, fileDTO.getDescription());
 	                    pstmt.executeUpdate();
 	                }
 	            }
 	        }
 
+	        conn.commit();  // 트랜잭션 커밋
+
 	    } catch (SQLException e) {
+	        try {
+	            if (conn != null) conn.rollback();  // 오류 발생 시 롤백
+	        } catch (SQLException rollbackEx) {
+	            rollbackEx.printStackTrace();
+	        }
 	        e.printStackTrace();
 	    } finally {
 	        closeConn(rs, pstmt, conn);
 	    }
 
-	    return res;
+	    return boardNo;
 	}
 
 
@@ -1203,6 +1213,37 @@ public class BoardDAO {
 
 	    return result;
 	}
+
+    public List<BoardFileUploadDTO> getFilesByBoardNo(int boardNo) {
+        List<BoardFileUploadDTO> files = new ArrayList<>();
+
+        try {
+            openConn();
+            String sql = "SELECT * FROM BOARD_FILEUPLOADS WHERE BOARD_NO = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, boardNo);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                BoardFileUploadDTO file = new BoardFileUploadDTO();
+                file.setFileNo(rs.getInt("FILE_NO"));
+                file.setBoardNo(rs.getInt("BOARD_NO"));
+                file.setFileUrl(rs.getString("FILE_URL"));
+                file.setFileName(rs.getString("FILE_NAME"));
+                file.setFileSize(rs.getLong("FILE_SIZE"));
+                file.setFileType(rs.getString("FILE_TYPE"));
+                file.setDescription(rs.getString("DESCRIPTION"));
+                file.setUploadedAt(rs.getDate("UPLOADED_AT"));
+                files.add(file);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConn(rs, pstmt, conn);
+        }
+
+        return files;
+    }
 
 	
 	
