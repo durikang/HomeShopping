@@ -92,7 +92,9 @@
                     events: {
                         'image.uploaded': function (response) {
                             var fileInfo = JSON.parse(response);
-                            addUploadedFile(fileInfo.fileUrl, fileInfo.fileName, fileInfo.fileSize, fileInfo.fileType, '');
+                            var imageUrl = fileInfo.fileUrl;
+                            console.log("이미지 업로드 성공: ", imageUrl);
+                            // Froala가 자동으로 이미지를 삽입하므로 추가 처리 불필요
                         },
                         'file.uploaded': function (response) {
                             var fileInfo = JSON.parse(response);
