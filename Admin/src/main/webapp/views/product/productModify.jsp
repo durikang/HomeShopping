@@ -11,16 +11,18 @@
 <body>
 	<div align="center">
 		<c:set var="dto" value="${Modify }" />
+		<c:set var="list" value="${CategoryList }"/>
 
 		<hr width="30%" color="red">
 		<h3>${dto.getName() }수정 페이지</h3>
 		<hr width="30%" color="red">
 		<br> <br>
 
-		<form method="post" enctype="multipart/form-date"
-			action="<%=request.getContextPath()%>/productModifyOk.do">
+		<form action="<%=request.getContextPath()%>/productModifyOk.do" method="post" 
+		enctype="multipart/form-data">
 		<input type="hidden" name="product_no" value="${dto.getProduct_no() }">
-		<input type="hidden" name="image_url" value=${dto.getCreated_at() }>
+		<%-- <input type="hidden" name="cerated_at" value=${dto.getCreated_at() }> --%>
+		<input type="hidden" name="user_no" value="${sessionScope.user.userNo}">
 			<table border="1" width="400">
 				<tr>
 					<th>카테고리 번호</th>
@@ -31,8 +33,8 @@
 
 							<c:if test="${!empty CategoryList }">
 								<c:forEach items="${CategoryList }" var="category_dto">
-									<option value="${dto.getCategory_No() }">
-										${dto.getName() } (${ dto.getCategory_No() })</option>
+									<option value="${category_dto.getCategory_No() }">
+										${category_dto.getName() } (${ category_dto.getCategory_No() })</option>
 								</c:forEach>
 							</c:if>
 					</select>
@@ -40,7 +42,7 @@
 
 				<tr>
 					<th>상품 이름</th>
-					<td><input name="name" required value="${dto.getName() }"></td>
+					<td><input name="product_name" required value="${dto.getName() }"></td>
 				</tr>
 				<tr>
 					<th>상품 이미지</th>
@@ -53,18 +55,23 @@
 				</tr>
 				<tr>
 					<th>상품 가격</th>
-					<td><input name="image_url" required></td>
+					<td><input name="product_price" required></td>
 					
 					
 				</tr>
 				<tr>
 					<th>상품 재고</th>
-					<td><input name="image_url" required></td>
+					<td><input name="stock_quantity" required></td>
 				</tr>
 				
 				<tr>
 					<th>상품 상태</th>
-					<td><input name="image_url" required></td>
+					<td>
+					<select name="product_state">
+						<option value="N">제품 수정</option>
+						<option value="Y">제품 삭제</option>
+					</select>
+					</td>
 				</tr>
 																								
 				<tr>

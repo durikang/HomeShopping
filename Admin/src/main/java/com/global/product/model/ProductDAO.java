@@ -355,4 +355,83 @@ public class ProductDAO {
 	}
 
 
+	public int modifyProduct(ProductDTO product) {
+		
+		int check = 0;
+		int paramIndex = 1;
+		
+		try {
+
+		openConn();
+		
+		sql = "UPDATE PRODUCT SET CATEGORY_NO = ?, NAME = ?, DESCRIPTION = ?, PRICE = ?, STOCK_QUANTITY = ?, UPDATED_AT = SYSDATE, IS_DELETED = ? WHERE PRODUCT_NO = ?";
+		
+		pstmt = con.prepareStatement(sql);
+		
+		pstmt.setString(paramIndex++,product.getCategory_no());
+		pstmt.setString(paramIndex++, product.getName());
+		pstmt.setString(paramIndex++,product.getDescription());
+		pstmt.setInt(paramIndex++, product.getPrice());
+		pstmt.setInt(paramIndex++, product.getStock_quantity());
+		pstmt.setString(paramIndex++, product.getIs_deleted());
+		pstmt.setInt(paramIndex++, product.getProduct_no());
+		
+		
+		check = pstmt.executeUpdate();
+		
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(pstmt, con);
+		}
+		
+		
+		return check;
+	}
+
+
+	public int DeleteProduct(int product_no) {
+		
+		int check = 0;
+		
+		try {
+
+		openConn();
+		
+		sql = "SELECT * FROM PRODUCT WHERE PRODUCT_NO = ?";
+		
+		pstmt = con.prepareStatement(sql);
+		
+		pstmt.setInt(1, product_no);
+		
+		rs = pstmt.executeQuery();
+		
+		if(rs.next()) {
+			sql = "DELETE FROM PRODUCT WHERE PRODUCT_NO = ?";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setInt(1, product_no);
+			
+			check = pstmt.executeUpdate();
+		}
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+			
+		}
+		
+		
+		
+		
+		
+		return check;
+	}
+
+
 }

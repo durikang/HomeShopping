@@ -12,7 +12,7 @@
 	<div align="center">
 		<h3>상품 등록</h3>
 
-		<form action="productInsertOk.do" method="post"
+		<form action="<%=request.getContextPath()%>/productInsertOk.do" method="post"
 			enctype="multipart/form-data">
 		 <input type="hidden" name="user_no" value="${sessionScope.user.userNo}">
 			<table class="insertTableForm">
