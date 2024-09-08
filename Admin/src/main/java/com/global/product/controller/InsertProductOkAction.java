@@ -148,12 +148,6 @@ public class InsertProductOkAction implements Action {
 		return (value != null) ? value.trim() : "";
 	}
 
-	// 안전하게 콘텐츠 타입을 가져오는 메서드
-	private String getContentTypeSafe(MultipartRequest multi, String paramName) {
-		String value = multi.getContentType(paramName);
-		return (value != null) ? value.trim() : "";
-	}
-
 	// 안전하게 정수로 변환하는 메서드
 	private int parseIntSafe(String value) {
 		try {

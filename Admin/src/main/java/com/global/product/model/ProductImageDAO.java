@@ -158,6 +158,107 @@ public class ProductImageDAO {
 	}
 
 
+	public int modifyNullProduct(ProductDTO product) {
+		
+		int img = 0;
+		
+		try {
+
+		openConn();
+		
+		sql = "UPDATE PRODUCT_IMAGE SET IMAGE_URL = ? WHERE PRODUCT_NO = ?";
+		
+		pstmt = con.prepareStatement(sql);
+			
+		pstmt.setString(1, "-");
+		pstmt.setInt(2, product.getProduct_no());
+		
+		img = pstmt.executeUpdate();
+		
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(pstmt, con);
+			
+		} 
+	
+		return img;
+	}
+
+
+	public int modifyImgProduct(ProductImageDTO image) {
+		
+		int img = 0;
+		
+		try {
+
+		openConn();
+		
+		sql = "UPDATE PRODUCT_IMAGE SET IMAGE_URL = ? WHERE PRODUCT_NO = ?";
+		
+		pstmt = con.prepareStatement(sql);
+			
+		pstmt.setString(1, image.getImage_url());
+		pstmt.setInt(2, image.getProudct_no());
+		
+		img = pstmt.executeUpdate();
+		
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(pstmt, con);
+			
+		} 
+	
+		return img;
+	}
+
+
+	public int DeleteProductImage(int product_no) {
+		
+			
+			int check = 0;
+			
+			try {
+
+			openConn();
+			
+			sql = "SELECT * FROM PRODUCT_IMAGE WHERE PRODUCT_NO = ?";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setInt(1, product_no);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				sql = "DELETE FROM PRODUCT_IMAGE WHERE PRODUCT_NO = ?";
+				
+				pstmt = con.prepareStatement(sql);
+				
+				pstmt.setInt(1, product_no);
+				
+				check = pstmt.executeUpdate();
+			}
+			
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				closeConn(rs, pstmt, con);
+				
+			}
+			
+			
+			
+			
+			
+			return check;
+		}
 
 
 }
