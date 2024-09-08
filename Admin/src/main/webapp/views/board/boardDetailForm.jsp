@@ -127,6 +127,14 @@ function restoreBoard(boardNo) {
     .file-download a:hover {
         background-color: #0056b3;
     }
+
+    /* 이미지 미리보기 스타일 */
+    .image-preview {
+        margin-top: 15px;
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
 </style>
 
 </head>
@@ -162,10 +170,19 @@ function restoreBoard(boardNo) {
             <c:out value="${info.content}" escapeXml="false"/>
         </div>
 
-        <!-- 파일 다운로드 버튼 (파일이 있을 경우에만 표시) -->
-        <c:if test="${not empty info.imageUrl}">
+        <!-- 첨부된 파일 처리 -->
+        <c:if test="${not empty files}">
             <div class="file-download">
-                <a href="${contextPath}/fileDownload.do?fileUrl=${info.imageUrl}" class="btn btn_space_tb">파일 다운로드</a>
+                <c:forEach var="file" items="${files}">
+                    <c:choose>
+                        <c:when test="${file.fileType.startsWith('image/')}">
+                            <img src="${contextPath}/boardFileDownload.do?fileUrl=${file.fileUrl}" alt="${file.fileName}" class="image-preview"/>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="${contextPath}/boardFileDownload.do?fileUrl=${file.fileUrl}">${file.fileName} 다운로드</a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
             </div>
         </c:if>
 

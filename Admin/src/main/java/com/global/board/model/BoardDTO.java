@@ -28,11 +28,6 @@ public class BoardDTO {
 	/* 각 게시글의 댓글 수 (IS_DELETED = 'N')*/
 	private int commentCount;
 
-	/* 사진 업로드용 */
-    private int imageNo;        // 사진의 고유 번호
-    private String imageUrl;    // 사진의 파일 경로 또는 URL
-    private Date uploadedAt;    // 사진 업로드 날짜
-    
     
 	public BoardDTO() {
 		super();
@@ -59,9 +54,6 @@ public class BoardDTO {
 		this.userEmail = userEmail;
 		this.userType = userType;
 		this.commentCount = commentCount;
-		this.imageNo = imageNo;
-		this.imageUrl = imageUrl;
-		this.uploadedAt = uploadedAt;
 	}
 	public int getBoardNo() {
 		return boardNo;
@@ -159,25 +151,6 @@ public class BoardDTO {
 	public void setCommentCount(int commentCount) {
 		this.commentCount = commentCount;
 	}
-	public int getImageNo() {
-		return imageNo;
-	}
-	public void setImageNo(int imageNo) {
-		this.imageNo = imageNo;
-	}
-	public String getImageUrl() {
-		return imageUrl;
-	}
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-	public Date getUploadedAt() {
-		return uploadedAt;
-	}
-	public void setUploadedAt(Date uploadedAt) {
-		this.uploadedAt = uploadedAt;
-	}
-
 	
 	
 	

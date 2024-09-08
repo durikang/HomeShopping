@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.global.action.Action;
 import com.global.action.View;
 
-public class LoginAction implements Action{
+public class UserLoginAction implements Action{
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {

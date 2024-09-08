@@ -4,58 +4,49 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>게시판 작성 폼</title>
-<!-- 스타일링은 이미 준비된 CSS 파일을 사용 -->
-<link rel="stylesheet" href="${contextPath }/resources/master.css">
-<style type="text/css">
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f9fa;
-        margin: 0;
-        padding: 0;
-    }
+    <meta charset="UTF-8">
+    <title>게시글 작성</title>
+    <link rel="stylesheet" href="${contextPath}/resources/master.css">
 
-    .content {
-        max-width: 1250px;
-        margin: 50px auto;
-        padding: 20px;
-        background-color: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+    <!-- Froala Editor CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.12/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.12/js/froala_editor.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.12/js/languages/ko.js"></script>
 
-    h2 {
-        margin-bottom: 20px;
-        color: #333;
-        font-size: 28px;
-        text-align: center;
-    }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
 
-    #content {
-        height: 400px;
-        width: 100%;
-    }
+        .content {
+            max-width: 1250px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    .ck-editor__editable {
-        min-height: 400px;
-    }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 28px;
+            text-align: center;
+        }
 
-    /* 이미지 미리보기 스타일 */
-    .image-preview {
-        margin-top: 15px;
-        max-width: 100%;
-        height: auto;
-        display: none;
-    }
-</style>
+        .fr-box {
+            min-height: 400px;
+        }
+
+    </style>
 </head>
 <body>
     <div class="content">
         <h2>게시글 작성</h2>
-        <!-- 파일 업로드를 위한 enctype 추가 -->
         <form action="boardInsertOk.do" method="post" enctype="multipart/form-data" onsubmit="return syncEditorContent()">
             <input type="hidden" name="userNo" value="${sessionScope.user.userNo}">
+            <input type="hidden" name="userId" value="${sessionScope.user.userId}">
 
             <!-- 카테고리 선택 -->
             <div class="form-group">
@@ -73,58 +64,119 @@
                 <input type="text" id="title" name="title" required>
             </div>
 
-            <!-- 내용 입력 (CKEditor 5 적용) -->
+            <!-- Froala Editor (본문 입력) -->
             <div class="form-group">
                 <label for="content">내용</label>
                 <textarea id="content" name="content"></textarea>
                 <script>
-                    let editor;
-                    ClassicEditor
-                        .create(document.querySelector('#content'))
-                        .then(newEditor => {
-                            editor = newEditor;
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
-
-                    function syncEditorContent() {
-                        document.querySelector('#content').value = editor.getData();
-                        if (editor.getData().trim() === '') {
-                            alert('내용을 입력해주세요.');
-                            return false;
+                new FroalaEditor('#content', {
+                    language: 'ko',
+                    height: 400,
+                    imageUploadURL: '${contextPath}/boardfileUpload.do',  // 이미지 업로드 URL
+                    fileUploadURL: '${contextPath}/boardfileUpload.do',   // 파일 업로드 URL
+                    imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
+                    fileAllowedTypes: ['application/pdf', 'application/msword'],
+                    pluginsEnabled: [
+                        'align', 'charCounter', 'codeBeautifier', 'codeView', 'colors', 
+                        'draggable', 'emoticons', 'entities', 'file', 'fontFamily', 
+                        'fontSize', 'fullscreen', 'image', 'imageManager', 'inlineStyle', 
+                        'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 
+                        'quickInsert', 'quote', 'table', 'url', 'video', 'wordPaste'
+                    ],
+                    imageUploadParams: {
+                        'X-CSRF-TOKEN': '${_csrf.token}'   // 이미지 업로드 시 CSRF 토큰 추가
+                    },
+                    fileUploadParams: {
+                        'X-CSRF-TOKEN': '${_csrf.token}'   // 파일 업로드 시 CSRF 토큰 추가
+                    },
+                    events: {
+                        'image.uploaded': function (response) {
+                            var fileInfo = JSON.parse(response);
+                            addUploadedFile(fileInfo.fileUrl, fileInfo.fileName, fileInfo.fileSize, fileInfo.fileType, '');
+                        },
+                        'file.uploaded': function (response) {
+                            var fileInfo = JSON.parse(response);
+                            addUploadedFile(fileInfo.fileUrl, fileInfo.fileName, fileInfo.fileSize, fileInfo.fileType, '');
+                        },
+                        'image.removed': function ($img) {
+                            var imgSrc = $img.attr('src');
+                            removeImageFromServer(imgSrc);
+                        },
+                        'file.unlink': function ($file) {
+                            var fileSrc = $file.attr('src');
+                            removeFileFromServer(fileSrc);
                         }
-                        return true;
+                    },
+                    imageUploadError: function (error, response) {
+                        console.log("이미지 업로드 에러 발생: ", error);
+                        alert("이미지를 업로드하는 중 오류가 발생했습니다.");
+                    },
+                    fileUploadError: function (error, response) {
+                        console.log("파일 업로드 에러 발생: ", error);
+                        alert("파일을 업로드하는 중 오류가 발생했습니다.");
                     }
+                });
+
+                // 업로드된 파일 정보를 세션에 추가하는 함수
+                function addUploadedFile(fileUrl, fileName, fileSize, fileType, description) {
+                    var uploadedFiles = sessionStorage.getItem('uploadedFiles') ? JSON.parse(sessionStorage.getItem('uploadedFiles')) : [];
+
+                    uploadedFiles.push({
+                        fileUrl: fileUrl,
+                        fileName: fileName,
+                        fileSize: fileSize,
+                        fileType: fileType,
+                        description: description || '' // 설명이 없을 경우 빈 문자열로 처리
+                    });
+
+                    sessionStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+                }
+
+                // 이미지 삭제 요청 함수
+                function removeImageFromServer(imageUrl) {
+                    fetch('${contextPath}/boardDeleteImage.do', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '${_csrf.token}'
+                        },
+                        body: JSON.stringify({ imageUrl: imageUrl })
+                    }).then(response => response.json())
+                      .then(data => {
+                          if (data.success) {
+                              console.log('이미지가 성공적으로 삭제되었습니다: ', imageUrl);
+                          } else {
+                              console.error('이미지 삭제에 실패했습니다: ', imageUrl);
+                          }
+                      })
+                      .catch(error => {
+                          console.error('이미지 삭제 중 오류 발생: ', error);
+                      });
+                }
+
+                // 파일 삭제 요청 함수
+                function removeFileFromServer(fileUrl) {
+                    fetch('${contextPath}/boardDeleteFile.do', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '${_csrf.token}'
+                        },
+                        body: JSON.stringify({ fileUrl: fileUrl })
+                    }).then(response => response.json())
+                      .then(data => {
+                          if (data.success) {
+                              console.log('파일이 성공적으로 삭제되었습니다: ', fileUrl);
+                          } else {
+                              console.error('파일 삭제에 실패했습니다: ', fileUrl);
+                          }
+                      })
+                      .catch(error => {
+                          console.error('파일 삭제 중 오류 발생: ', error);
+                      });
+                }
                 </script>
             </div>
-
-            <!-- 사진 업로드 기능 -->
-            <div class="form-group">
-                <label for="file">사진 첨부</label>
-                <input type="file" id="file" name="file" accept="image/*" onchange="previewImage(event)">
-                <!-- 미리보기 이미지 영역 -->
-                <img id="image-preview" class="image-preview" alt="이미지 미리보기">
-            </div>
-
-            <script>
-                // 이미지 미리보기 기능
-                function previewImage(event) {
-                    const imagePreview = document.getElementById('image-preview');
-                    const file = event.target.files[0];
-
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            imagePreview.src = e.target.result;
-                            imagePreview.style.display = 'block';
-                        }
-                        reader.readAsDataURL(file);
-                    } else {
-                        imagePreview.style.display = 'none';
-                    }
-                }
-            </script>
 
             <!-- 제출 버튼 -->
             <div class="form-group">
@@ -133,4 +185,5 @@
         </form>
     </div>
 </body>
+
 </html>

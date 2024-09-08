@@ -65,10 +65,11 @@ session.setAttribute("user", customer);
 <c:set var="contextPath" value="${ pageContext.servletContext.contextPath }" scope="application"/>
 
 <script>
-	window.onload = function(){
-			location.href="${contextPath}/main.go";
-		}
+    window.onload = function() {
+      location.href = "${contextPath}/main.go";
+    }
 </script>
+
 
 </body>
 </html>
