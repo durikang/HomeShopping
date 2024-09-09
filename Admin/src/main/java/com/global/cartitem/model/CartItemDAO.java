@@ -89,79 +89,173 @@ public class CartItemDAO {
 	}//closeConn(pstmt, con)end
 	
 	//cartItem 테이블 정보 전체 조회하는 메서드 
-	public List<CartItemDTO> getCartItemList(int no){
-		
-		List<CartItemDTO> list = new ArrayList<CartItemDTO>();
-		
-		try {
-			openConn();
+		public List<CartItemDTO> getCartItemList(int no){
 			
-			sql ="select u.USER_NO , ci.CART_ITEM_NO, c.CART_NO,p.PRODUCT_NO,ci.QUANTITY,ci.ADDED_AT,ci.UPDATED_AT,p.NAME,p.PRICE "
-					+ "from USERS u "
-					+ "join cart c on (c.USER_NO = u.USER_NO) "
-					+ "join cart_item ci on(c.cart_no=ci.cart_no) "
-					+ "join product p on(ci.product_no = p.product_no) "
-					+ "join product_category pc on(p.CATEGORY_NO = pc.CATEGORY_NO) "
-					+ "where c.cart_no = ? "
-					+ "order by  cart_no desc";
+			List<CartItemDTO> list = new ArrayList<CartItemDTO>();
+			
+			try {
+				openConn();
+				
+				sql ="select u.USER_NO , ci.CART_ITEM_NO, c.CART_NO,p.PRODUCT_NO,ci.QUANTITY,ci.ADDED_AT,ci.UPDATED_AT,p.NAME,p.PRICE "
+						+ "from USERS u "
+						+ "join cart c on (c.USER_NO = u.USER_NO) "
+						+ "join cart_item ci on(c.cart_no=ci.cart_no) "
+						+ "join product p on(ci.product_no = p.product_no) "
+						+ "join product_category pc on(p.CATEGORY_NO = pc.CATEGORY_NO) "
+						+ "where c.cart_no = ? "
+						+ "order by CART_ITEM_NO desc";
+			
+				pstmt = con.prepareStatement(sql);
+				pstmt.setInt(1, no);
+				
+				rs = pstmt.executeQuery();
+				
+				while (rs.next()) {
+					CartItemDTO dto = new CartItemDTO();
+					
 		
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, no);
-			
-			rs = pstmt.executeQuery();
-			
-			while (rs.next()) {
-				CartItemDTO dto = new CartItemDTO();
-				
-	
-				dto.setCartItem_no(rs.getInt("CART_ITEM_NO"));
-				dto.setCartItem_cartNo(rs.getInt("CART_NO"));
-				dto.setCartItem_productNo(rs.getInt("PRODUCT_NO"));
-				dto.setCartItem_quantity(rs.getInt("QUANTITY"));
-				dto.setCartItem_addedAt(rs.getDate("ADDED_AT"));
-				dto.setCartItem_updatedAt(rs.getDate("UPDATED_AT"));
-				
-				dto.setCartItem_productName(rs.getString("NAME"));
-				dto.setCartItem_productPrice(rs.getInt("PRICE"));
-				
-				list.add(dto);
+					dto.setCartItem_no(rs.getInt("CART_ITEM_NO"));
+					dto.setCart_no(rs.getInt("CART_NO"));
+					dto.setProduct_no(rs.getInt("PRODUCT_NO"));
+					dto.setQuantity(rs.getInt("QUANTITY"));
+					dto.setAdded_at(rs.getDate("ADDED_AT"));
+					dto.setUpdated_at(rs.getDate("UPDATED_AT"));
+					
+					dto.setProduct_name(rs.getString("NAME"));
+					dto.setProduct_price(rs.getInt("PRICE"));
+					
+					list.add(dto);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				closeConn(rs, pstmt, con);
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			closeConn(rs, pstmt, con);
-		}
+			
+			return list;
+			
+		}//getCartItemList end
 		
-		return list;
+		//cartItem 테이블 CART_ITEM_NO에 해당하는 정보를 삭제하는 메서드 
+		public int deleteCartItem(int no) {
+			int result =0;
+			
 		
-	}//getCartItemList end
-	
-	//cartItem 테이블  CART_NO 검색하여 해당 정보를 삭제하는 메서드 
-	public int deleteCartItem(int no) {
-		int result =0;
+			try {
+				openConn();
+				
+				sql ="delete from cart_item where CART_ITEM_NO =? ";
+				
+				pstmt = con.prepareStatement(sql);
+				
+				pstmt.setInt(1, no);
+				
+				result =pstmt.executeUpdate();
+				
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+					}finally {
+							closeConn(pstmt, con);
+						}
 		
-	
-		try {
-			openConn();
+			return result;
+		}//deleteCartItem end
+		
+		//삭제한 번호를 재작업 해주는 메서드
+		public void updateSequenceCartItem(int no) {
+			try {
+				openConn();
+				
+				sql = "update cart_item set CART_ITEM_NO = CART_ITEM_NO-1 where CART_ITEM_NO >?";
+				
+				pstmt.setInt(1, no);
+				
+				pstmt.executeUpdate();
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				closeConn(pstmt, con);
+			}
 			
-			sql ="delete from cart_item where CART_NO =? ";
+		}//updateSequenceCartItem end
+		
+		// 해당하는 cartItem 정보를 조회하는 메서드
+		public CartItemDTO getContentCartItem(int no) {
+			CartItemDTO dto = null;
 			
-			pstmt = con.prepareStatement(sql);
+			try {
+				
+				openConn();
+				
+				sql ="select u.USER_NO , ci.CART_ITEM_NO, c.CART_NO,p.PRODUCT_NO,ci.QUANTITY,ci.ADDED_AT,ci.UPDATED_AT,p.NAME,p.PRICE "
+						+ "from USERS u "
+						+ "join cart c on (c.USER_NO = u.USER_NO) "
+						+ "join cart_item ci on(c.cart_no=ci.cart_no) "
+						+ "join product p on(ci.product_no = p.product_no) "
+						+ "join product_category pc on(p.CATEGORY_NO = pc.CATEGORY_NO) "
+						+ "where ci.CART_ITEM_NO = ? "
+						+ "order by CART_ITEM_NO desc";
 			
-			pstmt.setInt(1, no);
+				
+				pstmt = con.prepareStatement(sql);
+				
+				pstmt.setInt(1, no);
+				
+				rs = pstmt.executeQuery();
+				
+				if(rs.next()) {
+					dto = new CartItemDTO();
+				
+					dto.setCartItem_no(rs.getInt("CART_ITEM_NO"));
+					dto.setCart_no(rs.getInt("CART_NO"));
+					dto.setProduct_no(rs.getInt("PRODUCT_NO"));
+					dto.setQuantity(rs.getInt("QUANTITY"));
+					dto.setAdded_at(rs.getDate("ADDED_AT"));
+					dto.setUpdated_at(rs.getDate("UPDATED_AT"));
+					
+					dto.setProduct_name(rs.getString("NAME"));
+					dto.setProduct_price(rs.getInt("PRICE"));
+					
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				closeConn(rs, pstmt, con);
+			}
 			
-			result =pstmt.executeUpdate();
+			return dto;
 			
-		} catch (SQLException e) {
+		}//contentCartItem end
+		
+		// cartItem 테이블의 정보를 수정하는 메서드
+		public int modifyCartItem(CartItemDTO dto) {
+			int result =0;
 			
-			e.printStackTrace();
-				}finally {
-						closeConn(pstmt, con);
-					}
-	
-		return result;
-	}
-	
-	//cartItem 테이블 삭제하는  메서드 
-	
-}//class end
+			try {
+				
+				openConn();
+				
+				sql ="update CART_ITEM set QUANTITY =? where CART_ITEM_NO = ?";
+				
+				pstmt = con.prepareStatement(sql);
+				
+				pstmt.setInt(1, dto.getQuantity());
+				
+				pstmt.setInt(2, dto.getCartItem_no());
+				
+				result = pstmt.executeUpdate();
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				closeConn(rs, pstmt, con);
+			}
+			
+			return result;
+			
+		}//modifyCartItem end
+		
+	}//class end
+

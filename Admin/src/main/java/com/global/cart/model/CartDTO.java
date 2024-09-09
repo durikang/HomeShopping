@@ -5,10 +5,10 @@ import java.sql.Date;
 public class CartDTO {
 	
 	private int cart_no;				// 장바구니 번호
-	private int cart_userNo;			// 장바구니 소유자 
-	private Date cart_createdAt;		// 장바구니 생성일
+	private int user_no;			// 장바구니 소유자 
+	private Date created_at;		// 장바구니 생성일
 	
-	private String cart_userName;
+	private String user_name;
 
 	public int getCart_no() {
 		return cart_no;
@@ -18,28 +18,30 @@ public class CartDTO {
 		this.cart_no = cart_no;
 	}
 
-	public int getCart_userNo() {
-		return cart_userNo;
+	public int getUser_no() {
+		return user_no;
 	}
 
-	public void setCart_userNo(int cart_userNo) {
-		this.cart_userNo = cart_userNo;
+	public void setUser_no(int user_no) {
+		this.user_no = user_no;
 	}
 
-	public Date getCart_createdAt() {
-		return cart_createdAt;
+	public Date getCreated_at() {
+		return created_at;
 	}
 
-	public void setCart_createdAt(Date cart_createdAt) {
-		this.cart_createdAt = cart_createdAt;
+	public void setCreated_at(Date created_at) {
+		this.created_at = created_at;
 	}
 
-	public String getCart_userName() {
-		return cart_userName;
+	public String getUser_name() {
+		return user_name;
 	}
 
-	public void setCart_userName(String cart_userName) {
-		this.cart_userName = cart_userName;
-	} 
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+
+	
 
 }

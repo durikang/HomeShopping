@@ -27,10 +27,10 @@
 			<c:if test="${!empty list }">
 				<c:forEach  items="${list }" var="dto" >
 					<tr>
-						<td><a href="<%=request.getContextPath()%>/cartItem_list.do?no=${dto.cart_no }">${dto.cart_no }</a></td>
-						<td>${dto.cart_userNo }</td>
+						<td><a href="cartItem_list.do?no=${dto.cart_no }">${dto.cart_no }</a></td>
+						<td>${dto.user_no }</td>
 						<td>
-							<fmt:formatDate value="${dto.cart_createdAt }"/>
+							<fmt:formatDate value="${dto.created_at }"/>
 						</td>
 						<td>											
 							<input type="button" value="삭제" onclick="if(confirm('정말로 게시글을 삭제하시겠습니까?')){
