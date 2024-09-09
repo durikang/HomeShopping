@@ -21,7 +21,6 @@ function goToDetailPage(event) {
     const userType = target.getAttribute('data-user-type');
     const currentPage = ${pi.currentPage};  // pi.currentPage를 자바스크립트 변수로 설정
     const status = '${status}';
-    const subtitle = ${param.subtitle};
 
     if (No) {
         // 서버에 방문 기록 저장 요청
@@ -32,7 +31,7 @@ function goToDetailPage(event) {
         xhr.send('userNo=${sessionScope.user.userNo}&boardNo=' + No);
         
         // 페이지 이동
-        window.location.href = '${contextPath}/boardDetailForm.do?boardNo=' + No + '&userType=' + userType + '&status=' + status + '&currentPage=' + currentPage +'&subtitle='+subtitle;
+        window.location.href = '${contextPath}/boardDetailForm.do?boardNo=' + No + '&userType=' + userType + '&status=' + status + '&currentPage=' + currentPage;
     }
 }
 
@@ -60,13 +59,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	</div>
 
     <div class="container">
-        <!-- 사이드바 메뉴 -->
-        <c:import url="board/import/categorySideBar.jsp" />
 
         <!-- 메인 콘텐츠 -->
         <div class="main-content">
-            <!-- 검색 바 추가 -->
-			<c:import url="board/import/boardFilter.jsp" />
 
             <!-- 게시판 테이블 -->
             <div class="table-container board-container">
@@ -149,8 +144,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             </div>
         </div>
-        <!-- 사이드바 메뉴 -->
-		<c:import url="board/import/categorySideBar.jsp" />
+
     </div>
+   	    <c:when test="${not empty url}">
+	        <c:import url="${url}" />
+	       	<!-- Include the pagination JSP -->
+	       	<!-- pi객체가 존재한다면. List페이지 이므로 페이지네이션 import -->
+	        <c:if test="${not empty pi }"> 
+			    <c:import url="/views/common/pagination.jsp"/>
+	        </c:if>
+	    </c:when>
 </body>
 </html>

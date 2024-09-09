@@ -211,5 +211,8 @@ function realDeleteBoard(boardNo) {
         <!-- 기존 댓글 표시 -->
         <c:import url="board/import/boardCommentList.jsp"/>
     </div>
+    
+    <c:import url="board/boardList_detail.jsp"/>
+    
 </body>
 </html>

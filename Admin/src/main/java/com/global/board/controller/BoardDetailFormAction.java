@@ -42,6 +42,9 @@ public class BoardDetailFormAction implements Action {
         String status = RequestParameterUtils.parseString(request.getParameter("status"), "");
         int currentPage = RequestParameterUtils.parseInteger(request.getParameter("currentPage"),1);
         
+        String subtitle = request.getParameter("subtitle");
+        
+        
         BoardDAO dao = BoardDAO.getInstance();
         BoardDTO board = null;
         boolean flag = false;
@@ -77,6 +80,13 @@ public class BoardDetailFormAction implements Action {
         request.setAttribute("status", status);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("info", board);
+        
+        
+        request.setAttribute("list", boardList);
+        request.setAttribute("address", "boardList.do"); // 페이지의 매핑을 던져줘야 함
+        request.setAttribute("pi", pi);
+        request.setAttribute("subtitle", subtitle); // 메뉴바에서 누른 게시글 현 위치를 보냄
+        
 
         return new View("main.go").setUrl("/views/board/boardDetailForm.jsp");
     }
