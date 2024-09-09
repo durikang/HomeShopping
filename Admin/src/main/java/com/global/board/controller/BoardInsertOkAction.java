@@ -7,9 +7,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -43,7 +41,10 @@ public class BoardInsertOkAction implements Action {
         board.setContent(content);
         board.setCategoryNo(categoryNo);
 
-        List<BoardFileUploadDTO> fileList = new ArrayList<>();
+        // 게시글을 먼저 저장하고 boardNo를 받아옴
+        BoardDAO dao = BoardDAO.getInstance();
+        int boardNo = dao.insertBoard(board, user.getUserNo()); 
+
         List<BoardFileUploadDTO> uploadedFiles = (List<BoardFileUploadDTO>) session.getAttribute("uploadedFiles");
 
         LocalDate now = LocalDate.now();
@@ -56,17 +57,18 @@ public class BoardInsertOkAction implements Action {
                 String tempFileUrl = file.getFileUrl();  // 임시 저장소 경로
                 String fileName = file.getFileName();
 
-                // 영구 저장소 경로 설정 (예: /resources/board/board_upload_files/유저번호/유저아이디/파일명)
-                String permanentFileUrl = "/resources/board/board_upload_files/" + user.getUserNo() + "/" + user.getUserId() + "/" + year + "/" + month + "/" + day + "/" + fileName;
-                
+                // 영구 저장소 경로 설정 (예: /resources/board/board_upload_files/boardNo/유저번호/유저아이디/파일명)
+                String permanentFileUrl = "/resources/board/board_upload_files/" + boardNo + "/" + user.getUserNo() + "/" + user.getUserId() + "/" + year + "/" + month + "/" + day + "/" + fileName;
+
                 // 임시 파일 URL에서 컨텍스트 경로 제거 (예: /Admin)
                 String contextPath = request.getContextPath();  // "/Admin"
                 if (tempFileUrl.startsWith(contextPath)) {
-                    tempFileUrl = tempFileUrl.substring(contextPath.length());  // /Admin 부분 제거
+                    tempFileUrl = tempFileUrl.substring(contextPath.length());
                 }
 
                 // 절대 경로로 변환
                 String tempFileAbsolutePath = request.getServletContext().getRealPath(tempFileUrl);
+                
                 String permanentFileAbsolutePath = request.getServletContext().getRealPath(permanentFileUrl);
 
                 // 영구 저장소 디렉토리가 존재하지 않으면 생성
@@ -81,24 +83,28 @@ public class BoardInsertOkAction implements Action {
 
                     // 파일 이동 후, 영구 저장소 경로를 DTO에 저장
                     BoardFileUploadDTO fileDTO = new BoardFileUploadDTO();
-                    fileDTO.setFileUrl(permanentFileUrl);  // 영구 저장소 경로 (Admin 없이)
+                    fileDTO.setFileUrl(permanentFileUrl);
                     fileDTO.setFileName(fileName);
                     fileDTO.setFileSize(file.getFileSize());
                     fileDTO.setFileType(file.getFileType());
 
-                    fileList.add(fileDTO);  // 파일 리스트에 추가
+                    uploadedFiles.set(uploadedFiles.indexOf(file), fileDTO);
                 }
             }
         }
-
+        // 임시 저장소의 url을 따로 저장해야됨. 아이디어는 위에있는거같음. 일단 시간이 없는 관계로 나머지 학원에서.
+        for(BoardFileUploadDTO file : uploadedFiles) {
+        	
+        	BoardFileUploadDTO fileDTO = new BoardFileUploadDTO();
+        	fileDTO.setFileUrl(permanentFileUrl);
+        }
+        
         // *** 이미지 경로를 영구 저장소 경로로 변경 ***
-        content = replaceTempUrlWithPermanentUrl(content, uploadedFiles, user, request.getContextPath(), year, month, day);
-        board.setContent(content);
-
-        // DAO를 통해 게시글 및 파일 저장 (트랜잭션 처리)
-        BoardDAO dao = BoardDAO.getInstance();
-        int result = dao.insertBoard(board, user.getUserNo(), fileList);
-
+        String changeContent = replaceTempUrlWithPermanentUrl(content, uploadedFiles, boardNo, user, request.getContextPath(), year, month, day);
+        // 게시글 첨부파일 저장
+        int result = dao.updateBoardAndFiles(boardNo, user.getUserNo(), uploadedFiles,changeContent);
+        
+        
         if (result > 0) {
             session.setAttribute("isSaved", true);  // 세션에 저장 성공 표시
             session.removeAttribute("uploadedFiles");  // 임시 파일 목록 제거
@@ -112,15 +118,19 @@ public class BoardInsertOkAction implements Action {
     }
 
     // 이미지 URL을 임시 저장소 경로에서 영구 저장소 경로로 업데이트하는 메서드
-    private String replaceTempUrlWithPermanentUrl(String content, List<BoardFileUploadDTO> uploadedFiles, UsersDTO user, String contextPath, String year, String month, String day) {
+    private String replaceTempUrlWithPermanentUrl(String tmpContent, List<BoardFileUploadDTO> uploadedFiles, int boardNo, UsersDTO user, String contextPath, String year, String month, String day) {
+    	String changeContent = null;
         for (BoardFileUploadDTO file : uploadedFiles) {
-            // 임시 저장소 경로는 Froala 에디터에 삽입된 경로와 일치
-            String tempUrl = file.getFileUrl(); // 임시 파일 경로 (이미 Froala에 삽입된 경로)
-            String permanentUrl = contextPath + "/resources/board/board_upload_files/" + user.getUserNo() + "/" + user.getUserId() + "/" + year + "/" + month + "/" + day + "/" + file.getFileName();
+            String tempUrl = file.getFileUrl(); // 임시 파일 경로
+            String permanentUrl = contextPath + "/resources/board/board_upload_files/" + boardNo + "/" + user.getUserNo() + "/" + user.getUserId() + "/" + year + "/" + month + "/" + day + "/" + file.getFileName();
 
-            // Froala에 삽입된 경로에서 "/Admin"이 포함된 부분을 대체하는 방식으로 수정
-            content = content.replace(tempUrl, permanentUrl);  // 임시 경로를 영구 경로로 대체
+            System.out.println("바뀌기 전 임시 저장소 : "+ tmpContent);
+            System.out.println("tempUrl : "+ tempUrl);
+            System.out.println("permanentUrl : "+ permanentUrl);
+            
+            changeContent = tmpContent.replace(tempUrl, permanentUrl);  // 임시 경로를 영구 경로로 대체
+            
         }
-        return content;
+        return changeContent;
     }
 }

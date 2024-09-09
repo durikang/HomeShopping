@@ -407,11 +407,10 @@ public class BoardDAO {
 		return res;
 	}
 
-	public int insertBoard(BoardDTO board, Integer userNo, List<BoardFileUploadDTO> fileUploads) {
+	public int insertBoard(BoardDTO board, Integer userNo) {
 	    int boardNo = 0;
 	    try {
 	        openConn();
-	        conn.setAutoCommit(false);  // 트랜잭션 시작
 
 	        // 게시글 삽입
 	        sql = "INSERT INTO BOARD (BOARD_NO, USER_NO, CATEGORY_NO, TITLE, CONTENT, VIEWS, CREATED_AT, UPDATED_AT, IS_DELETED) " +
@@ -432,37 +431,13 @@ public class BoardDAO {
 	            if (rs.next()) {
 	                boardNo = rs.getInt(1);
 	            }
-
-	            // 파일 업로드 정보 저장
-	            if (fileUploads != null && !fileUploads.isEmpty()) {
-	                for (BoardFileUploadDTO fileDTO : fileUploads) {
-	                    sql = "INSERT INTO BOARD_FILEUPLOADS (FILE_NO, BOARD_NO, FILE_URL, FILE_NAME, FILE_SIZE, FILE_TYPE, DESCRIPTION, UPLOADED_AT) " +
-	                          "VALUES (SEQ_BOARD_FILEUPLOADS_NO.NEXTVAL, ?, ?, ?, ?, ?, ?, SYSDATE)";
-	                    pstmt = conn.prepareStatement(sql);
-	                    pstmt.setInt(1, boardNo);
-	                    pstmt.setString(2, fileDTO.getFileUrl());
-	                    pstmt.setString(3, fileDTO.getFileName());
-	                    pstmt.setLong(4, fileDTO.getFileSize());
-	                    pstmt.setString(5, fileDTO.getFileType());
-	                    pstmt.setString(6, fileDTO.getDescription());
-	                    pstmt.executeUpdate();
-	                }
-	            }
 	        }
-
-	        conn.commit();  // 트랜잭션 커밋
 
 	    } catch (SQLException e) {
-	        try {
-	            if (conn != null) conn.rollback();  // 오류 발생 시 롤백
-	        } catch (SQLException rollbackEx) {
-	            rollbackEx.printStackTrace();
-	        }
 	        e.printStackTrace();
 	    } finally {
 	        closeConn(rs, pstmt, conn);
 	    }
-
 	    return boardNo;
 	}
 
@@ -1244,6 +1219,78 @@ public class BoardDAO {
 
         return files;
     }
+
+ // 게시글 및 연관된 댓글, 파일 삭제 메서드 (ON DELETE CASCADE 적용 시)
+    public boolean deleteBoardAndReplies(int boardNo) {
+        boolean result = false;
+
+        try {
+            openConn();
+
+            // 1. 게시글 삭제 (연관된 댓글과 파일은 ON DELETE CASCADE로 자동 삭제)
+            String deleteBoardSQL = "DELETE FROM BOARD WHERE BOARD_NO = ?";
+            pstmt = conn.prepareStatement(deleteBoardSQL);
+            pstmt.setInt(1, boardNo);
+            pstmt.executeUpdate();
+
+            result = true; // 삭제 성공 시 true 반환
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+            closeConn(rs, pstmt, conn);
+        }
+
+        return result;
+    }
+
+    public int updateBoardAndFiles(int boardNo, int userNo, List<BoardFileUploadDTO> uploadedFiles, String updatedContent) {
+        int result = 0;  // 결과를 저장할 변수
+
+        try {
+            openConn();  // DB 연결
+
+            // 파일 리스트가 비어있지 않은 경우에만 처리
+            if (uploadedFiles != null && !uploadedFiles.isEmpty()) {
+                // 파일 정보를 하나씩 DB에 저장
+                for (BoardFileUploadDTO file : uploadedFiles) {
+                    // 파일 업로드 정보를 DB에 삽입하는 SQL 쿼리
+                    String sql = "INSERT INTO BOARD_FILEUPLOADS (FILE_NO, BOARD_NO, FILE_URL, FILE_NAME, FILE_SIZE, FILE_TYPE, DESCRIPTION, UPLOADED_AT) " +
+                                 "VALUES (SEQ_BOARD_FILEUPLOADS_NO.NEXTVAL, ?, ?, ?, ?, ?, ?, SYSDATE)";
+                    pstmt = conn.prepareStatement(sql);
+                    
+                    // 쿼리 파라미터 설정
+                    pstmt.setInt(1, boardNo);  // 게시글 번호
+                    pstmt.setString(2, file.getFileUrl());  // 파일 URL
+                    pstmt.setString(3, file.getFileName());  // 파일 이름
+                    pstmt.setLong(4, file.getFileSize());  // 파일 크기
+                    pstmt.setString(5, file.getFileType());  // 파일 타입
+                    pstmt.setString(6, file.getDescription());  // 파일 설명 (없을 수도 있음)
+
+                    // 실행 후 성공 여부 체크
+                    result += pstmt.executeUpdate();
+                }
+            }
+
+            // 게시글 content 업데이트 (영구 경로로 수정된 이미지 경로 포함)
+            String updateContentSql = "UPDATE BOARD SET CONTENT = ? WHERE BOARD_NO = ?";
+            pstmt = conn.prepareStatement(updateContentSql);
+            pstmt.setString(1, updatedContent);  // 변경된 content
+            pstmt.setInt(2, boardNo);  // 게시글 번호
+            result += pstmt.executeUpdate();  // 업데이트 결과를 더해줌
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConn(rs, pstmt, conn);  // 연결 종료
+        }
+
+        return result;  // 저장된 파일 수와 업데이트 결과를 반환
+    }
+
+
+
 
 	
 	

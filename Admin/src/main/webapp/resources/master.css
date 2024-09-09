@@ -23,7 +23,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 1400px;
+    max-width: 1435px; /* 네비바에 메뉴가 추가될대마다 해당 최대 크기를 늘려주면 됩니다.*/
     margin: 0 auto;
     padding: 0 20px;
 }

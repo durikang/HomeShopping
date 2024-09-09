@@ -102,6 +102,13 @@
                 </ul>
             </li>
 
+            <!-- 이벤트 관리 -->
+            <li class="dropdown">옵션
+                <ul class="dropdown-menu">
+                    <li><a href="tmp_storage_delete.do">임시 저장소 비우기</a></li>
+                </ul>
+            </li>
+
             <!-- 로그아웃 -->
             <li><a href="userLogout.do">로그아웃</a></li>
         </ul>

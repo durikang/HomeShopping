@@ -2,13 +2,16 @@ package com.global.board.controller;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.util.Iterator;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.global.action.Action;
 import com.global.action.View;
+import com.global.board.model.BoardFileUploadDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -32,6 +35,10 @@ public class BoardDeleteImageAction implements Action {
         File imageFile = new File(realPath);
         JsonObject jsonResponse = new JsonObject();
 
+        // 세션에서 업로드된 파일 목록 가져오기
+        HttpSession session = request.getSession();
+        List<BoardFileUploadDTO> uploadedFiles = (List<BoardFileUploadDTO>) session.getAttribute("uploadedFiles");
+
         // 파일 경로가 null이거나 파일이 없을 경우 예외 처리
         if (realPath == null || imageFile == null || !imageFile.exists()) {
             jsonResponse.addProperty("success", false);
@@ -40,6 +47,18 @@ public class BoardDeleteImageAction implements Action {
             // 파일 삭제 처리
             if (imageFile.delete()) {
                 jsonResponse.addProperty("success", true);
+
+                // 세션에서 삭제된 파일 정보 제거 (Iterator 사용)
+                if (uploadedFiles != null) {
+                    Iterator<BoardFileUploadDTO> iterator = uploadedFiles.iterator();
+                    while (iterator.hasNext()) {
+                        BoardFileUploadDTO file = iterator.next();
+                        if (file.getFileUrl().equals(contextPath + imageUrl)) {
+                            iterator.remove();  // 삭제
+                        }
+                    }
+                    session.setAttribute("uploadedFiles", uploadedFiles);  // 세션에 변경 사항 반영
+                }
             } else {
                 jsonResponse.addProperty("success", false);
                 jsonResponse.addProperty("message", "Failed to delete file: " + realPath);
