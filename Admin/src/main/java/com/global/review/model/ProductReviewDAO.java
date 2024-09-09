@@ -162,17 +162,8 @@ public class ProductReviewDAO {
 		
 		try {
 			openConn();
-			
-			// insert 하기 위해 글 번호의 가장 큰 값을 가져온다.
-			sql = "select max(review_no) from product_review";
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				count = rs.getInt(1);
-			}
-			
-			sql = "insert into product_review values()";
+
+			sql = "insert into product_review values(SEQ_REVIEW_NO.nextval,SEQ_BOARD_NO.nextval,?,?)";
 			
 			pstmt = con.prepareStatement(sql);
 			
