@@ -44,7 +44,7 @@
 			            <option value="DELIVERED">배송 완료</option>
 			            <option value="CANCELLED">배송 취소</option>
 			        </select>
-				
+					
 				</td>
 				<td><input name="total_amount" readonly
 					value="${dto.total_amount }"></td>
