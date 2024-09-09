@@ -8,6 +8,10 @@ public class ProductReviewDTO {
 	private int Product_No;
 	private int Rating;
 	
+	/*board Category*/
+	private String boardCategoryNo;
+	private String boardCategoryName;
+	
 	/*상품 정보 조인용*/
 	private String category_no;
 	private String name;
@@ -151,5 +155,22 @@ public class ProductReviewDTO {
 	public void setIsDeleted(String isDeleted) {
 		this.isDeleted = isDeleted;
 	}
+
+	public String getBoardCategoryNo() {
+		return boardCategoryNo;
+	}
+
+	public void setBoardCategoryNo(String boardCategoryNo) {
+		this.boardCategoryNo = boardCategoryNo;
+	}
+
+	public String getBoardCategoryName() {
+		return boardCategoryName;
+	}
+
+	public void setBoardCategoryName(String boardCategoryName) {
+		this.boardCategoryName = boardCategoryName;
+	}
+	
 	
 }

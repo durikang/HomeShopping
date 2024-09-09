@@ -163,6 +163,7 @@ public class ProductReviewDAO {
 		try {
 			openConn();
 			
+			// insert 하기 위해 글 번호의 가장 큰 값을 가져온다.
 			sql = "select max(review_no) from product_review";
 			
 			rs = pstmt.executeQuery();
@@ -175,12 +176,18 @@ public class ProductReviewDAO {
 			
 			pstmt = con.prepareStatement(sql);
 			
+			pstmt.setInt(1, count + 1);
+			
+			
+			result = pstmt.executeUpdate();
+			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
 		}
 		
-		return 0;
+		return result;
 	}
 	
 }
