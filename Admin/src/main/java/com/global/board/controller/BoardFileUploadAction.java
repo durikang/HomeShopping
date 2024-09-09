@@ -46,16 +46,16 @@ public class BoardFileUploadAction implements Action {
         String month = String.format("%02d", now.getMonthValue());
         String day = String.format("%02d", now.getDayOfMonth());
 
-        // 임시 저장소 경로 설정
+        // 임시 저장소 경로 설정 (간단하게 /resources/board/board_temp_files 에만 저장)
         String tempUploadRoot = request.getServletContext().getRealPath("/resources/board/board_temp_files");
-        String uploadDir = Paths.get(tempUploadRoot, String.valueOf(userNo), userId, year, month, day).toString();
+        String uploadDir = tempUploadRoot;
         
         File dir = new File(uploadDir);
         if (!dir.exists()) {
             dir.mkdirs();
         }
         
-        Part filePart = request.getPart("file");  // 'file'은 Froala에서 전송하는 파일 파라미터 이름
+        Part filePart = request.getPart("file");
 
         if (filePart != null && filePart.getSize() > 0) {
             String originalFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
@@ -67,7 +67,7 @@ public class BoardFileUploadAction implements Action {
             
             // 임시 파일 URL 생성 (웹 루트 경로에서 시작)
             String contextPath = request.getContextPath();  // "/Admin"
-            String fileUrl = contextPath + "/resources/board/board_temp_files/" + userNo + "/" + userId + "/" + year + "/" + month + "/" + day + "/" + uniqueFileName;
+            String fileUrl = contextPath + "/resources/board/board_temp_files/" + uniqueFileName;
 
             // 파일 정보를 DTO에 담기
             BoardFileUploadDTO fileDTO = new BoardFileUploadDTO();

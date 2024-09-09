@@ -22,6 +22,13 @@ function restoreBoard(boardNo) {
         location.href = 'boardRestoreOk.do?boardNo=' + boardNo + '&currentPage=${currentPage}';
     }
 }
+
+//게시글 완전 삭제
+function realDeleteBoard(boardNo) {
+    if (confirm("정말 이 게시글을 완전히 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) {
+        location.href = 'boardRealDeleteOk.do?boardNo=' + boardNo + '&currentPage=${currentPage}';
+    }
+}
 </script>
 
 <style>
@@ -192,12 +199,19 @@ function restoreBoard(boardNo) {
         <!-- 수정하기 및 삭제하기 버튼: 작성자와 관리자만 가능 -->
         <c:if test="${sessionScope.user.userType == 'ADMIN' || sessionScope.user.userNo == info.userNo}">
             <button type="button" onclick="location.href='boardUpdateForm.do?no=${info.boardNo}&userType=${info.userType}&status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">수정하기</button>
-            <button type="button" onclick="deleteBoard(${info.boardNo})" class="btn btn_space_tb">삭제하기</button>
-        </c:if>
-
-        <!-- 삭제된 게시글의 경우, 삭제 취소 버튼을 표시 (관리자만 가능) -->
-        <c:if test="${info.isDeleted == 'Y' && sessionScope.user.userType == 'ADMIN'}">
-            <button type="button" onclick="restoreBoard(${info.boardNo})" class="btn btn_space_tb">삭제 취소</button>
+            
+            <!-- is_deleted 상태에 따라 다른 버튼 표시 -->
+            <c:choose>
+                <c:when test="${info.isDeleted == 'Y'}">
+                    <!-- 삭제된 게시글의 경우: 삭제 취소 또는 완전 삭제 버튼 -->
+                    <button type="button" onclick="restoreBoard(${info.boardNo})" class="btn btn_space_tb">삭제 취소</button>
+                    <button type="button" onclick="realDeleteBoard(${info.boardNo})" class="btn btn_space_tb">완전 삭제하기</button>
+                </c:when>
+                <c:otherwise>
+                    <!-- 삭제되지 않은 게시글의 경우: 삭제 버튼 -->
+                    <button type="button" onclick="deleteBoard(${info.boardNo})" class="btn btn_space_tb">삭제하기</button>
+                </c:otherwise>
+            </c:choose>
         </c:if>
 
         <!-- 댓글 입력 폼 -->
