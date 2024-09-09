@@ -123,8 +123,8 @@ public class CartDAO {
 				CartDTO dto = new CartDTO();
 				
 				dto.setCart_no(rs.getInt("CART_NO"));
-				dto.setCart_userNo(rs.getInt("USER_NO"));
-				dto.setCart_createdAt(rs.getDate("CREATED_AT"));
+				dto.setUser_no(rs.getInt("USER_NO"));
+				dto.setCreated_at(rs.getDate("CREATED_AT"));
 				
 				list.add(dto);
 				

@@ -29,17 +29,23 @@ public class CartDeleteAction implements Action {
         }
 		
         
-		int No = Integer.parseInt(request.getParameter("no").trim());
+        int No = Integer.parseInt(request.getParameter("no").trim());
 		
 		CartDAO dao = CartDAO.getInstanceCart();
 		
 		
-		dao.deleteCart(No);
+		int check = dao.deleteCart(No);
 		
-		List<CartDTO> cartList = dao.getCartList();
+		if (check > 0) {
+			ScriptUtil.sendScript(response, "장바구니 삭제 성공", "cart_list.do");
+        } 
+        
+        else {
+        	ScriptUtil.sendScript(response, "장바구니 삭제 실패", null);
+        }
 		
-		request.setAttribute("CartList", cartList);	
-		return new View("main.go").setUrl("/views/cart/cartList.jsp");
+		return null;
 	}
 
 }
+
