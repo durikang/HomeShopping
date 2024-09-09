@@ -244,7 +244,7 @@ public class OrderDAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			closeConn(rs, pstmt, con);
+			closeConn(pstmt, con);
 		}
 		
 		return result;
