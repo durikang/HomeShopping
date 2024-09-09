@@ -124,10 +124,8 @@ function realDeleteBoard(boardNo) {
 
     .file-download a {
         padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
+        color: blue;
         border-radius: 5px;
-        text-decoration: none;
         display: inline-block;
     }
 
@@ -135,13 +133,6 @@ function realDeleteBoard(boardNo) {
         background-color: #0056b3;
     }
 
-    /* 이미지 미리보기 스타일 */
-    .image-preview {
-        margin-top: 15px;
-        max-width: 100%;
-        height: auto;
-        display: block;
-    }
 </style>
 
 </head>
@@ -183,7 +174,7 @@ function realDeleteBoard(boardNo) {
                 <c:forEach var="file" items="${files}">
                     <c:choose>
                         <c:when test="${file.fileType.startsWith('image/')}">
-                            <img src="${contextPath}/boardFileDownload.do?fileUrl=${file.fileUrl}" alt="${file.fileName}" class="image-preview"/>
+                            <a href="${contextPath}/boardFileDownload.do?fileUrl=${file.fileUrl}" >${file.fileName} 다운로드</a>
                         </c:when>
                         <c:otherwise>
                             <a href="${contextPath}/boardFileDownload.do?fileUrl=${file.fileUrl}">${file.fileName} 다운로드</a>
@@ -192,7 +183,7 @@ function realDeleteBoard(boardNo) {
                 </c:forEach>
             </div>
         </c:if>
-
+		
         <!-- 뒤로가기 버튼 -->
         <button type="button" onclick="location.href='boardList.do?status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">뒤로가기</button>
         

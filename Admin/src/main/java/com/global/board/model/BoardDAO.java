@@ -1245,8 +1245,7 @@ public class BoardDAO {
         return result;
     }
 
-    public int updateBoardAndFiles(int boardNo, int userNo, List<BoardFileUploadDTO> uploadedFiles, String updatedContent) {
-        int result = 0;  // 결과를 저장할 변수
+    public void boardInsertFileUpload(int boardNo, List<BoardFileUploadDTO> uploadedFiles) {
 
         try {
             openConn();  // DB 연결
@@ -1256,7 +1255,7 @@ public class BoardDAO {
                 // 파일 정보를 하나씩 DB에 저장
                 for (BoardFileUploadDTO file : uploadedFiles) {
                     // 파일 업로드 정보를 DB에 삽입하는 SQL 쿼리
-                    String sql = "INSERT INTO BOARD_FILEUPLOADS (FILE_NO, BOARD_NO, FILE_URL, FILE_NAME, FILE_SIZE, FILE_TYPE, DESCRIPTION, UPLOADED_AT) " +
+                    sql = "INSERT INTO BOARD_FILEUPLOADS (FILE_NO, BOARD_NO, FILE_URL, FILE_NAME, FILE_SIZE, FILE_TYPE, DESCRIPTION, UPLOADED_AT) " +
                                  "VALUES (SEQ_BOARD_FILEUPLOADS_NO.NEXTVAL, ?, ?, ?, ?, ?, ?, SYSDATE)";
                     pstmt = conn.prepareStatement(sql);
                     
@@ -1269,25 +1268,33 @@ public class BoardDAO {
                     pstmt.setString(6, file.getDescription());  // 파일 설명 (없을 수도 있음)
 
                     // 실행 후 성공 여부 체크
-                    result += pstmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
             }
-
-            // 게시글 content 업데이트 (영구 경로로 수정된 이미지 경로 포함)
-            String updateContentSql = "UPDATE BOARD SET CONTENT = ? WHERE BOARD_NO = ?";
-            pstmt = conn.prepareStatement(updateContentSql);
-            pstmt.setString(1, updatedContent);  // 변경된 content
-            pstmt.setInt(2, boardNo);  // 게시글 번호
-            result += pstmt.executeUpdate();  // 업데이트 결과를 더해줌
-
+            
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             closeConn(rs, pstmt, conn);  // 연결 종료
         }
-
-        return result;  // 저장된 파일 수와 업데이트 결과를 반환
     }
+
+	public int updateBoardContent(int boardNo, String content) {
+		 int result = 0;  // 결과를 저장할 변수
+		 
+         try {
+			openConn();  // DB 연결
+			sql = "UPDATE BOARD SET CONTENT = ? WHERE BOARD_NO = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, content);  // 변경된 content
+			pstmt.setInt(2, boardNo);  // 게시글 번호
+			result += pstmt.executeUpdate();  // 업데이트 결과를 더해줌
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 
 

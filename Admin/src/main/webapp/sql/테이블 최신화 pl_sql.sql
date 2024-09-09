@@ -21,7 +21,8 @@ BEGIN
                                 'SEQ_ORDER_NO', 'SEQ_ORDER_ITEM_NO', 'SEQ_DELIVERY_NO', 
                                 'SEQ_EVENT_NO', 'SEQ_COUPON_NO', 'SEQ_EMAIL_LOG_NO', 
                                 'SEQ_USER_COUPON_NO', 'SEQ_USER_LOG_NO', 'SEQ_BOARD_VISIT_ID', 
-                                'SEQ_WALLET_NO', 'SEQ_REVENUE_NO','SEQ_BOARD_VISIT_NO')
+                                'SEQ_WALLET_NO', 'SEQ_REVENUE_NO','SEQ_BOARD_VISIT_NO',
+                                'SEQ_BOARD_FILEUPLOADS_NO')
     ) LOOP
         EXECUTE IMMEDIATE 'DROP SEQUENCE ' || rec.sequence_name;
     END LOOP;
@@ -395,6 +396,9 @@ BEGIN
 
     -- COMPANY_REVENUE 테이블의 REVENUE_NO 시퀀스
     EXECUTE IMMEDIATE 'CREATE SEQUENCE SEQ_REVENUE_NO START WITH 1 INCREMENT BY 1 NOCACHE';
+
+    -- COMPANY_REVENUE 테이블의 REVENUE_NO 시퀀스
+    EXECUTE IMMEDIATE 'CREATE SEQUENCE SEQ_BOARD_FILEUPLOADS_NO START WITH 1 INCREMENT BY 1 NOCACHE';
 
     -- 기본 데이터 삽입 및 게시글 100개 랜덤 삽입
     DECLARE

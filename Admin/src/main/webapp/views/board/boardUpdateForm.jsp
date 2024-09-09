@@ -8,6 +8,11 @@
 <meta charset="UTF-8">
 <title>게시글 상세보기</title>
 <link rel="stylesheet" href="${contextPath}/resources/board/css/board.css">
+<!-- Froala Editor CDN -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.12/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.12/js/froala_editor.pkgd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.12/js/languages/ko.js"></script>
+
 </head>
 <body>
     <div class="content">
@@ -46,9 +51,116 @@
 		    <!-- 내용 입력 (CKEditor 적용) -->
 	        <div class="form-group">
 	            <textarea id="content" name="content" required><c:out value="${info.content}" escapeXml="false"/></textarea>
-	            <script>
-	                CKEDITOR.replace('content');
-	            </script>
+				<script>
+                new FroalaEditor('#content', {
+                    language: 'ko',
+                    height: 400,
+                    imageUploadURL: '${contextPath}/boardfileUpload.do',  // 이미지 업로드 URL
+                    fileUploadURL: '${contextPath}/boardfileUpload.do',   // 파일 업로드 URL
+                    imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
+                    fileAllowedTypes: ['application/pdf', 'application/msword'],
+                    pluginsEnabled: [
+                        'align', 'charCounter', 'codeBeautifier', 'codeView', 'colors', 
+                        'draggable', 'emoticons', 'entities', 'file', 'fontFamily', 
+                        'fontSize', 'fullscreen', 'image', 'imageManager', 'inlineStyle', 
+                        'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 
+                        'quickInsert', 'quote', 'table', 'url', 'video', 'wordPaste'
+                    ],
+                    imageUploadParams: {
+                        'X-CSRF-TOKEN': '${_csrf.token}'   // 이미지 업로드 시 CSRF 토큰 추가
+                    },
+                    fileUploadParams: {
+                        'X-CSRF-TOKEN': '${_csrf.token}'   // 파일 업로드 시 CSRF 토큰 추가
+                    },
+                    events: {
+                        'image.uploaded': function (response) {
+                            var fileInfo = JSON.parse(response);
+                            var imageUrl = fileInfo.fileUrl;
+                            console.log("이미지 업로드 성공: ", imageUrl);
+                            // Froala가 자동으로 이미지를 삽입하므로 추가 처리 불필요
+                        },
+                        'file.uploaded': function (response) {
+                            var fileInfo = JSON.parse(response);
+                            addUploadedFile(fileInfo.fileUrl, fileInfo.fileName, fileInfo.fileSize, fileInfo.fileType, '');
+                        },
+                        'image.removed': function ($img) {
+                            var imgSrc = $img.attr('src');
+                            removeImageFromServer(imgSrc);
+                        },
+                        'file.unlink': function ($file) {
+                            var fileSrc = $file.attr('src');
+                            removeFileFromServer(fileSrc);
+                        }
+                    },
+                    imageUploadError: function (error, response) {
+                        console.log("이미지 업로드 에러 발생: ", error);
+                        alert("이미지를 업로드하는 중 오류가 발생했습니다.");
+                    },
+                    fileUploadError: function (error, response) {
+                        console.log("파일 업로드 에러 발생: ", error);
+                        alert("파일을 업로드하는 중 오류가 발생했습니다.");
+                    }
+                });
+
+                // 업로드된 파일 정보를 세션에 추가하는 함수
+                function addUploadedFile(fileUrl, fileName, fileSize, fileType, description) {
+                    var uploadedFiles = sessionStorage.getItem('uploadedFiles') ? JSON.parse(sessionStorage.getItem('uploadedFiles')) : [];
+
+                    uploadedFiles.push({
+                        fileUrl: fileUrl,
+                        fileName: fileName,
+                        fileSize: fileSize,
+                        fileType: fileType,
+                        description: description || '' // 설명이 없을 경우 빈 문자열로 처리
+                    });
+
+                    sessionStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+                }
+
+                // 이미지 삭제 요청 함수
+                function removeImageFromServer(imageUrl) {
+                    fetch('${contextPath}/boardDeleteImage.do', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '${_csrf.token}'
+                        },
+                        body: JSON.stringify({ imageUrl: imageUrl })
+                    }).then(response => response.json())
+                      .then(data => {
+                          if (data.success) {
+                              console.log('이미지가 성공적으로 삭제되었습니다: ', imageUrl);
+                          } else {
+                              console.error('이미지 삭제에 실패했습니다: ', imageUrl);
+                          }
+                      })
+                      .catch(error => {
+                          console.error('이미지 삭제 중 오류 발생: ', error);
+                      });
+                }
+
+                // 파일 삭제 요청 함수
+                function removeFileFromServer(fileUrl) {
+                    fetch('${contextPath}/boardDeleteFile.do', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '${_csrf.token}'
+                        },
+                        body: JSON.stringify({ fileUrl: fileUrl })
+                    }).then(response => response.json())
+                      .then(data => {
+                          if (data.success) {
+                              console.log('파일이 성공적으로 삭제되었습니다: ', fileUrl);
+                          } else {
+                              console.error('파일 삭제에 실패했습니다: ', fileUrl);
+                          }
+                      })
+                      .catch(error => {
+                          console.error('파일 삭제 중 오류 발생: ', error);
+                      });
+                }
+                </script>
 	        </div>            
 			
 	        <!-- 뒤로가기 버튼 -->

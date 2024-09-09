@@ -46,7 +46,7 @@ public class BoardInsertOkAction implements Action {
         int boardNo = dao.insertBoard(board, user.getUserNo()); 
 
         List<BoardFileUploadDTO> uploadedFiles = (List<BoardFileUploadDTO>) session.getAttribute("uploadedFiles");
-
+        
         LocalDate now = LocalDate.now();
         String year = String.valueOf(now.getYear());
         String month = String.format("%02d", now.getMonthValue());
@@ -92,17 +92,18 @@ public class BoardInsertOkAction implements Action {
                 }
             }
         }
-        // 임시 저장소의 url을 따로 저장해야됨. 아이디어는 위에있는거같음. 일단 시간이 없는 관계로 나머지 학원에서.
-        for(BoardFileUploadDTO file : uploadedFiles) {
-        	
-        	BoardFileUploadDTO fileDTO = new BoardFileUploadDTO();
-        	fileDTO.setFileUrl(permanentFileUrl);
-        }
+ 
         
-        // *** 이미지 경로를 영구 저장소 경로로 변경 ***
-        String changeContent = replaceTempUrlWithPermanentUrl(content, uploadedFiles, boardNo, user, request.getContextPath(), year, month, day);
+     // 게시글 작성 후 파일 경로를 영구 저장소 경로로 변경
+        if (uploadedFiles != null && !uploadedFiles.isEmpty()) {
+            String updatedContent = replaceTempUrlWithPermanentUrl(content, uploadedFiles, boardNo, user, request.getContextPath(), year, month, day);
+            
+            
+            board.setContent(updatedContent);
+        }
         // 게시글 첨부파일 저장
-        int result = dao.updateBoardAndFiles(boardNo, user.getUserNo(), uploadedFiles,changeContent);
+        dao.boardInsertFileUpload(boardNo, uploadedFiles);
+        int result = dao.updateBoardContent(boardNo,board.getContent());
         
         
         if (result > 0) {
@@ -117,20 +118,20 @@ public class BoardInsertOkAction implements Action {
         return null;  // View는 필요 없음
     }
 
-    // 이미지 URL을 임시 저장소 경로에서 영구 저장소 경로로 업데이트하는 메서드
+ // 이미지 URL을 임시 저장소 경로에서 영구 저장소 경로로 업데이트하는 메서드
     private String replaceTempUrlWithPermanentUrl(String tmpContent, List<BoardFileUploadDTO> uploadedFiles, int boardNo, UsersDTO user, String contextPath, String year, String month, String day) {
-    	String changeContent = null;
         for (BoardFileUploadDTO file : uploadedFiles) {
-            String tempUrl = file.getFileUrl(); // 임시 파일 경로
+            // Froala에서 사용하는 경로는 /Admin 포함
+            // 이 경로는 실제 HTML에서 사용된 이미지 경로와 일치해야 함
+            String tempUrl = contextPath + "/resources/board/board_temp_files/" + file.getFileName();  // 임시 파일 경로
             String permanentUrl = contextPath + "/resources/board/board_upload_files/" + boardNo + "/" + user.getUserNo() + "/" + user.getUserId() + "/" + year + "/" + month + "/" + day + "/" + file.getFileName();
 
-            System.out.println("바뀌기 전 임시 저장소 : "+ tmpContent);
-            System.out.println("tempUrl : "+ tempUrl);
-            System.out.println("permanentUrl : "+ permanentUrl);
-            
-            changeContent = tmpContent.replace(tempUrl, permanentUrl);  // 임시 경로를 영구 경로로 대체
-            
+            // Froala에서 사용되는 src 속성 경로를 영구 경로로 대체
+            tmpContent = tmpContent.replace(tempUrl, permanentUrl);
         }
-        return changeContent;
+        return tmpContent;
     }
+
+
+
 }
