@@ -11,6 +11,7 @@ import com.global.action.View;
 import com.global.admin.model.UsersDTO;
 import com.global.review.model.ProductReviewDAO;
 import com.global.review.model.ProductReviewDTO;
+import com.global.utils.RequestParameterUtils;
 import com.global.utils.ScriptUtil;
 
 public class ProductReviewInsertOkAction implements Action{
@@ -31,13 +32,15 @@ public class ProductReviewInsertOkAction implements Action{
         }
         
         // 유저 번호를 가져와서 BoardDTO에 설정합니다.
-        review.setUser_No(user.getUserNo());
-		String categoryNo = request.getParameter("categoryNo");
+        review.setUserNo(user.getUserNo());
+		String productCategoryNo = request.getParameter("product_CategoryNo");
+		String boardCategoryNo = request.getParameter("board_CategoryNo");
 		String title = request.getParameter("title").trim();
 		String content = request.getParameter("content").trim();
-		int reviewStar = Integer.parseInt(request.getParameter("reviewStar"));
+		int reviewStar = RequestParameterUtils.parseInteger(request.getParameter("reviewStar"),1);
 
-		review.setCategory_no(categoryNo);
+		review.setCategory_no(productCategoryNo);
+		review.setBoardCategoryNo(boardCategoryNo);
 		review.setTitle(title);
 		review.setContent(content);
 		review.setRating(reviewStar);
