@@ -42,20 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     rows.forEach(row => {
         row.addEventListener('click', goToDetailPage);
     });
-    
-    // 전체 선택 및 개별 선택 기능
-    const selectAllCheckbox = document.getElementById('selectAll');
-    if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('.deleteCheckbox');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-        });
-    }
-    
 });
-
 </script>
 <style type="text/css">
 
@@ -91,11 +78,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				        <td class="table_header info" colspan="9" align="right">전체 게시글 수: ${count}</td>
 				    </tr>
 				    <tr>
-				    	<th class="border-th board-checkBox"><input type="checkbox" id="selectAll" /></th>
 				        <th class="border-th board-th-boardNo">BoardNo.</th>
 				        <th class="border-th">Category <span class="subtitle">(categoryCode)</span></th>
 				        <th class="border-th">UserID. <span class="subtitle">(userNo)</span></th>
 				        <th class="border-th board-th-title">제목</th>
+				        <!-- <th class="border-th">내용</th> -->
 				        <th class="border-th board-th-createAt">작성일</th>
 				        <th class="border-th board-th-updateAt">수정일</th>
 				        <th class="border-th board-th-views">조회수</th>
@@ -111,7 +98,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					
 					            <!-- 각 행의 데이터를 출력 -->
 					            <tr class="trlist" data-id="${board.boardNo}" data-user-type="${board.userType}">
-					            	<td class="board-td"><input type="checkbox" class="deleteCheckbox" value="${board.boardNo}" /></td>
 					                <td class="board-td">${board.boardNo}</td>
 					                <td class="board-td">${board.categoryName} <span class="subtitle">(${board.categoryNo})</span></td>
 					                <td class="board-td">
@@ -132,6 +118,10 @@ document.addEventListener('DOMContentLoaded', function() {
 									        <span class="commentCount">[${board.commentCount}]</span>
 									    </c:if>
 									</td>
+<%-- 					                <td class="board-td">
+					                    <!-- stripHtml 메서드 결과를 명확히 문자열로 처리 -->
+					                    <c:out value="${truncatedContent}" />
+					                </td> --%>
 					                <td class="board-td"><fmt:formatDate value="${board.createAt}" /></td>
 					                <td class="board-td"><fmt:formatDate value="${board.updateAt}" /></td>
 					                <td class="board-td">${board.views}</td>
