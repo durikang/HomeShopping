@@ -31,7 +31,6 @@
 			
 		 <table border = "1" width = "auto">
 		 	<tr>
-		 		<th>No</th> 
 		 		<th>직책 코드</th> 
 		 		<th>직책 이름</th>
 		 	</tr>
@@ -40,7 +39,6 @@
 			 	<c:if test = "${!empty List }">
 				 	<c:forEach var="adminRole" items="${list }">
 			 			<tr>
-			 				<!-- <td>${adminRole.row_num() }</td> -->
 			 				<td>${adminRole.getRoleCode() }</td>
 			 				<td>${adminRole.getRoleName() }</td>
 			 			</tr>
