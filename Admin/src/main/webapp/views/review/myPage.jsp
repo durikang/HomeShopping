@@ -18,8 +18,10 @@
 				<td>주문번호</td><td>회원번호</td><td>주문날짜</td>
 				<td>주문상태</td><td>총 주문 갯수</td><td>리뷰</td>
 			</tr>
+			
 			<c:if test="${!empty buyList }">
 				<c:forEach items="${buyList }" var ="dto">
+				
 				<tr>
 					<td>${dto.getOrder_no() }</td>
 					<td>${dto.getUser_no() }</td>
@@ -27,12 +29,17 @@
 					<td>${dto.getStatus() }</td>
 					<td>${dto.getTotal_amount() }</td>
 					<c:if test="${dto.getStatus().equals('DELIVERED') }">
-					<td>리뷰작성</td>
+					<td>
+						<input type = "button" value = "리뷰작성" onclick="location.href='productReviewinsert.do?user_no=${dto.getUser}'">
+					</td>
 					</c:if>
+					
 					<c:if test="${!dto.getStatus().equals('DELIVERED') }">
-					<td>리뷰 작성 불가능</td>
+						<td>리뷰X</td>
 					</c:if>
+				
 				</tr>
+				
 				</c:forEach>
 			</c:if>
 			
