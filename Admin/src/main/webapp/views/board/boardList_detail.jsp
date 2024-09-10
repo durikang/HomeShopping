@@ -45,18 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </head>
 <body>
-	<div class="title">
-	    <h1>게시판</h1>
-	    <c:if test="${ not empty param.subtitle}">
-	        <nav aria-label="breadcrumb">
-	            <ol class="breadcrumb">
-	                <li>홈</li> <!-- 홈으로 이동 -->
-	                <li>게시판 관리</li> <!-- 게시판 관리 페이지로 이동 -->
-	                <li class="active" aria-current="page">${ param.subtitle }</li> <!-- 현재 위치 -->
-	            </ol>
-	        </nav>
-	    </c:if>
-	</div>
 
     <div class="container">
 
@@ -145,14 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
 
-    </div>
-   	    <c:when test="${not empty url}">
-	        <c:import url="${url}" />
-	       	<!-- Include the pagination JSP -->
-	       	<!-- pi객체가 존재한다면. List페이지 이므로 페이지네이션 import -->
-	        <c:if test="${not empty pi }"> 
-			    <c:import url="/views/common/pagination.jsp"/>
-	        </c:if>
-	    </c:when>
+</div>
+
 </body>
 </html>
