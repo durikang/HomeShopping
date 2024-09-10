@@ -116,6 +116,7 @@
 	   <input type="button" value="상품삭제"
 	        onclick="location.href='productDelete.do?no=${dto.getProduct_no() }'">
 	   &nbsp;&nbsp;
+	   <input class="btn" type="button" value="찜하기" oncick="location.href='product.go'">
 	   <input type="button" value="전체목록"
 	        onclick="location.href='productList.do'">
 	</div>
