@@ -76,8 +76,8 @@
 																								
 				<tr>
 					<td class="table_bottom button categoryInsertBtn" colspan="2">
-						<input class="btn" type="submit" value="카테고리 수정"> <input
-						class="btn" type="reset" value="초기화">
+						<input class="btn" type="submit" value="카테고리 수정"> 
+						<input class="btn" type="reset" value="초기화">
 					</td>
 				</tr>
 			</table>

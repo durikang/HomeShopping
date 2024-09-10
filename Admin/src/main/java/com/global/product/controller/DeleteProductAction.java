@@ -35,12 +35,12 @@ public class DeleteProductAction implements Action {
 			} 
 			else {
 				ScriptUtil.sendScript(response, "상품 삭제 실패!!!", null);
-				System.out.println("상품 이미지는 삭제");
+				
 			}
 		
 		} else {
 			ScriptUtil.sendScript(response, "상품 삭제 실패!!!", null);
-			System.out.println("상품 이미지도 삭제x");
+			
 		}
 		return null;
 	}

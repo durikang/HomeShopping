@@ -351,6 +351,23 @@ public int insertCategory(ProductCategoryDTO dto) {
 	}
 
 
+		public List<ProductCategoryDTO> selectProductCategoryList(int currentPage, int boardLimit, char c) {
+
+			
+			
+			return null;
+		}
+
+
+		public int getProductCategoryCount(char c) {
+
+			
+			
+			
+			return 0;
+		}
+
+
 
 		
 	}

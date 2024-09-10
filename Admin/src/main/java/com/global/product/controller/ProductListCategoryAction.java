@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.global.action.Action;
 import com.global.action.View;
+import com.global.board.model.BoardCategoryDTO;
 import com.global.product.model.ProductCategoryDAO;
 import com.global.product.model.ProductCategoryDTO;
 import com.global.utils.PageInfo;
@@ -20,10 +21,7 @@ public class ProductListCategoryAction implements Action {
 
 		ProductCategoryDAO dao = ProductCategoryDAO.getInstance();
 		
-		
-		List<ProductCategoryDTO> list = dao.getCategoryList();
-		
-		request.setAttribute("List", list);
+		String status = request.getParameter("status");
 		
 		int listCount;
         int currentPage = 1; // 기본적으로 페이지는 1로 설정
@@ -35,7 +33,15 @@ public class ProductListCategoryAction implements Action {
         
         int pageLimit = 10; // 한 페이지 하단에 보여질 페이지 수
         
+		List<ProductCategoryDTO> list;
 		
+		if("N".equals(status)) {
+			listCount = dao.getProductCategoryCount('N');
+			list = dao.selectProductCategoryList(currentPage, boardLimit, 'N');
+		}else if("Y".equals(status)) {
+			listCount = dao.getProductCategoryCount('Y');
+			list = dao.selectProductCategoryList(currentPage, boardLimit, 'Y');
+		}else {
 		listCount = dao.getProductCategoryListCount();
         list = dao.getProductCategoryPage(currentPage, boardLimit);
 		

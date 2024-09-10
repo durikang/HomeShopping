@@ -340,6 +340,8 @@ public class ProductDAO {
 	        pstmt.setInt(1, startRow);
 	        pstmt.setInt(2, endRow);
 			
+	        
+	        
 	        rs = pstmt.executeQuery();
 			
 			} catch (SQLException e) {
