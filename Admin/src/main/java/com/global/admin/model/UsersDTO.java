@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class UsersDTO {
 	
-    private int userNo;
+	private int userNo;
     private String userId;
     private String password;
     private String name;

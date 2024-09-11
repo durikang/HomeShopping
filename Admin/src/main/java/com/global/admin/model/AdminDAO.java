@@ -60,7 +60,7 @@ public class AdminDAO {
 			}
 	} // closeConn() 메서드 end
 	
-	// 전체 게시물 수를 확인하는 메서드.
+	// 전체 게시물 수를 확인하는 메서드
 	public int getCategoryCount() {
 			
 		int count = 0;
@@ -129,28 +129,18 @@ public class AdminDAO {
 	// 직책 추가하는 메서드
 	public int insertAdminCategory(AdminDTO dto) {
 		
-		int result = 0, count = 0;
+		int result = 0;
 			
 		try {
 			openConn();
-				
-			sql = "select max(role_code) from admin_role";
-				
-			pstmt = con.prepareStatement(sql);
-				
-			rs = pstmt.executeQuery();
-				
-			if(rs.next()) {
-				count = rs.getInt(1);
-			}
-				
+			
 			sql = "insert into admin_role values(?, ?)";
-				
+			
 			pstmt = con.prepareStatement(sql);
-				
+			
 			pstmt.setString(1, dto.getRoleCode());
 			pstmt.setString(2, dto.getRoleName());
-				
+			
 			result = pstmt.executeUpdate();
 		} 
 			
@@ -164,42 +154,43 @@ public class AdminDAO {
 			
 		return result;
 	} // insertAdminCategory() 메서드 end
-		
-	// 코드로 관리자 직책의 정보를 조회하는 메서드
-	public AdminDTO contentAdminCategory(String code, String name) {
-			
+	
+	// 관리자 직책의 정보를 조회하는 메서드
+	public List<AdminDTO> searchCategoryAdminList(String search_field, String search_keyword) {
+
 		AdminDTO dto = null;
-			
+		
+		String code = null;
+		
 		try {
 			openConn();
-				
+			
 			sql = "select * from admin_role where role_code = ?";
-				
+			
 			pstmt = con.prepareStatement(sql);
-				
+			
 			pstmt.setString(1, code);
-				
+			
 			rs = pstmt.executeQuery();
-				
+			
 			if(rs.next()) {
 				dto = new AdminDTO();
-					
-				// dto.setRow_Num(rs.getInt("rowNum"));
-				dto.setRoleCode(rs.getString("roleCode"));
-				dto.setRoleName(rs.getString("roleName"));
+				
+				dto.setRoleCode(rs.getString("code"));
+				dto.setRoleName(rs.getString("name"));
 			}
 		} 
-			
+		
 		catch (SQLException e) {
 			e.printStackTrace();
-		} 
-			
+		}
+		
 		finally {
 			closeConn(rs, pstmt, con);
 		}
-			
+		
 		return dto;
-	} // contentAdminCategory() 메서드 end
+	} // searchCategoryAdminList() 메서드 end
 	
 	// 전체 리스트를 조회하는 메서드
 	public List<AdminDTO> getAdminList() {

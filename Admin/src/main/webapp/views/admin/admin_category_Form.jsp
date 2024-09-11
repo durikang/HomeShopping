@@ -29,6 +29,13 @@
 					<input type = "text" name = "role_name">
 				</td>
 			</tr>
+			
+			<tr>
+				<th>직책 비밀번호</th>
+				<td>
+					<input type = "password" name = "role_pwd">
+				</td>
+			</tr>
 
 			<tr>
 				<td colspan = "2" align = "center">
