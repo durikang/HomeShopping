@@ -6,6 +6,30 @@
 <head>
 <meta charset="UTF-8">
 <title>카테고리 목록 페이지</title>
+<script type="text/javascript">
+/**
+ * 
+ */
+ 
+ // JavaScript 함수: 클릭한 행의 ID를 가져와서 상세 페이지로 이동
+function goToDetailPage(event) {
+    const target = event.currentTarget;
+    const No = target.getAttribute('data-id');
+    if (No) {
+        /* window.location.href = '${contextPath}/detail.do?no=' + userNo + '&status='+${status}+'&currentPage='+${pi.currentPage}; */
+        window.location.href = '${contextPath}/productCategoryContent.do?no=' + No + '&status=' + '${status}' + '&currentPage=' + '${pi.currentPage}';
+    }
+}
+
+// 모든 행에 클릭 이벤트 리스너 추가
+document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('table tr[data-id]');
+
+    rows.forEach(row => {
+        row.addEventListener('click', goToDetailPage);
+    });
+});
+</script>
 </head>
 <body>
 	<div align="center">
@@ -26,9 +50,9 @@
 			<c:set var="list" value="${List }" />
 			<c:if test="${!empty list }">
 				<c:forEach items="${list }" var="dto">
-					<tr>
+					<tr data-id=${dto.getCategory_No() }>
 						<td>${dto.getCategory_No() }</td>
-						<td><a href="<%=request.getContextPath() %>/productCategoryContent.do?no=${dto.getCategory_No() }">${dto.getName() }</a></td>
+						<td>${dto.getName() }</td>
 						<td>${dto.getDescription() }</td>
 					</tr>
 				</c:forEach>

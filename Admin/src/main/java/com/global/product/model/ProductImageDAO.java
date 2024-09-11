@@ -106,17 +106,32 @@ public class ProductImageDAO {
 
 	public int insertImgProduct(ProductImageDTO image) {
 
-		int result = 0;
+		int result = 0, count = 0;
 		int paramIndex=1;
+		
+		
 		try {
 		
 		openConn();
 		
-		sql = "INSERT INTO PRODUCT_IMAGE VALUES(SEQ_IMAGE_NO.NEXTVAL,SEQ_PRODUCT_NO.currval,?,null)";
+		sql = "SELECT MAX (IMAGE_NO) FROM PRODUCT_IMAGE";
 		
 		pstmt = con.prepareStatement(sql);
 		
+		rs = pstmt.executeQuery();
+		
+		if(rs.next()) {
+			count = rs.getInt(1) + 1;
+		}
+		
+		sql = "INSERT INTO PRODUCT_IMAGE VALUES(?,SEQ_PRODUCT_NO.currval,?,?)";
+		
+		pstmt = con.prepareStatement(sql);
+		
+		
+		pstmt.setInt(paramIndex++, count);
 		pstmt.setString(paramIndex++, image.getImage_url());
+		pstmt.setString(paramIndex++, image.getDescription());
 		
 		result = pstmt.executeUpdate();
 		
@@ -131,19 +146,34 @@ public class ProductImageDAO {
 
 
 	public int insertNullProduct(ProductDTO product) {
-		int result = 0;
-
+		int result = 0, count = 0;
+		int paramIndex=1;
+		
+		
 		try {
+
+			
+			openConn();
+			
+			sql = "SELECT MAX (IMAGE_NO) FROM PRODUCT_IMAGE";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt(1) + 1;
+			}
 		
-		openConn();
-		
-		sql = "INSERT INTO PRODUCT_IMAGE VALUES(SEQ_PRODUCT_NO.NEXTVAL,?,'',?)";
+		sql = "INSERT INTO PRODUCT_IMAGE VALUES(?,SEQ_PRODUCT_NO.currval,?,?)";
 		
 		pstmt = con.prepareStatement(sql);
 		
 		
-		pstmt.setInt(1, product.getProduct_no());
-		pstmt.setString(2, product.getDescription());
+		pstmt.setInt(paramIndex++, count);
+		pstmt.setString(paramIndex++, "-");
+		pstmt.setString(paramIndex++, product.getImg_description());
+		
 		
 		result = pstmt.executeUpdate();
 		
@@ -151,27 +181,33 @@ public class ProductImageDAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			closeConn(pstmt, con);
+			closeConn(rs, pstmt, con);
 		}
 		
+		
 		return result;
-	}
+		
+		}
 
+		
 
 	public int modifyNullProduct(ProductDTO product) {
 		
 		int img = 0;
+		int paramIndex=1;
 		
 		try {
 
 		openConn();
 		
-		sql = "UPDATE PRODUCT_IMAGE SET IMAGE_URL = ? WHERE PRODUCT_NO = ?";
+		sql = "UPDATE PRODUCT_IMAGE SET IMAGE_URL = ?, DESCRIPTION = ? WHERE PRODUCT_NO = ?";
 		
 		pstmt = con.prepareStatement(sql);
 			
-		pstmt.setString(1, "-");
-		pstmt.setInt(2, product.getProduct_no());
+		pstmt.setString(paramIndex++, "-");
+		pstmt.setString(paramIndex++, product.getImg_description());
+		pstmt.setInt(paramIndex++, product.getProduct_no());
+		
 		
 		img = pstmt.executeUpdate();
 		
@@ -191,17 +227,19 @@ public class ProductImageDAO {
 	public int modifyImgProduct(ProductImageDTO image) {
 		
 		int img = 0;
+		int paramIndex=1;
 		
 		try {
 
 		openConn();
 		
-		sql = "UPDATE PRODUCT_IMAGE SET IMAGE_URL = ? WHERE PRODUCT_NO = ?";
+		sql = "UPDATE PRODUCT_IMAGE SET IMAGE_URL = ?, DESCRIPTION = ? WHERE PRODUCT_NO = ?";
 		
 		pstmt = con.prepareStatement(sql);
 			
-		pstmt.setString(1, image.getImage_url());
-		pstmt.setInt(2, image.getProudct_no());
+		pstmt.setString(paramIndex++, image.getImage_url());
+		pstmt.setString(paramIndex++, image.getDescription());
+		pstmt.setInt(paramIndex++, image.getProudct_no());
 		
 		img = pstmt.executeUpdate();
 		

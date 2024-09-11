@@ -20,6 +20,9 @@ public class ModifyProductAction implements Action {
 		
 		String product_no = request.getParameter("no").trim();
 		
+		String status = request.getParameter("status") == null ? "" : request.getParameter("status");
+    	int currentPage = request.getParameter("currentPage") == null ? 0 : Integer.parseInt(request.getParameter("currentPage"));
+		
 		ProductDAO dao = ProductDAO.getInstance();
 		
 		ProductCategoryDAO categoryDAO = ProductCategoryDAO.getInstance();
@@ -28,7 +31,9 @@ public class ModifyProductAction implements Action {
 		
 		List<ProductCategoryDTO> list = categoryDAO.getCategoryList();
 		
-		
+		// request에 필요한 속성 설정
+    	request.setAttribute("status", status);
+    	request.setAttribute("currentPage", currentPage);
 		request.setAttribute("Modify", dto);
 		request.setAttribute("CategoryList", list);
 		

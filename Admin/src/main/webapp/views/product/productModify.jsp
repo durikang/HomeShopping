@@ -45,13 +45,18 @@
 					<td><input name="product_name" required value="${dto.getName() }"></td>
 				</tr>
 				<tr>
+					<th>상품 정보</th>
+					<td><textarea rows="8" cols="22" name="description"
+							value="${dto.getDescription() }"></textarea></td>
+				</tr>
+				<tr>
 					<th>상품 이미지</th>
 					<td><input type="file" name="image_url"></td>
 				</tr>
 				<tr>
-					<th>상품 정보</th>
-					<td><textarea rows="8" cols="22" name="description"
-							value="${dto.getDescription() }"></textarea></td>
+					<th>상품 이미지 정보</th>
+					<td><textarea rows="8" cols="22" name="img_description"
+							value="${dto.getImg_description() }"></textarea></td>
 				</tr>
 				<tr>
 					<th>상품 가격</th>
@@ -63,7 +68,7 @@
 					<th>상품 재고</th>
 					<td><input name="stock_quantity" required></td>
 				</tr>
-				
+
 				<tr>
 					<th>상품 상태</th>
 					<td>
@@ -75,7 +80,8 @@
 				</tr>
 																								
 				<tr>
-					<td class="table_bottom button categoryInsertBtn" colspan="2">
+					<td class="table_bottom button categoryInsertBtn" colspan="3">
+					<button type="button" onclick="location.href='productList.do?status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">뒤로가기</button>
 						<input class="btn" type="submit" value="카테고리 수정"> 
 						<input class="btn" type="reset" value="초기화">
 					</td>

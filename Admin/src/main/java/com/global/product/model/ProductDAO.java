@@ -436,4 +436,135 @@ public class ProductDAO {
 	}
 
 
+	public List<ProductDTO> getProduct(int currentPage, int boardLimit) {
+
+		List<ProductDTO> list = new ArrayList<>();
+		
+		sql = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY CATEGORY_NO ASC) AS rnum, B.* FROM PRODUCT B ) JOIN PRODUCT_IMAGE USING(PRODUCT_NO) WHERE rnum BETWEEN ? AND ?";
+
+		try {
+		
+		openConn();
+		
+		int paramIndex = 1;
+		int startRow = (currentPage - 1) * boardLimit + 1;
+		int endRow = startRow + boardLimit - 1;
+
+		pstmt = con.prepareStatement(sql);
+
+		pstmt.setInt(paramIndex++, startRow);
+		pstmt.setInt(paramIndex++, endRow);
+
+		rs = pstmt.executeQuery();
+
+		while (rs.next()) {
+			ProductDTO dto = new ProductDTO();
+			
+			dto.setProduct_no(rs.getInt("product_no"));
+			dto.setCategory_no(rs.getString("category_no"));
+			dto.setImage_url(rs.getString("image_url"));
+			dto.setName(rs.getString("name"));
+			dto.setDescription(rs.getString("description"));
+			dto.setPrice(rs.getInt("price"));
+			dto.setStock_quantity(rs.getInt("stock_quantity"));
+			dto.setViews(rs.getInt("views"));
+			dto.setCreated_at(rs.getDate("created_at"));
+			dto.setUpdated_at(rs.getDate("updated_at"));
+			dto.setIs_deleted(rs.getString("is_deleted"));
+			dto.setTotal_sales(rs.getInt("total_sales"));
+			dto.setUser_no(rs.getInt("user_no"));
+			
+			list.add(dto);
+			
+		}
+		
+		
+	} catch (SQLException e) {
+		
+		e.printStackTrace();
+		
+		
+	}finally {
+		closeConn(rs, pstmt, con);
+		
+	}
+		
+		return list;
+	}
+
+	public List<ProductDTO> selectProductList(int currentPage, int boardLimit, char status) {
+
+		List<ProductDTO> list = new ArrayList<>();
+		
+		sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY PRODUCT_NO ASC) AS rnum, P.* FROM PRODUCT P) JOIN PRODUCT_IMAGE USING(PRODUCT_NO) WHERE rnum BETWEEN ? AND ?";
+
+		try {
+			openConn();
+			int paramIndex = 1;
+			int startRow = (currentPage - 1) * boardLimit + 1;
+			int endRow = startRow + boardLimit - 1;
+
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(paramIndex++, String.valueOf(status));
+			pstmt.setInt(paramIndex++, startRow);
+			pstmt.setInt(paramIndex++, endRow);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				ProductDTO dto = new ProductDTO();
+				
+				dto.setProduct_no(rs.getInt("product_no"));
+				dto.setCategory_no(rs.getString("category_no"));
+				dto.setImage_url(rs.getString("image_url"));
+				dto.setName(rs.getString("name"));
+				dto.setDescription(rs.getString("description"));
+				dto.setPrice(rs.getInt("price"));
+				dto.setStock_quantity(rs.getInt("stock_quantity"));
+				dto.setViews(rs.getInt("views"));
+				dto.setCreated_at(rs.getDate("created_at"));
+				dto.setUpdated_at(rs.getDate("updated_at"));
+				dto.setIs_deleted(rs.getString("is_deleted"));
+				dto.setTotal_sales(rs.getInt("total_sales"));
+				dto.setUser_no(rs.getInt("user_no"));
+
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return list;
+	}
+	public int getProductCount(char status) {
+
+		int count = 0;
+
+		try {
+			openConn();
+			sql = "select count(*) from PRODUCT";
+			// 상태에 따라 SQL 조건 추가
+			if (status == 'Y') {
+				sql += " WHERE is_deleted = 'Y' order by 1 desc";
+			} else if (status == 'N') {
+				sql += " WHERE is_deleted = 'N' order by 1 desc";
+			}
+			pstmt = con.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+
+		return count;
+	}
+
+
+
 }

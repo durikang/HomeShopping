@@ -43,7 +43,8 @@ public class ModifyProductOkAction implements Action {
 			int product_price = parseIntSafe(multi.getParameter("product_price"));
 			int stock_quantity = parseIntSafe(multi.getParameter("stock_quantity"));
 			int user_no = parseIntSafe(multi.getParameter("user_no")); 
-
+			String img_description = getParameterSafe(multi, "img_description");
+			
 			File upload_file = multi.getFile("image_url");
 			
 			
@@ -89,6 +90,7 @@ public class ModifyProductOkAction implements Action {
 			product.setPrice(product_price);
 			product.setStock_quantity(stock_quantity);
 			product.setUser_no(user_no);
+			product.setImg_description(img_description);
 			
 			ProductDAO dao = ProductDAO.getInstance();
 			
@@ -112,6 +114,7 @@ public class ModifyProductOkAction implements Action {
 				
 				image.setImage_url(product.getImage_url());
 				image.setProudct_no(product.getProduct_no());
+				image.setDescription(product.getImg_description());
 				
 				int img = imageDAO.modifyImgProduct(image);
 				

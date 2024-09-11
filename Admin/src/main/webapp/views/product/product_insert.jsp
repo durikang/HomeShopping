@@ -53,6 +53,10 @@
 					<td><input type="file" name="image_url"></td>
 				</tr>
 				<tr>
+					<th>상품 이미지 정보</th>
+					<td><textarea rows="8" cols="22" name="product_image_info"></textarea></td>
+				</tr>
+				<tr>
 					<td colspan="2" align="center">
 						<input type="submit" value="상품 등록"> 
 						<input type="reset" value="초기화">

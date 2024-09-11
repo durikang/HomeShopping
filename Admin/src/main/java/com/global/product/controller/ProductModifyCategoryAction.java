@@ -17,12 +17,15 @@ public class ProductModifyCategoryAction implements Action {
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		String category_no = request.getParameter("no").trim(); 
-				
 		ProductCategoryDAO dao = ProductCategoryDAO.getInstance();
+
+		String category_no = request.getParameter("no").trim(); 
+		int currentPage = request.getParameter("currentPage") == null ? 0 : Integer.parseInt(request.getParameter("currentPage"));
+				
 		
 		ProductCategoryDTO dto = dao.getCategoryContent(category_no);
 		
+		request.setAttribute("currentPage", currentPage);
 		request.setAttribute("Modify", dto);
 		
 		return new View("main.go").setUrl("/views/product/productCategoryModify.jsp");

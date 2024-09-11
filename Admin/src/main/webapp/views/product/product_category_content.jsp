@@ -15,6 +15,7 @@
 </head>
 <body>
 <div align="center">
+		<c:set var="pi" value="${count }"/>
 		<c:set var="dto" value="${Content }" />
 
 		<hr width="30%" color="red">
@@ -49,13 +50,13 @@
 		<br>
 		
 		<input type="button" value="카테고리수정"
-	        onclick="location.href='productCategoryModify.do?no=${dto.getCategory_No() }'">
+	        onclick="location.href='productCategoryModify.do?no=${dto.getCategory_No() }&currentPage=${pi}&status=${status}'">
 	   &nbsp;&nbsp;
 	   <input type="button" value="카테고리삭제"
-	        onclick="location.href='productCategoryDelete.do?no=${dto.getCategory_No() }'">
+	        onclick="location.href='productCategoryDelete.do?no=${dto.getCategory_No() }&currentPage=${pi}&status=${status}'">
 	   &nbsp;&nbsp;
 	   <input type="button" value="전체목록"
-	        onclick="location.href='productCategoryList.do'">
+	        onclick="location.href='productCategoryList.do?currentPage=${pi}&status=&subtitle='">
 	</div>
 </body>
 </html>

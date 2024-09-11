@@ -8,11 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.global.action.Action;
 import com.global.action.View;
-import com.global.board.model.BoardCategoryDTO;
 import com.global.product.model.ProductCategoryDAO;
 import com.global.product.model.ProductCategoryDTO;
 import com.global.utils.PageInfo;
-import com.global.utils.PageUtils;
 
 public class ProductListCategoryAction implements Action {
 
@@ -24,6 +22,7 @@ public class ProductListCategoryAction implements Action {
 		String status = request.getParameter("status");
 		
 		int listCount;
+		
         int currentPage = 1; // 기본적으로 페이지는 1로 설정
         if (request.getParameter("currentPage") != null) {
         	currentPage = Integer.parseInt(request.getParameter("currentPage"));
@@ -36,15 +35,15 @@ public class ProductListCategoryAction implements Action {
 		List<ProductCategoryDTO> list;
 		
 		if("N".equals(status)) {
-			listCount = dao.getProductCategoryCount('N');
+			listCount = dao.getProductCategoryCount('N'); //얘는 필터 기능이다.
 			list = dao.selectProductCategoryList(currentPage, boardLimit, 'N');
 		}else if("Y".equals(status)) {
 			listCount = dao.getProductCategoryCount('Y');
 			list = dao.selectProductCategoryList(currentPage, boardLimit, 'Y');
 		}else {
 		listCount = dao.getProductCategoryListCount();
-        list = dao.getProductCategoryPage(currentPage, boardLimit);
-		
+        list = dao.getProductCategory(currentPage, boardLimit);
+		}
         // 전체 페이지 수 계산
         int maxPage = (int) Math.ceil((double) listCount / boardLimit);
 
@@ -62,11 +61,13 @@ public class ProductListCategoryAction implements Action {
         
         // request에 필요한 속성 설정
         request.setAttribute("count", pi.getListCount());
-        request.setAttribute("list", list);
+        request.setAttribute("List", list);
         request.setAttribute("pi", pi);
-		request.setAttribute("address", "productCategory.do");
+		request.setAttribute("address", "productCategoryList.do");
 		
 		return new View("main.go").setUrl("/views/product/product_category_list.jsp");
-	}	
+		}	
 
+	
 }
+

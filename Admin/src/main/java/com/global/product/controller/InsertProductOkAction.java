@@ -44,6 +44,7 @@ public class InsertProductOkAction implements Action {
 		int product_price = parseIntSafe(multi.getParameter("product_price"));
 		int stock_quantity = parseIntSafe(multi.getParameter("stock_quantity"));
 		int user_no = parseIntSafe(multi.getParameter("user_no")); 
+		String product_image_info = getParameterSafe(multi, "product_image_info");
 		
 		UsersDTO user = (UsersDTO)request.getSession().getAttribute("user");
 		
@@ -96,6 +97,7 @@ public class InsertProductOkAction implements Action {
 		product.setPrice(product_price);
 		product.setStock_quantity(stock_quantity);
 		product.setUser_no(user_no);
+		product.setImg_description(product_image_info);
 		
 
 		// DAO 객체 생성 및 데이터베이스에 제품 정보 저장
@@ -123,6 +125,7 @@ public class InsertProductOkAction implements Action {
 				
 				image.setImage_url(product.getImage_url());
 				image.setProudct_no(product.getProduct_no());
+				image.setDescription(product.getImg_description());
 				
 				int img = imageDAO.insertImgProduct(image);
 				
