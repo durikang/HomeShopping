@@ -7,12 +7,60 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript">
+// JavaScript 함수: 클릭한 행의 ID와 userType을 가져와서 상세 페이지로 이동
+function goToDetailPage(event) {
+    const target = event.currentTarget;
+    const No = target.getAttribute('data-id');
+    const userType = target.getAttribute('data-user-type');
+    const currentPage = ${pi.currentPage};  // pi.currentPage를 자바스크립트 변수로 설정
+    const status = '${status}';
+    const subtitle = '${param.subtitle}';
+
+    if (No) {
+        // 서버에 방문 기록 저장 요청
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '${contextPath}/boardSaveVisit.do', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        
+        xhr.send('userNo=${sessionScope.user.userNo}&cart_no=' + No);
+        
+        // 페이지 이동
+        window.location.href = '${contextPath}/boardDetailForm.do?cart_no=' + No + '&userType=' + userType + '&status=' + status + '&currentPage=' + currentPage +'&subtitle='+subtitle;
+    }
+}
+
+// 모든 행에 클릭 이벤트 리스너 추가
+document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('table tr[data-id]');
+    rows.forEach(row => {
+        row.addEventListener('click', goToDetailPage);
+    });
+    
+    // 전체 선택 및 개별 선택 기능
+    const selectAllCheckbox = document.getElementById('selectAll');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.deleteCheckbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+    }
+    
+});
+
+</script>
+<style type="text/css">
+
+
+</style>
 </head>
 <body>
-	<div align="center">
+	<div align="title">
 		<h3>장바구니 전체리스트</h3>
-
-		<br><br>
+	</div>
+	<div>
 		
 		<table width="300">
 		
