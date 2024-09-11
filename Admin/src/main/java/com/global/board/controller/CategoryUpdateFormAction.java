@@ -27,7 +27,7 @@ public class CategoryUpdateFormAction implements Action{
     	request.setAttribute("currentPage", currentPage);
     	request.setAttribute("category", category);
 		
-		return new View("main.go").setUrl("/views/board/CategoryUpdateForm.jsp");
+		return new View("main.go").setUrl("/views/board/categoryUpdateForm.jsp");
 	}
 
 }

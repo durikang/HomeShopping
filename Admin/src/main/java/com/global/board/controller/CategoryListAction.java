@@ -21,7 +21,7 @@ public class CategoryListAction implements Action {
 		
 		String status = request.getParameter("status");
 		
-		int listCount; // 조건에 따른 회원 수
+		int listCount; // 조건에 따른 회원 수 
 
 		// 현재 페이지
 		int currentPage = 1;
@@ -67,7 +67,7 @@ public class CategoryListAction implements Action {
         request.setAttribute("pi", pi);
         request.setAttribute("status", status); // 필터 상태를 JSP로 전달
 
-		return new View("main.go").setUrl("/views/board/CategoryList.jsp");
+		return new View("main.go").setUrl("/views/board/categoryList.jsp");
 	}
 
 }
