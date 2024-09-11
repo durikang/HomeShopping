@@ -11,6 +11,12 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+
+
+import com.global.board.model.BoardCategoryDTO;
+import com.global.board.model.BoardDTO;
+import com.global.product.model.ProductDTO;
+
 public class OrderDAO {
 	
 	Connection con = null;
@@ -249,6 +255,120 @@ public class OrderDAO {
 		
 		return result;
 	}
+	
+	public int getOrderCount(String st) {
+		
+		int count = 0;
+		try {
+			openConn();
+			sql = "SELECT COUNT(*) FROM orders";
+
+			if (st != null) {
+				sql += " WHERE is_deleted = ?";
+			}
+
+			pstmt = con.prepareStatement(sql);
+
+			if (st != null) {
+				pstmt.setString(1, st);
+			}
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+
+		return count;
+	}
+
+
+	public List<OrderDTO> selectOrderList(int currentPage, int boardLimit, char st) {
+		
+		List<OrderDTO> list = new ArrayList<>();
+		/*
+		 * boardList페이지에서 BOARD_DETAIL을 호출할때
+		 * USER_TYPE,USER_ID,USER_EMAIL,BOARD_CATEGORY테이블에 대한 정보를 포함하고 있습니다.
+		 */
+		sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY order_no ASC) AS rnum, b.* FROM orders b ) WHERE rnum BETWEEN ? AND ?";
+
+		try {
+			openConn();
+			int paramIndex = 1;
+			int startRow = (currentPage - 1) * boardLimit + 1;
+			int endRow = startRow + boardLimit - 1;
+
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(paramIndex++, startRow);
+			pstmt.setInt(paramIndex++, endRow);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				OrderDTO order = new OrderDTO();
+
+				order.setOrder_no(rs.getInt("order_no"));
+				order.setUser_no(rs.getInt("user_no"));
+				order.setOrder_date(rs.getDate("order_date"));
+				order.setStatus(rs.getString("status"));
+				order.setTotal_amount(rs.getInt("total_amount"));
+				
+
+				list.add(order);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return list;
+	}
+
+
+	public List<OrderDTO> selectOrderList(int currentPage, int boardLimit) {
+		List<OrderDTO> list = new ArrayList<>();
+		/*
+		 * boardList페이지에서 BOARD_DETAIL을 호출할때
+		 * USER_TYPE,USER_ID,USER_EMAIL,BOARD_CATEGORY테이블에 대한 정보를 포함하고 있습니다.
+		 */
+		sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY order_no ASC) AS rnum, b.* FROM orders b ) WHERE rnum BETWEEN ? AND ?";
+
+		try {
+			openConn();
+			int paramIndex = 1;
+			int startRow = (currentPage - 1) * boardLimit + 1;
+			int endRow = startRow + boardLimit - 1;
+
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(paramIndex++, startRow);
+			pstmt.setInt(paramIndex++, endRow);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				OrderDTO order = new OrderDTO();
+
+				order.setOrder_no(rs.getInt("order_no"));
+				order.setUser_no(rs.getInt("user_no"));
+				order.setOrder_date(rs.getDate("order_date"));
+				order.setStatus(rs.getString("status"));
+				order.setTotal_amount(rs.getInt("total_amount"));
+				
+
+				list.add(order);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return list;
+	}
+		
 	
 
 }

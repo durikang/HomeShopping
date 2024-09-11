@@ -7,6 +7,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript">
+	function showPopup() {
+    alert("배송이 완료되지 않아 리뷰 작성이 불가능합니다.");
+}
+</script>
 </head>
 <body>
 	<div align="center">
@@ -19,6 +24,7 @@
 				<th>주문 상태</th>
 				<th>총 주문 금액</th>
 				<th>설 정</th>
+				<th>리뷰</th>
 			</tr>
 
 			<c:if test="${not empty List }">
@@ -43,9 +49,20 @@
 					
 						<td>
 						<c:if test="${sessionScope.user.userType == 'ADMIN'}">
-							<input type="button" value="배송상태설정" onclick="location.href='orderModify.do?no=${dto.order_no}'">
+							<input type="button" value="배송상태설정" onclick="location.href='orderModify.do?no=${dto.order_no}'">&nbsp;&nbsp;
 						</c:if>
 					</td> 
+					
+						<c:if test="${dto.status == 'DELIVERED' }">
+							<td>
+							<input type="button" value="리뷰 작성" onclick="location.href='productReviewinsert.do'">
+							</td>
+						</c:if>
+						<c:if test="${dto.status != 'DELIVERED' }">
+							<td>
+							<input type="button" value="리뷰 작성" onclick="showPopup()">
+							</td>
+						</c:if>
 					</tr>
 				</c:forEach>
 			</c:if>

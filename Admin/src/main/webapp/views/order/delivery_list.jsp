@@ -39,7 +39,7 @@
 						</c:if>
 							<td>
 						<c:if test="${sessionScope.user.userType == 'ADMIN'}">
-							<input type="button" value="배송상태설정" onclick="location.href='orderitem_delete.do?no=${dto.oreder_no}'">
+							<input type="button" value="배송상태설정" onclick="location.href='delivery_modify.do?no=${dto.order_no}'">
 						</c:if>
 					</td> 
 						
