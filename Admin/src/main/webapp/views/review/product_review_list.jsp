@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				    <tr>
 				        <td class="table_header info" colspan="9" align="right">전체 리뷰 수: ${count}</td>
 				    </tr>
+				    
 				    <tr>
 				        <th class="border-th">ReviewNo.</th>
 				        <th class="border-th">UserID. <span class="subtitle">(userNo)</span></th>
@@ -76,11 +77,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				        <th class="border-th">조회수</th>
 				        <th class="border-th">상태</th>
 				    </tr>
+				    
 				    <c:choose>
 					    <c:when test="${not empty list}">
 					        <c:forEach items="${list}" var="review" varStatus="status">
 					            <!-- 제목과 내용을 잘라서 변수에 저장 -->
- 
 								<c:set var="truncatedTitle" value="${StringUtils.truncateWithEllipsis(review.title, 20)}" />
 								<c:set var="truncatedContent" value="${StringUtils.truncateWithEllipsis(review.content, 30)}" />
 					
@@ -88,16 +89,20 @@ document.addEventListener('DOMContentLoaded', function() {
 					            <tr class="trlist" data-id="${review.boardNo}" data-user-type="${review.userType}">
 					                <td class="board-td">${review.boardNo}</td>
 					                <td class="board-td">
+					                
 					                    <c:choose>
 					                        <c:when test="${review.userNo == null}">
 					                            null
 					                        </c:when>
+					                        
 					                        <c:otherwise>
 					                            ${review.userId}
 					                            <span class="subtitle">(${review.userNo})</span>
 					                        </c:otherwise>
 					                    </c:choose>
+					                    
 					                </td>
+					                
 					                <td class="board-td">${review.categoryName} <span class="subtitle">(${review.categoryNo})</span></td>
 					                <td class="board-td">
 					                    <!-- 명확하게 문자열로 출력 -->
@@ -111,42 +116,42 @@ document.addEventListener('DOMContentLoaded', function() {
 					                <td class="board-td"><fmt:formatDate value="${review.updateAt}" /></td>
 					                <td class="board-td">${review.views}</td>
 					                <td class="board-td">
+					                
 					                    <c:choose>
 					                        <c:when test="${review.isDeleted == 'N'}">
 					                            <c:set var="status" value="정상" />
 					                        </c:when>
+					                        
 					                        <c:otherwise>
 					                            <c:set var="status" value="삭제됨" />
 					                        </c:otherwise>
 					                    </c:choose>
+					                    
 					                    <c:out value="${status}" />
 					                </td>
 					            </tr>
 					        </c:forEach>
 					    </c:when>
-					    <c:otherwise>
-							<!-- 빈 행 추가 -->
-							<c:forEach var="rowIndex" begin="${list.size() + 1}" end="100">
-							    <tr class="trlist">
-						            <td colspan="9" class="board-td" style="height: 40px;">데이터가 존재하지 않습니다</td> <!-- 빈 셀 생성 -->
-							    </tr>
-							</c:forEach>
-					    </c:otherwise>
 					</c:choose>
+					
 				    <tr>
 				        <td class="table_bottom button" colspan="9" align="center">
+				        
    				            <!-- 로그인한 유저만 게시글 작성 버튼 보이기 -->
 				            <c:if test="${not empty sessionScope.user}">
 				                <input type="button" class="btn" value="리뷰 작성" onclick="location.href='productReviewinsert.do'">
 				            </c:if>
 				        </td>
 				    </tr>
+				    
 				</table>
 
             </div>
         </div>
+        
         <!-- 사이드바 메뉴 -->
 		<c:import url="board/import/categorySideBar.jsp" />
+		
     </div>
 </body>
 </html>
