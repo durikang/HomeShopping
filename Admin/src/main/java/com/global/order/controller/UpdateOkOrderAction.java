@@ -30,7 +30,7 @@ public class UpdateOkOrderAction implements Action {
 		
 		
 		OrderDAO dao = OrderDAO.getInstance();
-		
+		int o;
 		int check = dao.ModifyOrder(dto);
 		
 		if (check > 0) {

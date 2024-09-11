@@ -15,7 +15,7 @@ public class DeliveryListAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
+		int o;
 		DeliveryDAO dao = DeliveryDAO.getInstance();
 		
 		List<DeliveryDTO> list = dao.getDeliveryList();

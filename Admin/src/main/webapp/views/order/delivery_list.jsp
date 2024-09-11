@@ -7,10 +7,11 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<script type="text/javascript"></script>
 <body>
 	<div align="center">
 		<h3>배송 정보</h3>
-		<table border="1" >
+		<table border="1">
 			<tr>
 				<th>배송 번호</th>
 				<th>주문 번호</th>

@@ -18,7 +18,7 @@ public class UpdateDeliveryAction implements Action {
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
-		
+		int o;
 		int order_no = Integer.parseInt(request.getParameter("no").trim());
 		
 		DeliveryDAO dao = DeliveryDAO.getInstance();

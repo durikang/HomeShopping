@@ -16,7 +16,7 @@ public class DeleteOrderAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
+		int o;
 		int order_no = Integer.parseInt(request.getParameter("no").trim());
 		
 		DeliveryDAO dao3 = DeliveryDAO.getInstance();

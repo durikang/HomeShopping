@@ -18,7 +18,7 @@ public class ListOrderAction implements Action{
 	
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
+		int o;
 		OrderDAO dao = OrderDAO.getInstance();
 		
 		List<OrderDTO> list = dao.getOrderList(); 

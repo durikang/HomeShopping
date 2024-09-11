@@ -221,7 +221,7 @@ public class DeliveryDAO {
 
 	public int getDelivery(DeliveryDTO dto) {
 			int result = 0;
-		
+			int 0;
 	
 		
 		try {

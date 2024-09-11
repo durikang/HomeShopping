@@ -19,7 +19,7 @@ public class UpdateOkDeliveryAction implements Action {
 		int delivery_no = Integer.parseInt(request.getParameter("delivery_no").trim());
 		int order_no = Integer.parseInt(request.getParameter("order_no").trim());
 		String delivery_status = request.getParameter("delivery_status").trim();
-		
+		int o;
 		DeliveryDTO dto = new DeliveryDTO();
 		
 		dto.setDelivery_no(delivery_no);
