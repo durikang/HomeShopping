@@ -17,7 +17,7 @@ public class UpdateOkOrderAction implements Action {
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		int order_no = Integer.parseInt(request.getParameter("order_no").trim());
-		String status = request.getParameter("status").trim()	;
+		String status = request.getParameter("status").trim();
 		int user_no = Integer.parseInt(request.getParameter("user_no").trim());
 		int total_amount = Integer.parseInt(request.getParameter("total_amount").trim());
 		
@@ -27,7 +27,7 @@ public class UpdateOkOrderAction implements Action {
 		dto.setStatus(status);
 		dto.setUser_no(user_no);
 		dto.setTotal_amount(total_amount);
-		System.out.println(status);
+		System.out.println("dto.getStatus() : "+ dto.getStatus());
 		
 		OrderDAO dao = OrderDAO.getInstance();
 		
@@ -38,6 +38,7 @@ public class UpdateOkOrderAction implements Action {
 		} else {
 			ScriptUtil.sendScript(response, "배송 상태 수정 실패!!!", null);
 		}
+		
 		return null;
 		
 	}
