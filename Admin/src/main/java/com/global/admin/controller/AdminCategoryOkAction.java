@@ -33,7 +33,7 @@ public class AdminCategoryOkAction implements Action {
 		if(check > 0) {
 			out.println("<script>");
 			out.println("alert('관리자 직책 추가 성공')");
-			out.println("location.href='select.do'");
+			out.println("location.href='adminCategory_select.do'");
 			out.println("</script>");
 		}
 		

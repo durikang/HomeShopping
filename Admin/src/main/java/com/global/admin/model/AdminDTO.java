@@ -4,9 +4,10 @@ import java.sql.Date;
 
 public class AdminDTO extends UsersDTO{
 	
-	// private int row_num;
 	private String roleCode;
     private String roleName;
+    
+    private String rolePwd;
     
 	public AdminDTO() {
 		super();
@@ -38,13 +39,11 @@ public class AdminDTO extends UsersDTO{
 		this.roleName = roleName;
 	}
 	
-	/*
-	public int getRow_Num() {
-		return row_num;
+	public String getRolePwd() {
+		return rolePwd;
 	}
-	
-	public void setRow_Num(int row_num) {
-		this.row_num = row_num;
+
+	public void setRolePwd(String rolePwd) {
+		this.rolePwd = rolePwd;
 	}
-	*/
 }
