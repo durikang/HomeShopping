@@ -29,7 +29,6 @@ public class ProductReviewInsertAction implements Action{
         request.setAttribute("productCategoryList", productCategoryList);
         request.setAttribute("boardCategoryList", boardCategoryList);
 		
-		
 		return new View("main.go").setUrl("/views/review/product_review_insert.jsp");
 	}
 	
