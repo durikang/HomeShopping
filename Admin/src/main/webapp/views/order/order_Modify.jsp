@@ -18,11 +18,10 @@
 		<br>
 		<br>
 
-		<form method="post" enctype="multipart/form-date"
-			action="${contextPath}/orderModifyOk.do">
-		<input type="hidden" name="status" value="${dto.status }">
+		<%-- <form method="post" enctype="multipart/form-date" action="${contextPath}/orderModifyOk.do"> --%>
+		<form method="post" action="${contextPath}/orderModifyOk.do">
+		<%-- <input type="hidden" name="status" value="${dto.status }"> --%>
 			<table border="1">
-		
 			<tr>
 				<th>주문 번호</th>
 				<th>주문 고객 번호</th>
@@ -33,18 +32,23 @@
 			
 			
 			<tr>
-				<td><input name="order_no" readonly
-						value="${dto.order_no }"></td>
-				<td><input name="user_no" readonly
-					value="${dto.user_no }"></td>
+				<td><input name="order_no" readonly value="${dto.order_no }"></td>
+				<td><input name="user_no" readonly value="${dto.user_no }"></td>
 				<td>
+				<!-- 
 					<select name="status" >
 			            <option value="PENDING">배송 대기</option>
 			            <option value="SHIPPED">배송 중</option>
 			            <option value="DELIVERED">배송 완료</option>
 			            <option value="CANCELLED">배송 취소</option>
 			        </select>
-					
+					 -->
+					 <select name="status">
+					    <option value="PENDING" ${dto.status == 'PENDING' ? 'selected' : ''}>배송 대기</option>
+					    <option value="SHIPPED" ${dto.status == 'SHIPPED' ? 'selected' : ''}>배송 중</option>
+					    <option value="DELIVERED" ${dto.status == 'DELIVERED' ? 'selected' : ''}>배송 완료</option>
+					    <option value="CANCELLED" ${dto.status == 'CANCELLED' ? 'selected' : ''}>배송 취소</option>
+					</select>
 				</td>
 				<td><input name="total_amount" readonly
 					value="${dto.total_amount }"></td>
