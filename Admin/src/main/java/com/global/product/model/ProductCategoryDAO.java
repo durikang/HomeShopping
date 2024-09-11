@@ -11,6 +11,9 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.global.board.model.BoardCategoryDTO;
+
+
 public class ProductCategoryDAO {
 
 	Connection con = null;
@@ -245,39 +248,42 @@ public int insertCategory(ProductCategoryDTO dto) {
 	}
 
 
-	public List<ProductCategoryDTO> getProductCategoryPage(int currentPage, int boardLimit) {
-
-		
-		
+	public List<ProductCategoryDTO> getProductCategory(int currentPage, int boardLimit) {
 		
 		List<ProductCategoryDTO> list = new ArrayList<>();
 		
+		sql = "SELECT * FROM ( SELECT ROW_NUMBER() OVER (ORDER BY CATEGORY_NO  ASC) AS rnum, B.* FROM PRODUCT_CATEGORY B ) WHERE rnum BETWEEN ? AND ?";
+		
 		try {
-
-	    int startRow = (currentPage - 1) * boardLimit + 1;
-	    int endRow = startRow + boardLimit - 1;
 			
 		openConn();
 		
-		sql = "SELECT COUNT(*) FROM PRODUCT_CATEGORY ORDER BY 1";
+		int paramIndex = 1;
+		int startRow = (currentPage - 1) * boardLimit + 1;
+		int endRow = startRow + boardLimit - 1;
 
 		pstmt = con.prepareStatement(sql);
-        pstmt.setInt(1, startRow);
-        pstmt.setInt(2, endRow);
-		
-        rs = pstmt.executeQuery();
-		
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-	        closeConn(rs, pstmt, con);
-	    }
-		
-		
-		
-		return list;
+		pstmt.setInt(paramIndex++, startRow);
+		pstmt.setInt(paramIndex++, endRow);
+
+		rs = pstmt.executeQuery();
+
+		while (rs.next()) {
+			ProductCategoryDTO dto = new ProductCategoryDTO();
+
+			dto.setCategory_No(rs.getString("CATEGORY_NO"));
+			dto.setName(rs.getString("NAME"));
+			dto.setDescription(rs.getString("DESCRIPTION"));
+
+			list.add(dto);
+		}
+	} catch (SQLException e) {
+		e.printStackTrace();
+	} finally {
+		closeConn(rs, pstmt, con);
 	}
+	return list;
+}
 
 
 	public int ModifyCategory(ProductCategoryDTO dto) {
@@ -351,22 +357,68 @@ public int insertCategory(ProductCategoryDTO dto) {
 	}
 
 
-		public List<ProductCategoryDTO> selectProductCategoryList(int currentPage, int boardLimit, char c) {
+		public List<ProductCategoryDTO> selectProductCategoryList(int currentPage, int boardLimit, char status) {
+			List<ProductCategoryDTO> list = new ArrayList<>();
+			
+			sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY CATEGORY_NO ASC) AS rnum, P.* FROM PRODUCT_CATEGORY P) WHERE rnum BETWEEN ? AND ?";
 
-			
-			
-			return null;
+			try {
+				openConn();
+				int paramIndex = 1;
+				int startRow = (currentPage - 1) * boardLimit + 1;
+				int endRow = startRow + boardLimit - 1;
+
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(paramIndex++, String.valueOf(status));
+				pstmt.setInt(paramIndex++, startRow);
+				pstmt.setInt(paramIndex++, endRow);
+
+				rs = pstmt.executeQuery();
+
+				while (rs.next()) {
+					ProductCategoryDTO category = new ProductCategoryDTO();
+					category.setCategory_No(rs.getString("CATEGORY_NO"));
+					category.setName(rs.getString("NAME"));
+					category.setDescription(rs.getString("DESCRIPTION"));
+
+					list.add(category);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				closeConn(rs, pstmt, con);
+			}
+			return list;
 		}
 
 
-		public int getProductCategoryCount(char c) {
+		public int getProductCategoryCount(char status) {
 
-			
-			
-			
-			return 0;
+			int count = 0;
+
+			try {
+				openConn();
+				sql = "select count(*) from PRODUCT_CATEGORY";
+				// 상태에 따라 SQL 조건 추가
+				if (status == 'Y') {
+					sql += " WHERE is_deleted = 'Y' order by 1 desc";
+				} else if (status == 'N') {
+					sql += " WHERE is_deleted = 'N' order by 1 desc";
+				}
+				pstmt = con.prepareStatement(sql);
+
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					count = rs.getInt(1);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				closeConn(rs, pstmt, con);
+			}
+
+			return count;
 		}
-
 
 
 		

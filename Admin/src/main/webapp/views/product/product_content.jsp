@@ -111,14 +111,17 @@
 		<br>
 		
 		<input type="button" value="상품수정"
-	        onclick="location.href='productModify.do?no=${dto.getProduct_no() }'">
+	        onclick="location.href='productModify.do?no=${dto.getProduct_no() }&currentPage=${pi}&status=${status}'">
 	   &nbsp;&nbsp;
 	   <input type="button" value="상품삭제"
-	        onclick="location.href='productDelete.do?no=${dto.getProduct_no() }'">
+	        onclick="location.href='productDelete.do?no=${dto.getProduct_no() }&currentPage=${pi}&status=${status}'">
 	   &nbsp;&nbsp;
-	   <input class="btn" type="button" value="찜하기" oncick="location.href='product.go'">
+	   
 	   <input type="button" value="전체목록"
-	        onclick="location.href='productList.do'">
+	        onclick="location.href='productList.do?currentPage=${pi}&status=&subtitle='"><br><br>
+				<input class="btn" type="button" value="찜하기" oncick="location.href='cart_list.do?no=${dto.getUser_no() }'">
+				<input class="btn" type="button" value="구매하기" oncick="location.href='order_list.do?no=${dto.getUser_no() }'">	        		
+	        	
 	</div>
 </body>
 </html>

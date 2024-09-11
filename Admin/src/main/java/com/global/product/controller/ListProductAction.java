@@ -19,12 +19,10 @@ public class ListProductAction implements Action {
 
 		ProductDAO dao = ProductDAO.getInstance();
 		
-		List<ProductDTO> list = dao.getProudctList();
-		
-		request.setAttribute("List", list);
-		
+		String status = request.getParameter("status");
 		
 		int listCount;
+		
         int currentPage = 1; // 기본적으로 페이지는 1로 설정
         if (request.getParameter("currentPage") != null) {
         	currentPage = Integer.parseInt(request.getParameter("currentPage"));
@@ -34,10 +32,18 @@ public class ListProductAction implements Action {
         
         int pageLimit = 10; // 한 페이지 하단에 보여질 페이지 수
         
+		List<ProductDTO> list;
 		
+		if("N".equals(status)) {
+			listCount = dao.getProductCount('N'); //얘는 필터 기능이다.
+			list = dao.selectProductList(currentPage, boardLimit, 'N');
+		}else if("Y".equals(status)) {
+			listCount = dao.getProductCount('Y');
+			list = dao.selectProductList(currentPage, boardLimit, 'Y');
+		}else {
 		listCount = dao.getProductListCount();
-        list = dao.getProductPage(currentPage, boardLimit);
-		
+        list = dao.getProduct(currentPage, boardLimit);
+		}
         // 전체 페이지 수 계산
         int maxPage = (int) Math.ceil((double) listCount / boardLimit);
 
@@ -52,12 +58,16 @@ public class ListProductAction implements Action {
         
         // PageInfo 객체 생성 및 설정
         PageInfo pi = new PageInfo(currentPage, listCount, pageLimit, maxPage, startPage, endPage, boardLimit);
-        
-        // request에 필요한 속성 설정
+		
+		
+		
+		
+		
+		
         request.setAttribute("count", pi.getListCount());
-        request.setAttribute("list", list);
         request.setAttribute("pi", pi);
-		request.setAttribute("address", "productList.do");
+		request.setAttribute("List", list);
+    	request.setAttribute("address", "productList.do");
 		
 		return new View("main.go").setUrl("/views/product/product_list.jsp");
 	}
