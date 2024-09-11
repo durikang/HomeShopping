@@ -27,10 +27,10 @@ public class UpdateOkOrderAction implements Action {
 		dto.setStatus(status);
 		dto.setUser_no(user_no);
 		dto.setTotal_amount(total_amount);
-		System.out.println("dto.getStatus() : "+ dto.getStatus());
+		
 		
 		OrderDAO dao = OrderDAO.getInstance();
-		
+		int o;
 		int check = dao.ModifyOrder(dto);
 		
 		if (check > 0) {

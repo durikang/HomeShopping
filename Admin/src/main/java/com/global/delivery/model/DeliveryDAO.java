@@ -11,6 +11,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.global.order.model.OrderDTO;
+
 
 public class DeliveryDAO {
 	
@@ -146,7 +148,106 @@ public class DeliveryDAO {
 		
 	 return list;
 	}// end
+	
+	public int DeleteDelivery(int no) {
+		
+		int result = 0;
 
+		 try {
+		 
+		 openConn();
+		  
+		 sql = "SELECT * FROM delivery WHERE order_no = ?";
+		 
+		
+		 pstmt = con.prepareStatement(sql);
+		 
+		 pstmt.setInt(1, no);
+		 
+		 rs = pstmt.executeQuery();
+		 
+		 if(rs.next()) {
+			 sql = "DELETE FROM delivery WHERE order_no = ?";
+			 
+			 pstmt = con.prepareStatement(sql);
+			 
+			 pstmt.setInt(1, no);
+			 
+			 result = pstmt.executeUpdate();
+		 }
+		 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			closeConn(rs, pstmt, con);
+		}
+		 
+	return result;
+}
+
+
+	public DeliveryDTO getDelivery(int no) {
+		DeliveryDTO dto = null;
+		try {
+			openConn();
+			
+			sql = "select * from delivery where order_no = ?";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setInt(1, no);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dto = new DeliveryDTO();
+				
+				dto.setDelivery_no(rs.getInt("delivery_no"));
+				dto.setOrder_no(rs.getInt("order_no"));
+				dto.setDelivery_date(rs.getDate("delivery_date"));
+				dto.setDelivery_status(rs.getString("delivery_status"));
+			}
+			} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			closeConn(rs, pstmt, con);
+		}
+		
+		return dto;
+	}
+
+
+	public int getDelivery(DeliveryDTO dto) {
+			int result = 0;
+			int 0;
+	
+		
+		try {
+			
+			openConn();
+			
+			sql = "update delivery set delivery_status = ? where order_no = ?";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getDelivery_status());
+			pstmt.setInt(2, dto.getOrder_no());
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			closeConn(pstmt, con);
+		}
+		
+		return result;
+	}
+	
+	
+	
 	} 
 	
 	

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 <script type="text/javascript"></script>
 </head>
-<body>	
+<body>
 	<div align="center">
 		<c:set var="dto" value="${Modify }" />
 
@@ -20,22 +20,21 @@
 		<br>
 
 		<%-- <form method="post" enctype="multipart/form-date" action="${contextPath}/orderModifyOk.do"> --%>
-		<form method="post" action="${contextPath}/orderModifyOk.do">
+		<form method="post" action="${contextPath}/delivery_ModifyOk.do">
 		<%-- <input type="hidden" name="status" value="${dto.status }"> --%>
 			<table border="1">
 			<tr>
+				<th>배송 번호</th>
 				<th>주문 번호</th>
-				<th>주문 고객 번호</th>
-				<th>주문 일자</th>
-				<th>주문 상태</th>
-				<th>총 주문 금액</th>
+				<th>배송일</th>
+				<th>배송 상태</th>
 			</tr>
 			
 			
 			<tr>
+				<td><input name="delivery_no" readonly value="${dto.delivery_no }"></td>
 				<td><input name="order_no" readonly value="${dto.order_no }"></td>
-				<td><input name="user_no" readonly value="${dto.user_no }"></td>
-				<td><input name="order_date" readonly value="${dto.order_date }"></td>
+				<td><input name="delivery_date" readonly value="${dto.delivery_date }"></td>
 				<td>
 				<!-- 
 					<select name="status" >
@@ -45,15 +44,13 @@
 			            <option value="CANCELLED">배송 취소</option>
 			        </select>
 					 -->
-					 <select name="status">
-					    <option value="PENDING" ${dto.status == 'PENDING' ? 'selected' : ''}>배송 대기</option>
-					    <option value="SHIPPED" ${dto.status == 'SHIPPED' ? 'selected' : ''}>배송 중</option>
-					    <option value="DELIVERED" ${dto.status == 'DELIVERED' ? 'selected' : ''}>배송 완료</option>
-					    <option value="CANCELLED" ${dto.status == 'CANCELLED' ? 'selected' : ''}>배송 취소</option>
+					 <select name="delivery_status">
+					    <option value="PENDING" ${dto.delivery_status == 'PENDING' ? 'selected' : ''}>배송 대기</option>
+					    <option value="SHIPPED" ${dto.delivery_status == 'SHIPPED' ? 'selected' : ''}>배송 중</option>
+					    <option value="DELIVERED" ${dto.delivery_status == 'DELIVERED' ? 'selected' : ''}>배송 완료</option>
+					    <option value="CANCELLED" ${dto.delivery_status == 'CANCELLED' ? 'selected' : ''}>배송 취소</option>
 					</select>
 				</td>
-				<td><input name="total_amount" readonly
-					value="${dto.total_amount }"></td>
 			</tr>
 		
             <tr>
