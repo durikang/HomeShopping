@@ -12,9 +12,7 @@
 <div align="center">
 		<c:set var="dto" value="${Modify }" />
 
-		<hr width="30%" color="red">
 		<h3>${dto.getName() } 카테고리 수정 페이지</h3>
-		<hr width="30%" color="red">
 		<input type="hidden" name="category_no" value="${dto.getCategory_No() }">
 		<br>
 		<br>

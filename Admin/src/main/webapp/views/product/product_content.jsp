@@ -17,10 +17,8 @@
 <body>
 	<div align="center">
 		<c:set var="dto" value="${Content }" />
-
-		<hr width="30%" color="red">
+		<c:set var="pi" value="${count }"/>
 		<h3>${dto.getName() } 상세내역 페이지</h3>
-		<hr width="30%" color="red">
 		<br>
 		<br>
 
@@ -111,14 +109,14 @@
 		</table>
 		<br>
 		
-		<input type="button" value="상품수정"
+		<input class="btn" type="button" value="상품수정"
 	        onclick="location.href='productModify.do?no=${dto.getProduct_no() }&currentPage=${pi}&status=${status}'">
 	   &nbsp;&nbsp;
-	   <input type="button" value="상품삭제"
+	   <input class="btn" type="button" value="상품삭제"
 	        onclick="location.href='productDelete.do?no=${dto.getProduct_no() }&currentPage=${pi}&status=${status}'">
 	   &nbsp;&nbsp;
 	   
-	   	<input type="button" value="전체목록" onclick="location.href='productList.do?currentPage=${pi}&status=${status}&subtitle='"><br><br>
+	   	<input class="btn" type="button" value="전체목록" onclick="location.href='productList.do?currentPage=${pi}&status=${status}&subtitle='"><br><br>
 		<input class="btn" type="button" value="찜하기" onclick="location.href='cart_list.do?no=${dto.getProduct_no() }&num=${sessionScope.user.userNo}'">
 		<input class="btn" type="button" value="구매하기" onclick="location.href='order_list.do?no=${dto.getProduct_no() }&num=${sessionScope.user.userNo}'">	        		
 	        	

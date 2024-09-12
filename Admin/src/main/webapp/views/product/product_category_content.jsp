@@ -18,9 +18,7 @@
 		<c:set var="pi" value="${count }"/>
 		<c:set var="dto" value="${Content }" />
 
-		<hr width="30%" color="red">
 		<h3>${dto.getName() } 카테고리 상세내역 페이지</h3>
-		<hr width="30%" color="red">
 		<br>
 		<br>
 
@@ -32,7 +30,7 @@
 
 			<tr>
 				<th>카테고리 목록</th>
-				<td>${dto.getName() }</td>
+				<td>${dto.getName() }</td>	
 			</tr>
 			<tr>
 				<th>카테고리 정보</th>
@@ -49,13 +47,13 @@
 		</table>
 		<br>
 		
-		<input type="button" value="카테고리수정"
+		<input class="btn" type="button" value="카테고리수정"
 	        onclick="location.href='productCategoryModify.do?no=${dto.getCategory_No() }&currentPage=${pi}&status=${status}'">
 	   &nbsp;&nbsp;
-	   <input type="button" value="카테고리삭제"
+	   <input class="btn" type="button" value="카테고리삭제"
 	        onclick="location.href='productCategoryDelete.do?no=${dto.getCategory_No() }&currentPage=${pi}&status=${status}'">
 	   &nbsp;&nbsp;
-	   <input type="button" value="전체목록"
+	   <input class="btn" type="button" value="전체목록"
 	        onclick="location.href='productCategoryList.do?currentPage=${pi}&status=&subtitle='">
 	</div>
 </body>
