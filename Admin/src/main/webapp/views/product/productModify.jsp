@@ -13,9 +13,7 @@
 		<c:set var="dto" value="${Modify }" />
 		<c:set var="list" value="${CategoryList }"/>
 
-		<hr width="30%" color="red">
 		<h3>${dto.getName() }수정 페이지</h3>
-		<hr width="30%" color="red">
 		<br> <br>
 
 		<form action="<%=request.getContextPath()%>/productModifyOk.do" method="post" 

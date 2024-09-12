@@ -58,8 +58,8 @@
 				</tr>
 				<tr>
 					<td colspan="2" align="center">
-						<input type="submit" value="상품 등록"> 
-						<input type="reset" value="초기화">
+						<input class="btn"  type="submit" value="상품 등록"> 
+						<input class="btn" type="reset" value="초기화">
 					</td>
 				</tr>
 

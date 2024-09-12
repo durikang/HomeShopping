@@ -39,9 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </head>
 <body>
 	<div align="center">
-		<hr width="50%" color="red">
 		<h3>상품 목록 페이지</h3>
-		<hr width="50%" color="red">
 		<br> <br>
 
 

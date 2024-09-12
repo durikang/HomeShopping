@@ -33,9 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </head>
 <body>
 	<div align="center">
-		<hr width="50%" color="red">
 		<h3>카테고리 목록 페이지</h3>
-		<hr width="50%" color="red">
 		<br> <br>
 
 
@@ -66,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			</c:if>
 			<tr>
 				<td colspan="3" align="center">
-					<input type="button" value="카테고리 등록" onclick="location.href='productCategoryInsert.go'">
+					<input class="btn" type="button" value="카테고리 등록" onclick="location.href='productCategoryInsert.go'">
 				</td>
 			</tr>
 
