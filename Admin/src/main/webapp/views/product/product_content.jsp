@@ -119,8 +119,8 @@
 	   
 	   <input type="button" value="전체목록"
 	        onclick="location.href='productList.do?currentPage=${pi}&status=&subtitle='"><br><br>
-				<input class="btn" type="button" value="찜하기" oncick="location.href='cart_list.do?no=${dto.getUser_no() }'">
-				<input class="btn" type="button" value="구매하기" oncick="location.href='order_list.do?no=${dto.getUser_no() }'">	        		
+				<input class="btn" type="button" value="찜하기" oncick="location.href='cart_list.do?no=${dto.getProduct_no()() }&num=${sessionScope.user.userNo}'">
+				<input class="btn" type="button" value="구매하기" oncick="location.href='order_list.do?no=${dto.getProduct_no() }&num=${sessionScope.user.userNo}'">	        		
 	        	
 	</div>
 </body>
