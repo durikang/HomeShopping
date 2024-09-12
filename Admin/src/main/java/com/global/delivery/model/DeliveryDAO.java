@@ -221,7 +221,7 @@ public class DeliveryDAO {
 
 	public int getDelivery(DeliveryDTO dto) {
 			int result = 0;
-			int 0;
+			
 	
 		
 		try {
@@ -245,8 +245,117 @@ public class DeliveryDAO {
 		
 		return result;
 	}
-	
-	
+
+
+	public int getDeliveryCount(String st) {
+		int count = 0;
+		try {
+			openConn();
+			sql = "SELECT COUNT(*) FROM delivery";
+
+			if (st != null) {
+				sql += " WHERE is_deleted = ?";
+			}
+
+			pstmt = con.prepareStatement(sql);
+
+			if (st != null) {
+				pstmt.setString(1, st);
+			}
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+
+		return count;
+	}
+
+
+	public List<DeliveryDTO> selectDeliveryList(int currentPage, int boardLimit, char c) {
+		List<DeliveryDTO> list = new ArrayList<>();
+		/*
+		 * boardList페이지에서 BOARD_DETAIL을 호출할때
+		 * USER_TYPE,USER_ID,USER_EMAIL,BOARD_CATEGORY테이블에 대한 정보를 포함하고 있습니다.
+		 */
+		sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY order_no ASC) AS rnum, b.* delivery b ) WHERE rnum BETWEEN ? AND ?";
+
+		try {
+			openConn();
+			int paramIndex = 1;
+			int startRow = (currentPage - 1) * boardLimit + 1;
+			int endRow = startRow + boardLimit - 1;
+
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(paramIndex++, startRow);
+			pstmt.setInt(paramIndex++, endRow);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				DeliveryDTO dto = new DeliveryDTO();
+
+				dto.setDelivery_no(rs.getInt("delivery_no"));
+				dto.setOrder_no(rs.getInt("order_no"));
+				dto.setDelivery_date(rs.getDate("delivery_date"));
+				dto.setDelivery_status(rs.getString("delivery_status"));
+				
+
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return list;
+	}
+
+
+	public List<DeliveryDTO> selectDeliveryList(int currentPage, int boardLimit) {
+		
+		List<DeliveryDTO> list = new ArrayList<>();
+		/*
+		 * boardList페이지에서 BOARD_DETAIL을 호출할때
+		 * USER_TYPE,USER_ID,USER_EMAIL,BOARD_CATEGORY테이블에 대한 정보를 포함하고 있습니다.
+		 */
+		sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY order_no ASC) AS rnum, b.* FROM delivery b ) WHERE rnum BETWEEN ? AND ?";
+
+		try {
+			openConn();
+			int paramIndex = 1;
+			int startRow = (currentPage - 1) * boardLimit + 1;
+			int endRow = startRow + boardLimit - 1;
+
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(paramIndex++, startRow);
+			pstmt.setInt(paramIndex++, endRow);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				DeliveryDTO dto = new DeliveryDTO();
+
+				dto.setDelivery_no(rs.getInt("delivery_no"));
+				dto.setOrder_no(rs.getInt("order_no"));
+				dto.setDelivery_date(rs.getDate("delivery_date"));
+				dto.setDelivery_status(rs.getString("delivery_status"));
+				
+
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return list;
+	}
 	
 	} 
 	

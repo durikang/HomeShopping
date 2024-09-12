@@ -35,7 +35,7 @@ public class ListOrderAction implements Action{
 		}
 
 		// 한 페이지에 보여질 게시글 최대 수
-		int boardLimit = 30;
+		int boardLimit = 10;
 
 		// 페이지 하단에 보여질 페이지 수
 		int pageLimit = 10;
@@ -72,7 +72,7 @@ public class ListOrderAction implements Action{
         // request에 필요한 속성 설정
         request.setAttribute("count", pi.getListCount());
         request.setAttribute("List", list);
-        request.setAttribute("address", "boardList.do"); // 페이지의 매핑을 던져줘야 함
+        request.setAttribute("address", "order_list.do"); // 페이지의 매핑을 던져줘야 함
         request.setAttribute("pi", pi);
        
        
