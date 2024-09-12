@@ -1,12 +1,16 @@
 <%@page import="com.global.product.model.ProductDTO"%>
-<%@ page import="com.global.utils.StringUtils" %>
+<%@ page import="com.global.utils.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" import="java.util.ArrayList,java.util.List ,com.global.product.model.*"%>
+	pageEncoding="UTF-8"
+	import="java.util.ArrayList,java.util.List ,com.global.product.model.*"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<link href="${contextPath }/resources/product/css/product_list.css"
+	rel="stylesheet" type="text/css" />
 <title>상품 목록 페이지</title>
 <script type="text/javascript">
 /**
@@ -67,16 +71,16 @@ document.addEventListener('DOMContentLoaded', function() {
 						<td>${dto.getCategory_no() }</td>
 						<td>${dto.getName() }</td>
 						<td>
-							<img src="${contextPath }/${dto.getImage_url()}">
+							<img class="product_img" src="${contextPath }/${dto.getImage_url()}" />
 						</td>
 						<td>${dto.getDescription() }</td>
-						<td>${dto.getPrice() }</td>
-						<td>${dto.getStock_quantity() }</td>
-						<td>${dto.getViews() }</td>
+						<td><fmt:formatNumber value="${dto.getPrice() }" pattern="#,###" /></td>
+						<td><fmt:formatNumber value="${dto.getStock_quantity() }" pattern="#,###" /></td>
+						<td><fmt:formatNumber value="${dto.getViews() }" pattern="#,###" /></td>
 						<td>${dto.getCreated_at() }</td>
 						<td>${dto.getUpdated_at() }</td>
 						<td>${dto.getIs_deleted() }</td>
-						<td>${dto.getTotal_sales() }</td>
+						<td><fmt:formatNumber value="${dto.getTotal_sales() }" pattern="#,###" /></td>
 					</tr>
 				</c:forEach>
 			</c:if>

@@ -40,7 +40,7 @@
 			            
             <tr>
                 <td class="table_bottom button categoryInsertBtn" colspan="3">
-                <input class="btn" type="button" onclick="location.href='productCategoryList.do?status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">뒤로가기</input>
+                <input class="btn" type="button" onclick="location.href='productCategoryList.do?status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb" value="뒤로가기"/>
                     <input class="btn" type="submit" value="카테고리 수정">
                     <input class="btn" type="reset" value="초기화">
                 </td>
