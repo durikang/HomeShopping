@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>    
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
 <%
 	request.setAttribute("newLine", "\n");
 	request.setAttribute("br", "<br>");
@@ -59,18 +60,18 @@
 			
 			<tr>
 				<th>상품 가격</th>
-				<td>${dto.getPrice() }</td>
+				<td><fmt:formatNumber value="${dto.getPrice() }" pattern="#,###" /></td>
 			</tr>
 			
 			<tr>
 				<th>상품 재고</th>
-				<td>${dto.getStock_quantity() }</td>
+				<td><fmt:formatNumber value="${dto.getStock_quantity() }" pattern="#,###" /></td>
 			</tr>
 		
 			
 			<tr>
 				<th>상품 조회수</th>
-				<td>${dto.getViews() }</td>
+				<td><fmt:formatNumber value="${dto.getViews() }" pattern="#,###" /></td>
 			</tr>
 		
 			
@@ -94,7 +95,7 @@
 			
 			<tr>
 				<th>상품 판매량</th>
-				<td>${dto.getTotal_sales() }</td>
+				<td><fmt:formatNumber value="${dto.getTotal_sales() }" pattern="#,###" /></td>
 			</tr>
 		
 			
@@ -117,13 +118,10 @@
 	        onclick="location.href='productDelete.do?no=${dto.getProduct_no() }&currentPage=${pi}&status=${status}'">
 	   &nbsp;&nbsp;
 	   
-	   <input type="button" value="전체목록"
-	        onclick="location.href='productList.do?currentPage=${pi}&status=&subtitle='"><br><br>
-				<input class="btn" type="button" value="찜하기" oncick="location.href='cart_list.do?no=${dto.getProduct_no()() }&num=${sessionScope.user.userNo}'">
-				<input class="btn" type="button" value="구매하기" oncick="location.href='order_list.do?no=${dto.getProduct_no() }&num=${sessionScope.user.userNo}'">	        		
+	   	<input type="button" value="전체목록" onclick="location.href='productList.do?currentPage=${pi}&status=${status}&subtitle='"><br><br>
+		<input class="btn" type="button" value="찜하기" onclick="location.href='cart_list.do?no=${dto.getProduct_no() }&num=${sessionScope.user.userNo}'">
+		<input class="btn" type="button" value="구매하기" onclick="location.href='order_list.do?no=${dto.getProduct_no() }&num=${sessionScope.user.userNo}'">	        		
 	        	
 	</div>
-</body>
-</html>
 </body>
 </html>
