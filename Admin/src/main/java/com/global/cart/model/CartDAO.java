@@ -113,7 +113,7 @@ public class CartDAO {
 			openConn();
 		
 			sql = "select * from CART order by cart_no desc";
-			
+
 			pstmt = con.prepareStatement(sql);
 		
 			rs = pstmt.executeQuery();

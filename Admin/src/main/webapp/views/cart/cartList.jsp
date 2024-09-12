@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,46 +58,50 @@ document.addEventListener('DOMContentLoaded', function() {
 </style>
 </head>
 <body>
-	<div align="title">
+	<div class="title">
 		<h3>장바구니 전체리스트</h3>
 	</div>
-	<div>
+	<div class="container">
+		<div class="main-content">
+			<div class="table-container board-container">
 		
-		<table width="300">
-		
-		<c:set var="list" value="${CartList }" />
-			<tr>
-				<th>장바구니 No.</th>
-				<th>유저No.</th>
-				<th>장바구니 생성일</th>
-				<th>장바구니 삭제</th>
-			</tr>
-			
-			<c:if test="${!empty list }">
-				<c:forEach  items="${list }" var="dto" >
-					<tr>
-						<td><a href="cartItem_list.do?no=${dto.cart_no }">${dto.cart_no }</a></td>
-						<td>${dto.user_no }</td>
-						<td>
-							<fmt:formatDate value="${dto.created_at }"/>
-						</td>
-						<td>											
-							<input type="button" value="삭제" onclick="if(confirm('정말로 게시글을 삭제하시겠습니까?')){
-											location.href='cart_delete.do?no=${dto.cart_no}'} else{return;}">
-						</td>
+				<table>
+				
+				<c:set var="list" value="${CartList }" />
+					<tr >
+						<th class="border-th board-th-boardNo">장바구니 No.</th>
+						<th class="border-th board-th-boardNo">유저No.</th>
+						<th class="border-th board-th-createAt">장바구니 생성일</th>
+						<th class="border-th board-th-status" >장바구니 삭제</th>
 					</tr>
-				</c:forEach>
-			</c:if>
-				<c:if test="${empty list }">
-				<tr>
-					<td colspan="5" align="center">
-						<h3>장바구니가 비어있습니다.</h3>
-					</td>
-					</tr>
-				</c:if>
-			
-		</table>
-		
+					
+					<c:if test="${!empty list }">
+						<c:forEach  items="${list }" var="dto" >
+							
+							<tr class="trlist" data-id="${dto.cart_no}"  >
+								<td class="board-td"><a href="cartItem_list.do?no=${dto.cart_no }">${dto.cart_no }</a></td>
+								<td class="board-td">${dto.user_no }</td>
+								<td class="board-td">
+									<fmt:formatDate value="${dto.created_at }"/>
+								</td>
+								<td class="board-td">											
+									<input type="button" value="삭제" onclick="if(confirm('정말로 게시글을 삭제하시겠습니까?')){
+													location.href='cart_delete.do?no=${dto.cart_no}'} else{return;}">
+								</td>
+							</tr>
+						</c:forEach>
+					</c:if>
+						<c:if test="${empty list }">
+						<tr>
+							<td colspan="5" align="center">
+								<h3>장바구니가 비어있습니다.</h3>
+							</td>
+							</tr>
+						</c:if>
+						
+				</table>
+			</div>
+		</div>
 	</div>
 </body>
 </html>
