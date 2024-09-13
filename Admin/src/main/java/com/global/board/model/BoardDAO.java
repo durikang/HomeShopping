@@ -388,12 +388,50 @@ public class BoardDAO {
 		return list;
 	}
 
+	public List<BoardCategoryDTO> selectBoardCategoryList(String isDeleted) {
+	    List<BoardCategoryDTO> list = new ArrayList<>();
+	    try {
+	        // 기본 SQL 쿼리
+	        sql = "SELECT * FROM BOARD_CATEGORY WHERE 1=1";
+	        
+	        // IS_DELETED 조건 추가
+	        if (isDeleted.equals("N")) {
+	            sql += " AND IS_DELETED = 'N'";
+	        } else if (isDeleted.equals("Y")) {
+	            sql += " AND IS_DELETED = 'Y'";
+	        }
+	        
+	        openConn(); // 데이터베이스 연결
+	        
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        rs = pstmt.executeQuery();
+	        
+	        // 결과를 BoardCategoryDTO 객체로 변환
+	        while (rs.next()) {
+	            BoardCategoryDTO category = new BoardCategoryDTO();
+	            category.setCategoryNo(rs.getString("CATEGORY_NO"));
+	            category.setName(rs.getString("NAME"));
+	            category.setDescription(rs.getString("DESCRIPTION"));
+	            category.setIsDeleted(rs.getString("IS_DELETED"));
+	            list.add(category); // 리스트에 추가
+	        }
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(rs, pstmt, conn); // 자원 해제
+	    }
+	    return list;
+	}
+
+
 	public int insertBoardCategory(BoardCategoryDTO category) {
 		int res = 0;
 
 		try {
 			openConn();
-			sql = "insert into BOARD_CATEGORY values(?,?,?)";
+			sql = "insert into BOARD_CATEGORY values(?,?,?,'N')";
 			int paramIndex = 1;
 
 			pstmt = conn.prepareStatement(sql);
@@ -583,6 +621,7 @@ public class BoardDAO {
 				category.setCategoryNo(rs.getString("CATEGORY_NO"));
 				category.setName(rs.getString("NAME"));
 				category.setDescription(rs.getString("DESCRIPTION"));
+				category.setIsDeleted(rs.getString("IS_DELETED"));
 			}
 
 		} catch (SQLException e) {
@@ -595,21 +634,20 @@ public class BoardDAO {
 
 	public int updateCategory(BoardCategoryDTO category) {
 		int res = 0;
+		int paramIndex = 1;
 
 		try {
-			sql = "update BOARD_CATEGORY set NAME = ?, DESCRIPTION = ? where CATEGORY_NO = ?";
-
-			int paramIndex = 1;
+			openConn();
+			sql = "update BOARD_CATEGORY set NAME = ?,IS_DELETED= ? where CATEGORY_NO = ?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(paramIndex++, category.getName());
-			pstmt.setString(paramIndex++, category.getDescription());
+			pstmt.setString(paramIndex++, category.getIsDeleted());
 			pstmt.setString(paramIndex++, category.getCategoryNo());
 
 			res = pstmt.executeUpdate();
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			closeConn(pstmt, conn);
@@ -1316,6 +1354,25 @@ public class BoardDAO {
 			closeConn(rs, pstmt, conn);
 		}
 	    return count;
+	}
+
+	public int deleteCategory(String categoryNo) {
+		int res = 0;
+		try {
+			openConn();
+			sql = "delete board_category where category_no=?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, categoryNo);
+			
+			res = pstmt.executeUpdate();
+			
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return res;
 	}
 
 
