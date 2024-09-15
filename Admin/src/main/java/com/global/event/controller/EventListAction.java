@@ -11,6 +11,7 @@ import com.global.action.Action;
 import com.global.action.View;
 import com.global.event.model.Event;
 import com.global.event.model.EventDAO;
+import com.global.utils.Location;
 import com.global.utils.PageInfo;
 import com.global.utils.PageUtil;
 import com.global.utils.RequestParameterUtils;
@@ -33,7 +34,22 @@ public class EventListAction implements Action {
 		
         List<? extends Event> eventList = dao.getEventList(eventType);  // 이벤트 타입에 따라 다르게 처리
         
+		Location location = new Location();
+		location.addPath("홈");
+		location.setCurrent("이벤트 관리");  // 현재 위치
+		if(eventType.equalsIgnoreCase("EVENT")) {
+			location.setTitle("이벤트 관리 페이지");  // 동적으로 h1 타이틀 설정
+			location.setCurrent("이벤트 관리 페이지");
+		}else if(eventType.equalsIgnoreCase("BANNER")) {
+			location.setTitle("베너 이벤트 관리 페이지");  // 동적으로 h1 타이틀 설정
+			location.setCurrent("베너 이벤트 관리 페이지");
+		}else if(eventType.equalsIgnoreCase("COUPON")) {
+			location.setTitle("쿠폰 이벤트 관리 페이지");  // 동적으로 h1 타이틀 설정
+			location.setCurrent("쿠폰 이벤트 관리 페이지");
+		}
+        
         // request에 필요한 속성 설정
+		request.setAttribute("location", location);
         request.setAttribute("count", eventListCount);
         request.setAttribute("list", eventList);
         request.setAttribute("eventType", eventType);  // 이벤트 타입 전달

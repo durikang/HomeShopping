@@ -63,18 +63,13 @@ document.addEventListener('DOMContentLoaded', function() {
 </style>
 </head>
 <body>
-	<div class="title">
-	    <h1>게시판</h1>
-	    <c:if test="${ not empty param.subtitle}">
-	        <nav aria-label="breadcrumb">
-	            <ol class="breadcrumb">
-	                <li>홈</li> <!-- 홈으로 이동 -->
-	                <li>게시판 관리</li> <!-- 게시판 관리 페이지로 이동 -->
-	                <li class="active" aria-current="page">${ param.subtitle }</li> <!-- 현재 위치 -->
-	            </ol>
-	        </nav>
-	    </c:if>
-	</div>
+
+<div class="title">
+    <h1>${location.title}</h1> <!-- 동적 제목 출력 -->
+    ${location.displayBreadcrumb()} <!-- BreadCrumb 경로 출력 -->
+</div>
+
+
     <!-- 왼쪽 사이드바 메뉴 -->
 <div class="container">
       <c:import url="board/import/categorySideBar.jsp" />
