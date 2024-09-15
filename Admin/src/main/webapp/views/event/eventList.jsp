@@ -64,7 +64,7 @@
 	    <c:choose>
 	        <c:when test="${not empty list}">
 	            <c:forEach items="${list}" var="event">
-					<tr class="trlist" data-id="${event.eventNo}">
+					<tr class="trlist" data-id="${event.eventNo}" data-event-type="${event.eventType}">
 						<td>${event.eventNo}</td>
 						<td>${event.name}</td>
 						<td>${StringUtils.stripHtml(event.description)}</td>

@@ -63,12 +63,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </style>
 </head>
 <body>
-
-<div class="title">
-    <h1>${location.title}</h1> <!-- 동적 제목 출력 -->
-    ${location.displayBreadcrumb()} <!-- BreadCrumb 경로 출력 -->
-</div>
-
+<!-- 경로를 나타내는 컴포넌트 -->
+<c:import url="common/pageTitleAndPath.jsp" />
 
     <!-- 왼쪽 사이드바 메뉴 -->
 <div class="container">

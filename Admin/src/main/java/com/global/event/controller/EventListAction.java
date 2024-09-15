@@ -24,7 +24,6 @@ public class EventListAction implements Action {
 		
 		String eventType = RequestParameterUtils.parseString(request.getParameter("eventType"), "");  // 이벤트 타입 (banner, coupon 등)
         int currentPage = RequestParameterUtils.parseInteger(request.getParameter("currentPage"),1);
-        String subtitle = request.getParameter("subtitle");
         // 이벤트 리스트 갯수 가져오기
         int eventListCount = dao.getEventCount(eventType);  // 이벤트 타입에 따라 다르게 처리
         int eventLimit = 20;
@@ -36,16 +35,15 @@ public class EventListAction implements Action {
         
 		Location location = new Location();
 		location.addPath("홈");
-		location.setCurrent("이벤트 관리");  // 현재 위치
 		if(eventType.equalsIgnoreCase("EVENT")) {
 			location.setTitle("이벤트 관리 페이지");  // 동적으로 h1 타이틀 설정
-			location.setCurrent("이벤트 관리 페이지");
+			location.setCurrent("이벤트 관리 목록");
 		}else if(eventType.equalsIgnoreCase("BANNER")) {
 			location.setTitle("베너 이벤트 관리 페이지");  // 동적으로 h1 타이틀 설정
-			location.setCurrent("베너 이벤트 관리 페이지");
+			location.setCurrent("베너 이벤트 관리 목록");
 		}else if(eventType.equalsIgnoreCase("COUPON")) {
 			location.setTitle("쿠폰 이벤트 관리 페이지");  // 동적으로 h1 타이틀 설정
-			location.setCurrent("쿠폰 이벤트 관리 페이지");
+			location.setCurrent("쿠폰 이벤트 관리 목록");
 		}
         
         // request에 필요한 속성 설정
@@ -55,7 +53,6 @@ public class EventListAction implements Action {
         request.setAttribute("eventType", eventType);  // 이벤트 타입 전달
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("pi", pi);  // PageInfo 객체 전달
-        request.setAttribute("subtitle", subtitle);
         request.setAttribute("address", "eventList.do");
 
         return new View("main.go").setUrl("/views/event/eventList.jsp");
