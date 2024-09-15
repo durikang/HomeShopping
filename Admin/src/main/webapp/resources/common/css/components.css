@@ -23,6 +23,7 @@
 .breadcrumb li {
     display: inline;
     font-weight: 500;
+    user-select: none; /* 드래그 방지, 경로 텍스트 선택 방지 */
 }
 
 .breadcrumb li+li:before {

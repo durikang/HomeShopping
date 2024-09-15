@@ -189,45 +189,71 @@ public class EventDAO {
         return null;  // 이미지가 없을 경우 null 반환
     }
 
-    // 이벤트 상세 정보 가져오기
     public Event getEventDetail(int eventNo, String eventType) {
         Event event = null;
         try {
             openConn();
             String sql = "";
             if ("COUPON".equalsIgnoreCase(eventType)) {
-                sql = "SELECT * FROM COUPON_EVENT JOIN EVENT USING(EVENT_NO) "
-                        + "LEFT JOIN EVENT_IMAGE ON COUPON_EVENT.EVENT_NO = EVENT_IMAGE.EVENT_NO WHERE EVENT_NO = ?";
-            } else if ("BANNER".equalsIgnoreCase(eventType)) {
-                sql = "SELECT * FROM BANNER_EVENT JOIN EVENT USING(EVENT_NO) "
-                        + "LEFT JOIN EVENT_IMAGE ON BANNER_EVENT.EVENT_NO = EVENT_IMAGE.EVENT_NO WHERE EVENT_NO = ?";
-            } else if("BANNER".equalsIgnoreCase(eventType)) {
-                sql = "SELECT * FROM EVENT LEFT JOIN EVENT_IMAGE USING(EVENT_NO) WHERE EVENT_NO = ?";
-            }
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, eventNo);
-            rs = pstmt.executeQuery();
+                sql = "SELECT * FROM COUPON_EVENT JOIN EVENT ON COUPON_EVENT.EVENT_NO = EVENT.EVENT_NO "
+                        + "LEFT JOIN EVENT_IMAGE ON COUPON_EVENT.EVENT_NO = EVENT_IMAGE.EVENT_NO WHERE COUPON_EVENT.EVENT_NO = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, eventNo);
+                rs = pstmt.executeQuery();
 
-            if (rs.next()) {
-                event = new Event();
-                populateCommonEventFields(event, rs);
+                if (rs.next()) {
+                    event = new CouponEvent();  // 쿠폰 이벤트 객체 생성
+                    populateCommonEventFields(event, rs);
 
-                // 쿠폰 이벤트 또는 배너 이벤트에 맞는 필드 설정
-                if ("COUPON".equalsIgnoreCase(eventType)) {
+                    // 쿠폰 이벤트 전용 필드 설정
                     ((CouponEvent) event).setCouponCode(rs.getString("COUPON_CODE"));
                     ((CouponEvent) event).setDiscountAmount(rs.getDouble("DISCOUNT_AMOUNT"));
                     ((CouponEvent) event).setDiscountPercent(rs.getDouble("DISCOUNT_PERCENT"));
                     ((CouponEvent) event).setExpiryDate(rs.getDate("EXPIRY_DATE"));
-                } else if ("BANNER".equalsIgnoreCase(eventType)) {
+
+                    // EventImage 처리
+                    EventImage eventImage = populateEventImage(rs);
+                    event.setEventImage(eventImage);
+                }
+
+            } else if ("BANNER".equalsIgnoreCase(eventType)) {
+                sql = "SELECT * FROM BANNER_EVENT JOIN EVENT ON BANNER_EVENT.EVENT_NO = EVENT.EVENT_NO "
+                        + "LEFT JOIN EVENT_IMAGE ON BANNER_EVENT.EVENT_NO = EVENT_IMAGE.EVENT_NO WHERE BANNER_EVENT.EVENT_NO = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, eventNo);
+                rs = pstmt.executeQuery();
+
+                if (rs.next()) {
+                    event = new BannerEvent();  // 배너 이벤트 객체 생성
+                    populateCommonEventFields(event, rs);
+
+                    // 배너 이벤트 전용 필드 설정
                     ((BannerEvent) event).setLinkUrl(rs.getString("LINK_URL"));
                     ((BannerEvent) event).setDisplayStartDate(rs.getDate("DISPLAY_START_DATE"));
                     ((BannerEvent) event).setDisplayEndDate(rs.getDate("DISPLAY_END_DATE"));
+
+                    // EventImage 처리
+                    EventImage eventImage = populateEventImage(rs);
+                    event.setEventImage(eventImage);
                 }
 
-                // EventImage 처리
-                EventImage eventImage = populateEventImage(rs);
-                event.setEventImage(eventImage);
+            } else {
+                // 일반 이벤트 처리
+                sql = "SELECT * FROM EVENT LEFT JOIN EVENT_IMAGE USING(EVENT_NO) WHERE EVENT.EVENT_NO = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, eventNo);
+                rs = pstmt.executeQuery();
+
+                if (rs.next()) {
+                    event = new Event();  // 일반 이벤트 객체 생성
+                    populateCommonEventFields(event, rs);
+
+                    // EventImage 처리
+                    EventImage eventImage = populateEventImage(rs);
+                    event.setEventImage(eventImage);
+                }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -235,6 +261,8 @@ public class EventDAO {
         }
         return event;
     }
+
+
     
     public int insertEvent(Event event) {
         int eventNo = 0;
@@ -296,6 +324,36 @@ public class EventDAO {
             closeConn(rs, pstmt, conn);
         }
     }
+
+    public boolean isCouponCodeExists(String couponCode) {
+        boolean exists = false;
+        
+        try {
+            // 연결 열기
+        	openConn();  // openConn() 메서드를 static이 아니므로 getInstance() 사용
+        	sql = "SELECT COUNT(*) FROM COUPON_EVENT WHERE COUPON_CODE = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, couponCode);
+            
+            rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                int count = rs.getInt(1);  // 첫 번째 컬럼의 값을 가져옴
+                if (count > 0) {
+                    exists = true;  // 쿠폰 코드가 존재하면 true
+                }
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            
+            closeConn(rs, pstmt, conn);
+        }
+        
+        return exists;
+    }
+
 
 
 

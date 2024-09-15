@@ -75,7 +75,7 @@ public class BoardListAction implements Action {
 		Location location = new Location();
 		location.addPath("홈");
 		location.addPath("게시판 관리");
-		location.setCurrent("게시판 상세보기");  // 현재 위치
+		location.setCurrent("전체 게시글");  // 현재 위치
 		location.setTitle("게시판");  // 동적으로 h1 타이틀 설정
 		
         // request에 필요한 속성 설정
