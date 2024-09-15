@@ -96,7 +96,7 @@
             <!-- 이벤트 관리 -->
             <li class="dropdown">이벤트 관리
                 <ul class="dropdown-menu">
-                    <li><a href="eventList.do?eventType=">일반 이벤트 목록</a></li>
+                    <li><a href="eventList.do?eventType=EVENT">일반 이벤트 목록</a></li>
                     <li><a href="eventList.do?eventType=BANNER">베너 이벤트 목록</a></li>
                     <li><a href="eventList.do?eventType=COUPON">쿠폰 이벤트 목록</a></li>
                     <li><a href="email_log.html">이메일 발송 기록</a></li>

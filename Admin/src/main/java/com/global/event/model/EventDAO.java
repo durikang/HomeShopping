@@ -194,14 +194,14 @@ public class EventDAO {
         Event event = null;
         try {
             openConn();
-            String sql;
+            String sql = "";
             if ("COUPON".equalsIgnoreCase(eventType)) {
                 sql = "SELECT * FROM COUPON_EVENT JOIN EVENT USING(EVENT_NO) "
                         + "LEFT JOIN EVENT_IMAGE ON COUPON_EVENT.EVENT_NO = EVENT_IMAGE.EVENT_NO WHERE EVENT_NO = ?";
             } else if ("BANNER".equalsIgnoreCase(eventType)) {
                 sql = "SELECT * FROM BANNER_EVENT JOIN EVENT USING(EVENT_NO) "
                         + "LEFT JOIN EVENT_IMAGE ON BANNER_EVENT.EVENT_NO = EVENT_IMAGE.EVENT_NO WHERE EVENT_NO = ?";
-            } else {
+            } else if("BANNER".equalsIgnoreCase(eventType)) {
                 sql = "SELECT * FROM EVENT LEFT JOIN EVENT_IMAGE USING(EVENT_NO) WHERE EVENT_NO = ?";
             }
             pstmt = conn.prepareStatement(sql);
@@ -234,6 +234,67 @@ public class EventDAO {
             closeConn(rs, pstmt, conn);
         }
         return event;
+    }
+    
+    public int insertEvent(Event event) {
+        int eventNo = 0;
+        try {
+            openConn();
+            sql = "INSERT INTO EVENT (EVENT_NO, NAME, DESCRIPTION, START_DATE, END_DATE, EVENT_TYPE) "
+                + "VALUES (EVENT_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(sql, new String[] {"EVENT_NO"});
+            pstmt.setString(1, event.getName());
+            pstmt.setString(2, event.getDescription());
+            pstmt.setDate(3, event.getStartDate());
+            pstmt.setDate(4, event.getEndDate());
+            pstmt.setString(5, event.getEventType());
+            pstmt.executeUpdate();
+
+            rs = pstmt.getGeneratedKeys();  // 자동 생성된 키 값을 가져옴
+            if (rs.next()) {
+                eventNo = rs.getInt(1);  // 생성된 EVENT_NO 값 반환
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConn(rs, pstmt, conn);
+        }
+        return eventNo;
+    }
+
+    public void insertBannerEvent(BannerEvent bannerEvent) {
+        try {
+            openConn();
+            sql = "INSERT INTO BANNER_EVENT (BANNER_EVENT_NO, EVENT_NO, LINK_URL) "
+                + "VALUES (BANNER_SEQ.NEXTVAL, ?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, bannerEvent.getEventNo());
+            pstmt.setString(2, bannerEvent.getLinkUrl());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConn(rs, pstmt, conn);
+        }
+    }
+
+    public void insertCouponEvent(CouponEvent couponEvent) {
+        try {
+            openConn();
+            sql = "INSERT INTO COUPON_EVENT (COUPON_EVENT_NO, EVENT_NO, COUPON_CODE, DISCOUNT_AMOUNT, DISCOUNT_PERCENT, EXPIRY_DATE) "
+                + "VALUES (COUPON_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, couponEvent.getEventNo());
+            pstmt.setString(2, couponEvent.getCouponCode());
+            pstmt.setDouble(3, couponEvent.getDiscountAmount());
+            pstmt.setDouble(4, couponEvent.getDiscountPercent());
+            pstmt.setDate(5, couponEvent.getExpiryDate());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConn(rs, pstmt, conn);
+        }
     }
 
 

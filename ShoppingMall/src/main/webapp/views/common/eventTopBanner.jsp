@@ -45,7 +45,7 @@
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
         // Admin 프로젝트에서 이벤트 리스트 API 호출
-        fetch('http://localhost:8585/Admin/eventListApi.do?eventType=banner')  // Admin 프로젝트의 API URL
+        fetch('http://localhost:8585/Admin/eventListApi.do?eventType=EVENT')  // Admin 프로젝트의 API URL
             .then(function(response) {
                 if (!response.ok) {
                     throw new Error("API 호출에 실패했습니다.");

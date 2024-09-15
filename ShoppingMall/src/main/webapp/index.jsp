@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>쇼핑몰 관리자 페이지</title>
+<title>쇼핑몰 페이지</title>
 <%
 
 %>
@@ -14,7 +14,7 @@
 
 </head>
 <body>
-<!-- 쇼핑몰 추가 ㅎㅎ  -->
+
 <c:set var="contextPath" value="${ pageContext.servletContext.contextPath }" scope="application"/>
 
 <script>

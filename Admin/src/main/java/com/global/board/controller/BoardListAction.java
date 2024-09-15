@@ -11,6 +11,7 @@ import com.global.action.View;
 import com.global.board.model.BoardCategoryDTO;
 import com.global.board.model.BoardDAO;
 import com.global.board.model.BoardDTO;
+import com.global.utils.Location;
 import com.global.utils.PageInfo;
 
 public class BoardListAction implements Action {
@@ -71,13 +72,19 @@ public class BoardListAction implements Action {
         // 필터용 BoardCategory List
 		List<BoardCategoryDTO> categoryList = dao.selectBoardCategoryList();
 		
+		Location location = new Location();
+		location.addPath("홈");
+		location.addPath("게시판 관리");
+		location.setCurrent("게시판 상세보기");  // 현재 위치
+		location.setTitle("게시판");  // 동적으로 h1 타이틀 설정
+		
         // request에 필요한 속성 설정
+		request.setAttribute("location", location);
 		request.setAttribute("categoryList", categoryList);
         request.setAttribute("count", pi.getListCount());
         request.setAttribute("list", boardList);
         request.setAttribute("address", "boardList.do"); // 페이지의 매핑을 던져줘야 함
         request.setAttribute("pi", pi);
-        request.setAttribute("subtitle", subtitle); // 메뉴바에서 누른 게시글 현 위치를 보냄
         request.setAttribute("status", status); // 필터 상태를 JSP로 전달
 
 		return new View("main.go").setUrl("/views/board/boardList.jsp");

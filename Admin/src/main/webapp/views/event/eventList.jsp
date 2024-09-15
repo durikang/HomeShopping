@@ -1,6 +1,7 @@
 <%@page import="com.global.event.model.Event"%>
 <%@ page import="com.global.utils.StringUtils" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="java.util.List"%>
@@ -26,8 +27,9 @@
 <body>
 
 	<div class="title">
-	  	<h1>${eventType == 'BANNER' ? '베너 이벤트 관리 페이지' : eventType == 'COUPON' ? '쿠폰 이벤트 관리 페이지' : '이벤트 관리 페이지'}</h1>
-	</div>	
+	    <h1>${location.title}</h1> <!-- 동적 제목 출력 -->
+	    ${location.displayBreadcrumb()} <!-- BreadCrumb 경로 출력 -->
+	</div>
 
 <div align="center">
     <div class="spacer"></div>
@@ -88,7 +90,7 @@
 	        <td class="table_bottom button" colspan="9" align="center">
 	        	<!-- 로그인한 유저만 이벤트 등록 버튼 보이기 -->
             	<c:if test="${not empty sessionScope.user and sessionScope.user.userType == 'ADMIN'}">
-	            	<input type="button" class="btn" value="이벤트 등록" onclick="location.href='${eventType}InsertForm.do'">
+					<input type="button" class="btn" value="이벤트 등록" onclick="location.href='eventInsertForm.do'">
 	            </c:if>
 	        </td>
 	    </tr>
