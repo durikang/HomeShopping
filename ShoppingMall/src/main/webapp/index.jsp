@@ -14,7 +14,7 @@
 
 </head>
 <body>
-
+<!-- 쇼핑몰 추가 ㅎㅎ  -->
 <c:set var="contextPath" value="${ pageContext.servletContext.contextPath }" scope="application"/>
 
 <script>
