@@ -32,9 +32,9 @@
         /* 숨겨진 상태의 알람 메세지 */
         .alertMessage {
             display: none;
-			font-size: 14px;
-		    margin-top: 15px;
-		    margin-bottom: 15px;
+            font-size: 14px;
+            margin-top: 15px;
+            margin-bottom: 15px;
         }
 
         /* 긍정의 메세지 */
@@ -52,6 +52,10 @@
     document.addEventListener('DOMContentLoaded', function() {
         const eventForms = document.querySelectorAll('.event-form');
         const alertMessageElement = document.querySelector('.alertMessage');
+        const statusInput = document.querySelector('input[name="status"]');  // hidden input
+        const statusDisplay = document.getElementById('statusDisplay');  // 상태 표시용 span
+        const startDateInput = document.querySelector('input[name="startDate"]');
+        const endDateInput = document.querySelector('input[name="endDate"]');
 
         // 이벤트 유형 변경 시 폼 변경
         document.querySelectorAll('input[name="eventType"]').forEach(function(radio) {
@@ -63,86 +67,74 @@
             });
         });
 
-        // 쿠폰 코드 자동 생성 및 중복 체크
-        document.querySelector('input[name="couponCode"]').addEventListener('click', function() {
-            generateCouponCode(this);
-        });
+        // 시작 날짜 또는 종료 날짜가 변경될 때 STATUS 상태를 실시간으로 업데이트
+        startDateInput.addEventListener('change', updateStatus);
+        endDateInput.addEventListener('change', updateStatus);
 
-        function generateCouponCode(inputElement) {
-            const couponCode = 'COUPON-' + Math.random().toString(36).substr(2, 8).toUpperCase();
-            
-            fetch('checkCouponCode.do', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `couponCode=${couponCode}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.isDuplicate) {
-                    // 부정의 메시지 표시
-                    alertMessageElement.textContent = '쿠폰 코드가 중복되었습니다. 다른 코드를 생성하세요.';
-                    alertMessageElement.className = 'alertMessage alert-error';
-                    alertMessageElement.style.display = 'block';
-                    generateCouponCode(inputElement);  // 다시 쿠폰 코드 생성
-                } else {
-                    // 긍정의 메시지 표시
-                    alertMessageElement.textContent = '쿠폰 코드를 사용할 수 있습니다.';
-                    alertMessageElement.className = 'alertMessage alert-success';
-                    alertMessageElement.style.display = 'block';
-                    inputElement.value = couponCode;  // 쿠폰 코드 필드에 값 설정
-                }
-            })
-            .catch(error => {
-                console.error('에러 발생:', error);
-            });
+        function updateStatus() {
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+
+            // 날짜 값이 없을 경우 STATUS 초기 설정
+            if (!startDate || !endDate) {
+                statusInput.value = 'SCHEDULED';
+                statusDisplay.textContent = '예정';
+                statusDisplay.style.color = 'black';  // 검은색
+                return;
+            }
+
+            // 오늘 날짜 (시간 제거)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);  // 시간 정보를 0으로 설정
+
+            // 시작 날짜와 종료 날짜도 Date 객체로 변환 (시간 제거)
+            const start = new Date(startDate);
+            start.setHours(0, 0, 0, 0);
+
+            const end = new Date(endDate);
+            end.setHours(0, 0, 0, 0);
+
+            // STATUS 상태 자동 설정 및 시각적 표시
+            if (start > today) {
+                statusInput.value = 'SCHEDULED';  // 시작 날짜가 오늘 이후
+                statusDisplay.textContent = '예정';
+                statusDisplay.style.color = 'black';  // 검은색
+                statusDisplay.style.fontweight = "bold";
+            } else if (end < today) {
+                statusInput.value = 'ENDED';  // 종료 날짜가 오늘 이전
+                statusDisplay.textContent = '종료';
+                statusDisplay.style.color = 'red';  // 붉은색
+                statusDisplay.style.fontweight = "bold";
+            } else {
+                statusInput.value = 'ACTIVE';  // 현재 진행 중
+                statusDisplay.textContent = '진행';
+                statusDisplay.style.color = 'green';  // 초록색
+                statusDisplay.style.fontweight = "bold";
+            }
+
+            console.log('STATUS 설정:', statusInput.value);  // STATUS 값 확인
         }
-
-        // 배너 이미지 크기 및 형식 유효성 검사
-        document.querySelector('input[name="bannerImage"]').addEventListener('change', function(event) {
-            const bannerImage = event.target.files[0];
-            const img = new Image();
-
-            img.src = URL.createObjectURL(bannerImage);
-            img.onload = function() {
-                if (img.width !== 1400 || img.height !== 150) {
-                    alert('이미지 크기가 1400x150 픽셀이어야 합니다.');
-                    event.target.value = '';  // 잘못된 파일을 제거
-                    return;
-                }
-                const fileSizeMB = bannerImage.size / (1024 * 1024);
-                if (fileSizeMB > 2) {
-                    alert('이미지 크기는 2MB를 초과할 수 없습니다.');
-                    event.target.value = '';  // 잘못된 파일을 제거
-                    return;
-                }
-
-                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-                if (!allowedTypes.includes(bannerImage.type)) {
-                    alert('JPEG, PNG 또는 GIF 형식의 이미지만 업로드할 수 있습니다.');
-                    event.target.value = '';  // 잘못된 파일을 제거
-                    return;
-                }
-            };
-        });
 
         // 폼 제출 시 유효성 검사
         document.querySelector('form').addEventListener('submit', function(event) {
             const eventType = document.querySelector('input[name="eventType"]:checked').value;
 
-            // 날짜 유효성 검사 추가
-            const startDate = document.querySelector('input[name="startDate"]').value;
-            const endDate = document.querySelector('input[name="endDate"]').value;
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
 
-            if (startDate && endDate) {
-                if (new Date(startDate) > new Date(endDate)) {
-                    alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.');
-                    event.preventDefault();
-                    return;
-                }
+            if (!startDate || !endDate) {
+                alert('시작 날짜와 종료 날짜를 입력해야 합니다.');
+                event.preventDefault();
+                return;
             }
-            
+
+            // 날짜 유효성 검사
+            if (new Date(startDate) > new Date(endDate)) {
+                alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.');
+                event.preventDefault();
+                return;
+            }
+
             if (eventType === 'coupon') {
                 const discountAmount = document.querySelector('input[name="discountAmount"]').value;
                 const discountPercent = document.querySelector('input[name="discountPercent"]').value;
@@ -155,6 +147,8 @@
             }
         });
     });
+
+
     </script>
 </head>
 <body>
@@ -184,17 +178,25 @@
                 <input type="date" name="endDate" required>
             </div>
 
+            <!-- 이벤트 상태 -->
+			<div class="form-group">
+			    <h3>이벤트 상태</h3>
+			    <span id="statusDisplay" style="color: black;">예정</span>
+			    <input type="hidden" name="status" value="SCHEDULED">
+			</div>
+
+
             <!-- 이벤트 유형 선택 -->
             <h3>이벤트 유형 선택</h3>
             <div class="form-group">
                 <label>
-                    <input type="radio" name="eventType" value="general" checked> 일반 이벤트
+                    <input type="radio" name="eventType" value="GENERAL" checked> 일반 이벤트
                 </label>
                 <label>
-                    <input type="radio" name="eventType" value="banner"> 베너 이벤트
+                    <input type="radio" name="eventType" value="BANNER"> 베너 이벤트
                 </label>
                 <label>
-                    <input type="radio" name="eventType" value="coupon"> 쿠폰 이벤트
+                    <input type="radio" name="eventType" value="COUPON"> 쿠폰 이벤트
                 </label>
             </div>
 
