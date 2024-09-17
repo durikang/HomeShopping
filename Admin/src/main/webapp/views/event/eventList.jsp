@@ -87,7 +87,7 @@
 	        </c:otherwise>
 	    </c:choose>  
 	    <tr>
-	        <td class="table_bottom button" colspan="9" align="center">
+	        <td class="table_bottom button" colspan="10" align="center">
 	        	<!-- 로그인한 유저만 이벤트 등록 버튼 보이기 -->
             	<c:if test="${not empty sessionScope.user and sessionScope.user.userType == 'ADMIN'}">
 					<input type="button" class="btn" value="이벤트 등록" onclick="location.href='eventInsertForm.do'">

@@ -239,7 +239,7 @@ public class EventDAO {
 
             } else {
                 // 일반 이벤트 처리
-                sql = "SELECT * FROM EVENT LEFT JOIN EVENT_IMAGE USING(EVENT_NO) WHERE EVENT.EVENT_NO = ?";
+                sql = "SELECT * FROM EVENT LEFT JOIN EVENT_IMAGE USING(EVENT_NO) WHERE EVENT_NO = ?";
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setInt(1, eventNo);
                 rs = pstmt.executeQuery();
@@ -268,8 +268,43 @@ public class EventDAO {
         int eventNo = 0;
         try {
             openConn();
+
+            // Step 1: 테이블의 최대 PK 값 조회
+            sql = "SELECT MAX(EVENT_NO) FROM EVENT";
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            int maxEventNo = 0;
+            if (rs.next()) {
+                maxEventNo = rs.getInt(1);
+            }
+
+            // Step 2: 시퀀스의 현재 값 확인
+            String seqValueSql = "SELECT SEQ_EVENT_NO.NEXTVAL FROM dual";
+            pstmt = conn.prepareStatement(seqValueSql);
+            rs = pstmt.executeQuery();
+            int currentSeqValue = 0;
+            if (rs.next()) {
+                currentSeqValue = rs.getInt(1);
+            }
+            rs.close();
+            pstmt.close();
+
+            // Step 3: 시퀀스 값이 테이블의 최대 PK보다 작은 경우, 시퀀스 삭제 후 재생성
+            if (currentSeqValue <= maxEventNo) {
+                String dropSeqSql = "DROP SEQUENCE SEQ_EVENT_NO";
+                pstmt = conn.prepareStatement(dropSeqSql);
+                pstmt.executeUpdate();
+                pstmt.close();
+
+                String createSeqSql = "CREATE SEQUENCE SEQ_EVENT_NO START WITH " + (maxEventNo + 1);
+                pstmt = conn.prepareStatement(createSeqSql);
+                pstmt.executeUpdate();
+                pstmt.close();
+            }
+
+            // Step 4: 이벤트 삽입
             sql = "INSERT INTO EVENT (EVENT_NO, NAME, DESCRIPTION, START_DATE, END_DATE, EVENT_TYPE) "
-                + "VALUES (EVENT_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
+                + "VALUES (SEQ_EVENT_NO.NEXTVAL, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql, new String[] {"EVENT_NO"});
             pstmt.setString(1, event.getName());
             pstmt.setString(2, event.getDescription());
@@ -278,9 +313,9 @@ public class EventDAO {
             pstmt.setString(5, event.getEventType());
             pstmt.executeUpdate();
 
-            rs = pstmt.getGeneratedKeys();  // 자동 생성된 키 값을 가져옴
+            rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
-                eventNo = rs.getInt(1);  // 생성된 EVENT_NO 값 반환
+                eventNo = rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -290,40 +325,116 @@ public class EventDAO {
         return eventNo;
     }
 
-    public void insertBannerEvent(BannerEvent bannerEvent) {
+    public int insertBannerEvent(BannerEvent bannerEvent) {
+    	int res = 0;
         try {
             openConn();
+
+            // Step 1: 테이블의 최대 PK 값 조회
+            sql = "SELECT MAX(BANNER_EVENT_NO) FROM BANNER_EVENT";
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            int maxBannerNo = 0;
+            if (rs.next()) {
+                maxBannerNo = rs.getInt(1);
+            }
+
+            // Step 2: 시퀀스의 현재 값 확인
+            String seqValueSql = "SELECT SEQ_BANNER_EVENT_NO.NEXTVAL FROM DUAL";
+            pstmt = conn.prepareStatement(seqValueSql);
+            rs = pstmt.executeQuery();
+            int currentSeqValue = 0;
+            if (rs.next()) {
+                currentSeqValue = rs.getInt(1);
+            }
+            rs.close();
+            pstmt.close();
+
+            // Step 3: 시퀀스 값이 테이블의 최대 PK보다 작은 경우, 시퀀스 삭제 후 재생성
+            if (currentSeqValue <= maxBannerNo) {
+                String dropSeqSql = "DROP SEQUENCE SEQ_BANNER_EVENT_NO";
+                pstmt = conn.prepareStatement(dropSeqSql);
+                pstmt.executeUpdate();
+                pstmt.close();
+
+                String createSeqSql = "CREATE SEQUENCE SEQ_BANNER_EVENT_NO START WITH " + (maxBannerNo + 1);
+                pstmt = conn.prepareStatement(createSeqSql);
+                pstmt.executeUpdate();
+                pstmt.close();
+            }
+
+            // Step 4: 배너 이벤트 삽입
             sql = "INSERT INTO BANNER_EVENT (BANNER_EVENT_NO, EVENT_NO, LINK_URL) "
-                + "VALUES (BANNER_SEQ.NEXTVAL, ?, ?)";
+                + "VALUES (SEQ_BANNER_EVENT_NO.NEXTVAL, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, bannerEvent.getEventNo());
             pstmt.setString(2, bannerEvent.getLinkUrl());
-            pstmt.executeUpdate();
+            res = pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             closeConn(rs, pstmt, conn);
         }
+        
+        return res;
     }
 
-    public void insertCouponEvent(CouponEvent couponEvent) {
+    public int insertCouponEvent(CouponEvent couponEvent) {
+    	int res = 0;
         try {
             openConn();
+
+            // Step 1: 테이블의 최대 PK 값 조회
+            sql = "SELECT MAX(COUPON_EVENT_NO) FROM COUPON_EVENT";
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            int maxCouponNo = 0;
+            if (rs.next()) {
+                maxCouponNo = rs.getInt(1);
+            }
+
+            // Step 2: 시퀀스의 현재 값 확인
+            String seqValueSql = "SELECT SEQ_COUPON_EVENT_NO.NEXTVAL FROM DUAL";
+            pstmt = conn.prepareStatement(seqValueSql);
+            rs = pstmt.executeQuery();
+            int currentSeqValue = 0;
+            if (rs.next()) {
+                currentSeqValue = rs.getInt(1);
+            }
+            rs.close();
+            pstmt.close();
+
+            // Step 3: 시퀀스 값이 테이블의 최대 PK보다 작은 경우, 시퀀스 삭제 후 재생성
+            if (currentSeqValue <= maxCouponNo) {
+                String dropSeqSql = "DROP SEQUENCE SEQ_COUPON_EVENT_NO";
+                pstmt = conn.prepareStatement(dropSeqSql);
+                pstmt.executeUpdate();
+                pstmt.close();
+
+                String createSeqSql = "CREATE SEQUENCE SEQ_COUPON_EVENT_NO START WITH " + (maxCouponNo + 1);
+                pstmt = conn.prepareStatement(createSeqSql);
+                pstmt.executeUpdate();
+                pstmt.close();
+            }
+
+            // Step 4: 쿠폰 이벤트 삽입
             sql = "INSERT INTO COUPON_EVENT (COUPON_EVENT_NO, EVENT_NO, COUPON_CODE, DISCOUNT_AMOUNT, DISCOUNT_PERCENT, EXPIRY_DATE) "
-                + "VALUES (COUPON_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
+                + "VALUES (SEQ_COUPON_EVENT_NO.NEXTVAL, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, couponEvent.getEventNo());
             pstmt.setString(2, couponEvent.getCouponCode());
             pstmt.setDouble(3, couponEvent.getDiscountAmount());
             pstmt.setDouble(4, couponEvent.getDiscountPercent());
             pstmt.setDate(5, couponEvent.getExpiryDate());
-            pstmt.executeUpdate();
+           res = pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             closeConn(rs, pstmt, conn);
         }
+        return res;
     }
+
 
     public boolean isCouponCodeExists(String couponCode) {
         boolean exists = false;

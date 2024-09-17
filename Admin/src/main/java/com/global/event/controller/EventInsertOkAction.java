@@ -7,10 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.global.action.Action;
 import com.global.action.View;
+import com.global.board.model.BoardDAO;
 import com.global.event.model.BannerEvent;
 import com.global.event.model.CouponEvent;
 import com.global.event.model.Event;
 import com.global.event.model.EventDAO;
+import com.global.utils.ScriptUtil;
 
 public class EventInsertOkAction implements Action {
 
@@ -35,7 +37,7 @@ public class EventInsertOkAction implements Action {
 
         // Event 테이블에 저장
         int eventNo = dao.insertEvent(event);
-
+        int check = eventNo;
         // 선택된 이벤트 유형에 따른 추가 정보 저장
         if ("banner".equalsIgnoreCase(eventType)) {
             String linkUrl = request.getParameter("linkUrl");
@@ -44,7 +46,7 @@ public class EventInsertOkAction implements Action {
             bannerEvent.setEventNo(eventNo);
             bannerEvent.setLinkUrl(linkUrl);
             
-            dao.insertBannerEvent(bannerEvent);
+            check = dao.insertBannerEvent(bannerEvent);
             
         } else if ("coupon".equalsIgnoreCase(eventType)) {
             String couponCode = request.getParameter("couponCode");
@@ -59,10 +61,17 @@ public class EventInsertOkAction implements Action {
             couponEvent.setDiscountPercent(discountPercent);
             couponEvent.setExpiryDate(expiryDate);
 
-            dao.insertCouponEvent(couponEvent);
+            check = dao.insertCouponEvent(couponEvent);
         }
+        
+		if (check > 0) {
+			ScriptUtil.sendScript(response, "이벤트 등록 성공", "eventList.do");
+		} else {
+			ScriptUtil.sendScript(response, "이벤트 등록 실패!!!", null);
+		}
+        
 
         // 이벤트 목록으로 리다이렉트
-        return new View("main.do").setUrl("eventList.do");
+        return null;
     }
 }
