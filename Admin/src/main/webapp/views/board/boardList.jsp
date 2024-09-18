@@ -35,7 +35,6 @@ function goToDetailPage(event) {
         window.location.href = '${contextPath}/boardDetailForm.do?boardNo=' + No + '&userType=' + userType + '&status=' + status + '&currentPage=' + currentPage +'&subtitle='+subtitle;
     }
 }
-
 // 모든 행에 클릭 이벤트 리스너 추가
 document.addEventListener('DOMContentLoaded', function() {
     const rows = document.querySelectorAll('table tr[data-id]');
