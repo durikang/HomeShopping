@@ -3,12 +3,12 @@ package com.global.product.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.global.action.Action;
 import com.global.action.View;
-import com.global.product.model.ProductCategoryDTO;
 import com.global.product.model.ProductDAO;
 import com.global.product.model.ProductDTO;
 import com.global.utils.PageInfo;
@@ -20,6 +20,8 @@ public class ContentProductAction implements Action {
 		ProductDAO dao = ProductDAO.getInstance();
 				
 		String product_no = request.getParameter("no").trim(); 
+		String userType = request.getParameter("userType");
+		
 		String status = request.getParameter("status");
 		
 		int listCount;
@@ -48,7 +50,33 @@ public class ContentProductAction implements Action {
 		
 		
 		// 조회하는 메서드 호출
-		ProductDTO cont = dao.getProductContent(product_no);
+		ProductDTO product = dao.getProductContent(product_no);
+
+//		조회수 증가 로직은 프론트에서만
+//		boolean flag = false; 
+//		
+//        // 조회수 증가 로직
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            for (Cookie c : cookies) {
+//                if (c.getName().equals("no" + product_no)) {
+//                    flag = true;
+//                }
+//            }
+//            if (!flag) {
+//                int res = dao.increaseViews(product_no);
+//                if (res > 0) {
+//                	product = dao.getProductContent(product_no);
+////                	product = dao.selectProduct(product_no, userType);
+//                    Cookie c1 = new Cookie("no" + product_no, String.valueOf(product_no));
+//                    c1.setMaxAge(1 * 24 * 60 * 60);
+//                    response.addCookie(c1);
+//                }
+//            } else {
+//            	product = dao.getProductContent(product_no);
+////            	product = dao.selectProduct(product_no, userType); 이해 X
+//            }
+//        }
 		
 		
 		
@@ -68,7 +96,7 @@ public class ContentProductAction implements Action {
         
         // request에 필요한 속성 설정
         request.setAttribute("count", pi.getCurrentPage());
-		request.setAttribute("Content", cont);
+		request.setAttribute("Content", product);
 		
 		
 		

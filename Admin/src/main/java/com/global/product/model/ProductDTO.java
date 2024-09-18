@@ -16,17 +16,56 @@ public class ProductDTO {
 	private String is_deleted;
 	private int total_sales;
 	
+	/*product_category join용*/
+	private String category_name;
 	
 	/*product_img join용*/
 	private int image_no;
 	private String image_url;
 	private String img_description;
+	
 	/* Admin join용 */
 	private int user_no;
 	private String role_code;
 	
+	/* USERS 정보를 함께 담을 필요가있음.*/
+	
+	private String userId;
+	private String userName;
+	private String userEmail;
+	private String userType;
 	
 	
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserEmail() {
+		return userEmail;
+	}
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+	public String getUserType() {
+		return userType;
+	}
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+	public String getCategory_name() {
+		return category_name;
+	}
+	public void setCategory_name(String category_name) {
+		this.category_name = category_name;
+	}
 	public String getRole_code() {
 		return role_code;
 	}

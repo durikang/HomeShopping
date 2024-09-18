@@ -16,9 +16,7 @@
 		<input type="hidden" name="category_no" value="${dto.getCategory_No() }">
 		<br>
 		<br>
-
-		<form method="post" enctype="multipart/form-date"
-			action="<%=request.getContextPath()%>/productCategoryModifyOk.do">
+		<form method="post" enctype="multipart/form-data" action="<%=request.getContextPath()%>/productCategoryModifyOk.do">
 			<table border="1" width="400">
 			<tr>
 				<th>카테고리 번호</th>
@@ -33,7 +31,15 @@
 			</tr>
 			<tr>
 				<th>카테고리 정보</th>
-				<td><textarea rows="8" cols="22" name="description" value="${dto.getDescription() }"></textarea></td>
+				<td><textarea rows="8" cols="22" name="description"></textarea></td>
+			</tr>
+			<tr>
+				<th>카테고리 이미지</th>
+				<td><input type="file" name="image_url"></td>
+			</tr>
+			<tr>
+				<th>카테고리 이미지 정보</th>
+				<td><textarea rows="8" cols="22" name="alt_text"></textarea></td>
 			</tr>
 			            
             <tr>
