@@ -5,8 +5,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link href="${contextPath }/resources/product/css/product.css"
-	rel="stylesheet" type="text/css" />
 <title>카테고리 목록 페이지</title>
 <script type="text/javascript">
 /**
@@ -39,42 +37,33 @@ document.addEventListener('DOMContentLoaded', function() {
 		<br> <br>
 
 
-		<table>
+		<table border="1" width="650">
 			<tr>
 
-				<th class="producter-th product-th-categoryNo">카테고리 번호</th>
-				<th class="producter-th product-th-name">카테고리 목록</th>
-				<th class="producter-th product-th-info">카테고리 정보</th>
-				<th class="producter-th product-th-img">카테고리 이미지</th>
-				<th class="producter-th product-th-imf-info">카테고리 이미지 정보</th>
-				<th class="producter-th product-th-createAt">카테고리 이미지 등록일</th>
-				
+				<th>카테고리 번호</th>
+				<th>카테고리 목록</th>
+				<th>카테고리 정보</th>
 
 			</tr>
 			<c:set var="list" value="${List }" />
 			<c:if test="${!empty list }">
 				<c:forEach items="${list }" var="dto">
 					<tr data-id=${dto.getCategory_No() }>
-						<td class="product-td">${dto.getCategory_No() }</td>
-						<td class="product-td">${dto.getName() }</td>
-						<td class="product-td">${dto.getDescription() }</td>
-						<td class="product-td">
-							<img class="product_img" src="${contextPath }/${dto.getImage_url()}" />
-						</td>
-						<td class="product-td">${dto.getAlt_text() }</td>
-						<td class="product-td">${dto.getUpload_date() }</td>
+						<td>${dto.getCategory_No() }</td>
+						<td>${dto.getName() }</td>
+						<td>${dto.getDescription() }</td>
 					</tr>
 				</c:forEach>
 			</c:if>
 			<c:if test="${empty list }">
 				<tr>
-					<td colspan="6" align="center">
+					<td colspan="3" align="center">
 						<h3>카테고리가 없습니다.</h3>
 					</td>
 				</tr>
 			</c:if>
 			<tr>
-				<td colspan="6" align="center">
+				<td colspan="3" align="center">
 					<input class="btn" type="button" value="카테고리 등록" onclick="location.href='productCategoryInsert.go'">
 				</td>
 			</tr>

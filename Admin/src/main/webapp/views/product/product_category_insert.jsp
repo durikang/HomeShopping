@@ -13,7 +13,7 @@
 	<div align="center">
     <h3>카테고리 등록</h3>
 
-    <form action="${ contextPath }/productCategoryInsert.do" method="post" enctype="multipart/form-data" onsubmit="return validatePasswords()">
+    <form action="${ contextPath }/productCategoryInsert.do" method="post" onsubmit="return validatePasswords()">
         <table class="insertTableForm">
             <tr>
                 <th>카테고리 번호</th>
@@ -33,14 +33,6 @@
                     <textarea rows="8" cols="22" name="description"></textarea>
                 </td>
             </tr>
-            <tr>
-					<th>카테고리 이미지</th>
-					<td><input type="file" name="image_url"></td>
-				</tr>
-				<tr>
-					<th>카테고리 이미지 정보</th>
-					<td><textarea rows="8" cols="22" name="alt_text"></textarea></td>
-				</tr>
              <tr>
                 <td class="table_bottom button categoryInsertBtn" colspan="2">
                     <input class="btn" type="submit" value="카테고리 등록">
