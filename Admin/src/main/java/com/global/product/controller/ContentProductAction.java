@@ -23,7 +23,7 @@ public class ContentProductAction implements Action {
 		String userType = request.getParameter("userType");
 		
 		String status = request.getParameter("status");
-	//ㅁ	q
+	//ㅁq
 		int listCount;
 		
         int currentPage = 1; // 기본적으로 페이지는 1로 설정
