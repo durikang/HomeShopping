@@ -104,39 +104,82 @@ public class CartDAO {
 	}//closeConn(pstmt, con) end
 	
 
-	//cart 테이블 전체 정보 조회 메서드
-	public List<CartDTO> getCartList(){
-		List<CartDTO> list = new ArrayList<>();
-		
+	public int getCartCount() {
+		int result = 0;
 		try {
 			
 			openConn();
+			
+			sql = "SELECT COUNT(*) FROM cart LEFT JOIN users USING(user_no)";
+			pstmt = con.prepareStatement(sql);
+			
+			rs= pstmt.executeQuery();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+				}finally {
+					closeConn(rs, pstmt, con);
+						}
 		
-			sql = "select * from CART order by cart_no desc";
+		return result;
+		
+	} //getCartCount end
+
+	public List<CartDTO> selectCartList(int currentPage, int cartLimit) {
+		List<CartDTO> list = new ArrayList<>();
+		
+		// 현재 회원 관련된 로직이 미구현 상태이므로 임시로 아래 쿼리를 사용합니다.
+		sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY c.CART_NO DESC) AS rnum, c.*, u.USER_TYPE, u.NAME AS USER_NAME FROM CART c LEFT JOIN USERS u ON c.USER_NO = u.USER_NO ) WHERE rnum BETWEEN ? AND ?";
+
+		try {
+			openConn();
+			int paramIndex = 1;
+			int startRow = (currentPage - 1) * cartLimit + 1;
+			int endRow = startRow + cartLimit - 1;
 
 			pstmt = con.prepareStatement(sql);
-		
+			pstmt.setInt(paramIndex++, startRow);
+			pstmt.setInt(paramIndex++, endRow);
+
 			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
+				CartDTO cart = new CartDTO();
+				cart.setCart_no(rs.getInt("CART_NO"));
+
+				// 아직 회원 관련 로직이 구현되지 않았으므로
+				int userNo = rs.getInt("USER_NO");
+				if (rs.wasNull()) {
+					cart.setUser_no((Integer) null);; // USER_NO가 NULL이면 null 설정
+				} else {
+					cart.setUser_no(userNo);; // USER_NO가 NULL이 아니면 해당 값 설정
+				}
+
+				cart.setCart_no(rs.getInt("CART_NO"));
+
+				cart.setCreated_at(rs.getDate("CREATED_AT"));
+
+
+				/* USERS 정보도 필요하므로 SET */
+
+				cart.setUser_no((rs.getInt("USER_NO")));;
+
 				
-				CartDTO dto = new CartDTO();
-				
-				dto.setCart_no(rs.getInt("CART_NO"));
-				dto.setUser_no(rs.getInt("USER_NO"));
-				dto.setCreated_at(rs.getDate("CREATED_AT"));
-				
-				list.add(dto);
-				
+				cart.setUser_name(rs.getString("USER_NAME"));
+				cart.setUser_type(rs.getString("USER_TYPE"));
+
+				list.add(cart);
 			}
 		} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-					closeConn(rs, pstmt, con);
-				}
-	
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
 		return list;
-	}//getCartList end
+	}
+	
+
+
 
 
 	//cart 테이블 정보를 삭제하는 메서드
