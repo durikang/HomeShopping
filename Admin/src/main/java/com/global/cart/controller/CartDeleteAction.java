@@ -29,7 +29,7 @@ public class CartDeleteAction implements Action {
         }
 		
         
-        int No = Integer.parseInt(request.getParameter("no").trim());
+        int No = Integer.parseInt(request.getParameter("cart_no").trim());
 		
 		CartDAO dao = CartDAO.getInstanceCart();
 		

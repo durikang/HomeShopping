@@ -35,7 +35,7 @@ public class CartItemDeleteAction implements Action {
         if (check > 0) {
         	dao.updateSequenceCartItem(no);
         	
-			ScriptUtil.sendScript(response, "장바구니 상품 삭제 성공", "cartItem_list.do?no="+no);
+			ScriptUtil.sendScript(response, "장바구니 상품 삭제 성공", "cartItem_list.do?cart_no="+no);
         } 
         
         else {
