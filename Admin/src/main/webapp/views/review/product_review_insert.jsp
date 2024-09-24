@@ -60,7 +60,7 @@
 		        </select>
 		    </div>
 
-		    <%-- <!-- 게시판 카테고리 선택 -->
+		    <!-- 게시판 카테고리 선택 -->
 		    <div class="form-group">
 		        <label for="categoryNo">리뷰 카테고리</label>
 		        <select name="board_CategoryNo" id="categoryNo" required>
@@ -68,7 +68,7 @@
 		                <option value="${dto.getCategoryNo()}">${dto.getName()}</option>
 		            </c:forEach>
 		        </select>
-		    </div> --%>
+		    </div>
 		
 		    <!-- 제목 입력 -->
 		    <div class="form-group">
