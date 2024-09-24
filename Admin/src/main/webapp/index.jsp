@@ -54,8 +54,8 @@ customer.setLastLoginDate(new Date(System.currentTimeMillis()));  // 현재 시�
 customer.setTotalPurchaseAmount(50000);
 
 // 세션에 가데이터 저장
-session.setAttribute("user", customer);
-*/
+session.setAttribute("user", customer); */
+
  
 %>
 
