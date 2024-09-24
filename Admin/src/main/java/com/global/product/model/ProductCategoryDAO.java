@@ -119,7 +119,7 @@ public int insertCategory(ProductCategoryDTO dto) {
 		
 		openConn();
 		
-		sql = "INSERT INTO PRODUCT_CATEGORY VALUES(?,?,?)";
+		sql = "INSERT INTO PRODUCT_CATEGORY VALUES(?,?,?,'N')";
 		
 		pstmt = con.prepareStatement(sql);
 		
@@ -188,7 +188,7 @@ public int insertCategory(ProductCategoryDTO dto) {
 
 		openConn();
 		
-		sql = "SELECT * FROM PRODUCT_CATEGORY WHERE CATEGORY_NO = ? ";
+		sql = "SELECT * FROM PRODUCT_CATEGORY p FULL OUTER JOIN CATEGORY_IMAGE i on p.CATEGORY_NO = i.CATEGORY_NO WHERE p.CATEGORY_NO = ? ";
 		
 		pstmt = con.prepareStatement(sql);
 		
@@ -203,7 +203,9 @@ public int insertCategory(ProductCategoryDTO dto) {
 			dto.setCategory_No(rs.getString("category_no"));
 			dto.setName(rs.getString("name"));
 			dto.setDescription(rs.getString("description"));
-			
+			dto.setAlt_text(rs.getString("ALT_TEXT"));
+			dto.setImage_url(rs.getString("IMAGE_URL"));
+			dto.setUpload_date(rs.getDate("UPLOAD_DATE"));
 			
 		}
 		
@@ -252,7 +254,7 @@ public int insertCategory(ProductCategoryDTO dto) {
 		
 		List<ProductCategoryDTO> list = new ArrayList<>();
 		
-		sql = "SELECT * FROM ( SELECT ROW_NUMBER() OVER (ORDER BY CATEGORY_NO  ASC) AS rnum, B.* FROM PRODUCT_CATEGORY B ) WHERE rnum BETWEEN ? AND ?";
+		sql = "SELECT * FROM ( SELECT ROW_NUMBER() OVER (ORDER BY CATEGORY_NO  ASC) AS rnum, B.* FROM PRODUCT_CATEGORY B )JOIN CATEGORY_IMAGE USING(CATEGORY_NO)  WHERE rnum BETWEEN ? AND ?";
 		
 		try {
 			
@@ -274,6 +276,10 @@ public int insertCategory(ProductCategoryDTO dto) {
 			dto.setCategory_No(rs.getString("CATEGORY_NO"));
 			dto.setName(rs.getString("NAME"));
 			dto.setDescription(rs.getString("DESCRIPTION"));
+			dto.setAlt_text(rs.getString("ALT_TEXT"));
+			dto.setImage_url(rs.getString("IMAGE_URL"));
+			dto.setPcimage_no(rs.getInt("PCIMAGE_NO"));
+			dto.setUpload_date(rs.getDate("UPLOAD_DATE"));
 
 			list.add(dto);
 		}
@@ -360,7 +366,7 @@ public int insertCategory(ProductCategoryDTO dto) {
 		public List<ProductCategoryDTO> selectProductCategoryList(int currentPage, int boardLimit, char status) {
 			List<ProductCategoryDTO> list = new ArrayList<>();
 			
-			sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY CATEGORY_NO ASC) AS rnum, P.* FROM PRODUCT_CATEGORY P) WHERE rnum BETWEEN ? AND ?";
+			sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY CATEGORY_NO ASC) AS rnum, P.* FROM PRODUCT_CATEGORY P)JOIN CATEGORY_IMAGE USING(CATEGORY_NO)WHERE rnum BETWEEN ? AND ?";
 
 			try {
 				openConn();
@@ -369,7 +375,6 @@ public int insertCategory(ProductCategoryDTO dto) {
 				int endRow = startRow + boardLimit - 1;
 
 				pstmt = con.prepareStatement(sql);
-				pstmt.setString(paramIndex++, String.valueOf(status));
 				pstmt.setInt(paramIndex++, startRow);
 				pstmt.setInt(paramIndex++, endRow);
 
@@ -380,6 +385,11 @@ public int insertCategory(ProductCategoryDTO dto) {
 					category.setCategory_No(rs.getString("CATEGORY_NO"));
 					category.setName(rs.getString("NAME"));
 					category.setDescription(rs.getString("DESCRIPTION"));
+					category.setAlt_text(rs.getString("ALT_TEXT"));
+					category.setImage_url(rs.getString("IMAGE_URL"));
+					category.setPcimage_no(rs.getInt("PCIMAGE_NO"));
+					category.setUpload_date(rs.getDate("UPLOAD_DATE"));
+
 
 					list.add(category);
 				}
@@ -423,6 +433,3 @@ public int insertCategory(ProductCategoryDTO dto) {
 
 		
 	}
-
-
-

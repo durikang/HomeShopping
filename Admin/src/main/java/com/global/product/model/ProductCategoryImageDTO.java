@@ -2,21 +2,24 @@ package com.global.product.model;
 
 import java.sql.Date;
 
-public class ProductCategoryDTO {
-    private String category_no;
-    private String name;
-    private String description;
-	
-    /*category_image join용*/
-    private int pcimage_no;
+public class ProductCategoryImageDTO {
+
+	private int pcimage_no;
+	private String category_no;
 	private String image_url;
 	private String alt_text;
-	
+	private Date upload_date;
 	public int getPcimage_no() {
 		return pcimage_no;
 	}
 	public void setPcimage_no(int pcimage_no) {
 		this.pcimage_no = pcimage_no;
+	}
+	public String getCategory_no() {
+		return category_no;
+	}
+	public void setCategory_no(String category_no) {
+		this.category_no = category_no;
 	}
 	public String getImage_url() {
 		return image_url;
@@ -36,29 +39,6 @@ public class ProductCategoryDTO {
 	public void setUpload_date(Date upload_date) {
 		this.upload_date = upload_date;
 	}
-	private Date upload_date;
-    
-    
-	public String getCategory_No() {
-		return category_no;
-	}
-	public void setCategory_No(String category_No) {
-		this.category_no = category_No;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
-    
-    
 
 }
