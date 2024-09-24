@@ -17,10 +17,10 @@
 		
 		<br><br>
 		
-		<form method = "post" action = "<%= request.getContextPath() %>/search.do">
+		<form method = "post" action = "<%= request.getContextPath() %>/adminInsert_search.do">
 			<select name = "field">
-				<option value="id">아이디</option>
-	        	<option value="name">이름</option>
+	        	<option value = "name">관리자 이름</option>
+	        	<option value = "name">직책 이름</option>
 			</select>
 			
 			<input type = "text" name = "keyword">&nbsp;
@@ -31,7 +31,7 @@
 			
 		 <table border = "1" width = "auto">
 		 	<tr>
-		 		<th>No</th> <th>이름</th> <th>이메일</th>
+		 		<th>관리자 이름</th> <th>직책 이름</th> <th>이메일</th> 
 		 	</tr>
 		 	
 		 	<c:set var = "list" value = "${List }"/>
@@ -39,19 +39,17 @@
 		 	<c:if test = "${!empty list }">
 		 		<c:forEach items = "${list }" var = "dto">
 		 			<tr>
-		 				<td>${dto.getUserNo() }</td>
 		 				<td>${dto.getName() }</td>
+		 				<td>${dto.getRoleName() }</td>
 		 				<td>${dto.getEmail() }</td>
-		 				<td>
-	                  		<input type = "button" value = "상세내역" onclick = "location.href='content.do?num=${dto.getUserNo()}'">
-	               		</td>
+		 				<td><input type = "button" value = "상세내역" onclick = "location.href='adminInsert_content.do'"></td>
 		 			</tr>
 		 		</c:forEach>
 		 	</c:if>
 		 	
 		 	<c:if test = "${empty list }">
 		 		<tr>
-		 			<td colspan = "3" align = "center">
+		 			<td colspan = "5" align = "center">
 		 				<h3>전체 관리자 리스트가 없습니다.</h3>
 		 			</td>
 		 		</tr>
@@ -59,9 +57,10 @@
 		 </table>
 		 
 		 <br>
-		<!-- 로그인한 유저만 게시글 작성 버튼 보이기 -->
+		 
+		 <!-- 로그인한 유저만 게시글 작성 버튼 보이기 -->
           <c:if test="${not empty sessionScope.user}">
-		 	<input type = "button" value = "등록" onclick = "location.href='adminInsertForm.do'">
+		 	<input type = "button" value = "등록" onclick = "location.href='adminInsert_Form.do'">
 		  </c:if>
 	</div>
 </body>

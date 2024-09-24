@@ -19,14 +19,14 @@
 			<tr>
 				<th>아이디</th>
 				<td>
-					<input type = "text" name = "id">
+					<input type = "text" name = "userId">
 				</td>
 			</tr>
 			
 			<tr>
 				<th>비밀번호</th>
 				<td>
-					<input type = "password" name = "pwd">
+					<input type = "password" name = "password">
 				</td>
 			</tr>
 			
@@ -34,6 +34,19 @@
 				<th>이름</th>
 				<td>
 					<input type = "text" name = "name">
+				</td>
+			</tr>
+			
+			<tr>
+				<th>직책 이름</th>
+				<td>
+	                <select name = "categoryNo" id = "categoryNo" required>
+	                    <c:forEach var = "role" items = "${role }">
+	                        <option value = "${role.categoryNo}">${role.name }</option>
+	                    </c:forEach>
+	                </select>
+				
+					<input type = "text" name = "roleName">
 				</td>
 			</tr>
 			

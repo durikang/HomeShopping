@@ -60,37 +60,6 @@ public class AdminDAO {
 			}
 	} // closeConn() 메서드 end
 	
-	// 전체 게시물 수를 확인하는 메서드
-	public int getCategoryCount() {
-			
-		int count = 0;
-			
-		try {
-			openConn();
-				
-			sql = "select count(*) from admin_role";
-				
-			pstmt = con.prepareStatement(sql);
-				
-			rs = pstmt.executeQuery();
-				
-			if(rs.next()) {
-				count = rs.getInt(1);
-			}
-		} 
-		
-		catch (SQLException e) {
-			
-			e.printStackTrace();
-		} 
-		
-		finally {
-			closeConn(rs, pstmt, con);
-		}
-			
-		return count;
-	} // getCategoryCount() end
-	
 	// 직책 전체 리스트를 조회하는 메서드
 	public List<AdminDTO> getAdminCategoryList() {
 			
@@ -155,6 +124,7 @@ public class AdminDAO {
 		return result;
 	} // insertAdminCategory() 메서드 end
 	
+	/*
 	// 관리자 직책의 정보를 조회하는 메서드
 	public List<AdminDTO> searchCategoryAdminList(String search_field, String search_keyword) {
 
@@ -191,18 +161,17 @@ public class AdminDAO {
 		
 		return dto;
 	} // searchCategoryAdminList() 메서드 end
+	*/
 	
 	// 전체 리스트를 조회하는 메서드
-	public List<AdminDTO> getAdminList() {
+	public List<AdminDTO> getAdminInsertList() {
 		
 		List<AdminDTO> list = new ArrayList<AdminDTO>();
 		
 		try {
 			openConn();
 			
-			sql = "select * from users order by num desc";
-			sql = "select * from admin_role order by num desc";
-			
+			sql = "select * from users join admin using(user_no) join admin_role using(role_code) order by user_no desc";
 			
 			pstmt = con.prepareStatement(sql);
 			
@@ -211,15 +180,10 @@ public class AdminDAO {
 			while(rs.next()) {
 				AdminDTO dto = new AdminDTO();
 				
-				dto.setUserNo(rs.getInt("userNo"));
-				dto.setUserId(rs.getString("userId"));
-				dto.setPassword(rs.getString("password"));
+				dto.setUserNo(rs.getInt("user_no"));
 				dto.setName(rs.getString("name"));
 				dto.setEmail(rs.getString("email"));
-				dto.setRoleCode(rs.getString("role_code"));
 				dto.setRoleName(rs.getString("role_name"));
-				dto.setCreatedAt(rs.getDate("created_At"));
-				dto.setUpdatedAt(rs.getDate("updated_At"));
 				
 				list.add(dto);
 			}
@@ -239,26 +203,34 @@ public class AdminDAO {
 	// 추가하는 메서드
 	public int insertAdmin(AdminDTO dto) {
 		
-		int result = 0, count = 0;
+		int result = 0;
 		
 		try {
 			openConn();
 
-			sql = "insert into users values(seq_user_no.nextval, ?, ?, ?, ?, 'ADMIN', DEFAULT , ?, sysdate, sysdate)";
+			sql = "insert into users values(SEQ_USER_NO.nextval, ?, ?, ?, ?)";
 			
 			pstmt = con.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getUserId());
 			pstmt.setString(2, dto.getPassword());
 			pstmt.setString(3, dto.getName());
-			pstmt.setString(4, dto.getEmail());
-			pstmt.setString(5, dto.getUserType());
-			pstmt.setString(6, dto.getRoleCode());
-			pstmt.setString(7, dto.getRoleName());
-			pstmt.setDate(8, dto.getCreatedAt());
-			pstmt.setDate(9, dto.getUpdatedAt());
+			pstmt.setString(4, dto.getRoleName());
+			pstmt.setString(5, dto.getEmail());
+			pstmt.setString(5, dto.getEmail());
+			pstmt.setString(5, dto.getEmail());
+			pstmt.setString(5, dto.getEmail());
 			
 			result = pstmt.executeUpdate();
+			if(result > 0) {
+				sql = "insert into admin values(SEQ_USER_NO.currval, ?)";
+				pstmt = con.prepareStatement(sql);
+				
+				pstmt.setString(1, dto.getUserId());
+				pstmt.setString(2, dto.getPassword());
+					
+				
+			}
 			
 		} 
 		
@@ -271,8 +243,9 @@ public class AdminDAO {
 		}
 		
 		return result;
-	}  // insertAdmin() 메서드 end
+	} // insertAdmin() 메서드 end
 	
+	/*
 	// 번호에 해당하는 관리자의 정보를 조회하는 메서드
 	public AdminDTO contentAdmin(int no) {
 		
@@ -314,6 +287,7 @@ public class AdminDAO {
 		
 		return dto;
 	}  // contentAdmin() 메서드 end
+	*/
 	
 	// 정보를 수정하는 메서드
 	public int updateAdmin(AdminDTO dto) {
@@ -413,4 +387,9 @@ public class AdminDAO {
 			closeConn(rs, pstmt, con);
 		}
 	} // updateSequence() 메서드 end
+
+	public AdminDTO contentAdmin(int user_no) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
