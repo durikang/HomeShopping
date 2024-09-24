@@ -218,6 +218,43 @@ public class CartDAO {
 		
 	}//deleteCart end
 	
+	
+	public int insertCart(CartDTO dto) {
+		int result = 0, count = 0;
+		
+		openConn();
+			try {
+				
+				sql="select max(cart_no) from cart_no";
+				pstmt = con.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				
+				sql="select max(cart_item_no) from cart_item_no";
+				pstmt = con.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				if(rs.next()) {
+					count = rs.getInt(1)+1;
+				}
+				sql = "insert into cart values(?,?,?)";
+				pstmt=con.prepareStatement(sql);
+				pstmt.setInt(1, count);
+				pstmt.setInt(2, dto.getUser_no());
+				pstmt.setDate(3, dto.getCreated_at());
+				
+				sql = "insert into cart_item values(?,?,?,?,?,?,?,?)";
+				pstmt=con.prepareStatement(sql);
+				pstmt.setInt(1, count);
+				pstmt.setInt(2, dto.getUser_no());
+				pstmt.setDate(3, dto.getCreated_at());
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				closeConn(rs, pstmt, con);
+			}
+		
+		return result;
+	}
 	//cart 테이블 정보를 상세보기하는 메서드[..?]
 	
 	//cart 테이블 정보를 수정하는 메서드[..?]
