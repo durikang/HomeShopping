@@ -36,10 +36,26 @@
 				<th>카테고리 정보</th>
 				<td>${fn:replace(dto.getDescription(), newLine, br) }</td>
 			</tr>
+			<tr>
+				<th>카테고리 이미지</th>
+				<td>
+					<img src="${contextPath }/${dto.getImage_url()}">
+				</td>
+			</tr>
+		
+			
+			<tr>
+				<th>카테고리 이미지 정보</th>
+				<td>${fn:replace(dto.getAlt_text(), newLine, br) }</td>
+			</tr>
+						<tr>
+				<th>카테고리 등록일</th>
+				<td>${dto.getUpload_date() }</td>
+			</tr>
 			
 			<c:if test="${empty dto }">
 				<tr>
-					<td colspan="2" align="center">
+					<td colspan="6" align="center">
 						<h3>해당하는 게시글이 없습니다.</h3>
 					</td>
 				</tr>
