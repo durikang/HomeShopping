@@ -87,7 +87,6 @@
 						<input class="btn" type="reset" value="초기화">
 					</td>
 				</tr>
-
 			</table>
 		</form>
 	</div>
