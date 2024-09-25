@@ -11,9 +11,9 @@ import javax.servlet.http.HttpSession;
 
 import com.global.action.Action;
 import com.global.action.View;
-import com.global.admin.model.UsersDTO;
 import com.global.order.model.OrderDAO;
 import com.global.order.model.OrderDTO;
+import com.global.user.model.UsersDTO;
 
 public class ContentAction implements Action{
 

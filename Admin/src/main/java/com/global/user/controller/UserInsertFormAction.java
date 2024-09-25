@@ -1,4 +1,4 @@
-package com.global.admin.controller;
+package com.global.user.controller;
 
 import java.io.IOException;
 
@@ -8,13 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.global.action.Action;
 import com.global.action.View;
-import com.global.admin.model.AdminDAO;
 
-public class AdminInsertFormAction implements Action {
+public class UserInsertFormAction implements Action {
 
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
-		return new View("main.go").setUrl("/views/admin/admin_insert_Form.jsp");
+		
+		return new View("main.go").setUrl("/views/user/user_Insert_Form.jsp");
 	}
 }

@@ -9,24 +9,24 @@
 <body>
 	<div align = "center">
 		<hr width = "50%" color = "red">
-			<h3>관리자 등록 페이지</h3>
+			<h3>유저 등록 페이지</h3>
 		<hr width = "50%" color = "red">
 		
 		<br><br>
 		
-		<form method = "post" action = "${contextPath }/adminInsert_ok.do">
+		<form method = "post" action = "${contextPath }/userInsert_ok.do">
 			<table border = "1" width = "auto">
 			<tr>
 				<th>아이디</th>
 				<td>
-					<input type = "text" name = "userId">
+					<input type = "text" name = "user_id">
 				</td>
 			</tr>
 			
 			<tr>
 				<th>비밀번호</th>
 				<td>
-					<input type = "password" name = "password">
+					<input type = "password" name = "user_pwd">
 				</td>
 			</tr>
 			
@@ -34,19 +34,6 @@
 				<th>이름</th>
 				<td>
 					<input type = "text" name = "name">
-				</td>
-			</tr>
-			
-			<tr>
-				<th>직책 이름</th>
-				<td>
-	                <select name = "categoryNo" id = "categoryNo" required>
-	                    <c:forEach var = "role" items = "${role }">
-	                        <option value = "${role.categoryNo }">${role.name }</option>
-	                    </c:forEach>
-	                </select>
-				
-					<input type = "text" name = "roleName">
 				</td>
 			</tr>
 			

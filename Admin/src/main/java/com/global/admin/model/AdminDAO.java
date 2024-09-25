@@ -208,30 +208,29 @@ public class AdminDAO {
 		try {
 			openConn();
 
-			sql = "insert into users values(SEQ_USER_NO.nextval, ?, ?, ?, ?)";
+			sql = "insert into users values(SEQ_USER_NO.nextval, ?, ?, ?, ?, 'ADMIN', 'N', sysdate, sysdate)";
 			
 			pstmt = con.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getUserId());
 			pstmt.setString(2, dto.getPassword());
 			pstmt.setString(3, dto.getName());
-			pstmt.setString(4, dto.getRoleName());
-			pstmt.setString(5, dto.getEmail());
-			pstmt.setString(5, dto.getEmail());
-			pstmt.setString(5, dto.getEmail());
-			pstmt.setString(5, dto.getEmail());
+			pstmt.setString(4, dto.getEmail());
+			pstmt.setString(5, dto.getUserType());
+			pstmt.setString(6, dto.getIsDeleted());
+			pstmt.setDate(7, dto.getCreatedAt());
+			pstmt.setDate(8, dto.getUpdatedAt());
 			
 			result = pstmt.executeUpdate();
+			
 			if(result > 0) {
-				sql = "insert into admin values(SEQ_USER_NO.currval, ?)";
+				sql = "insert into admin values(SEQ_USER_NO.currval, ?, ?)";
+				
 				pstmt = con.prepareStatement(sql);
 				
-				pstmt.setString(1, dto.getUserId());
-				pstmt.setString(2, dto.getPassword());
-					
-				
+				pstmt.setString(1, dto.getRoleCode());
+				pstmt.setString(2, dto.getRoleName());
 			}
-			
 		} 
 		
 		catch (SQLException e) {

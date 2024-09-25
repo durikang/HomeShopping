@@ -10,9 +10,9 @@ import javax.servlet.http.HttpSession;
 
 import com.global.action.Action;
 import com.global.action.View;
-import com.global.admin.model.UsersDTO;
 import com.global.cart.model.CartDAO;
 import com.global.cart.model.CartDTO;
+import com.global.user.model.UsersDTO;
 import com.global.utils.ScriptUtil;
 
 public class CartDeleteAction implements Action {

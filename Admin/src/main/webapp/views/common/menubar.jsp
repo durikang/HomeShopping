@@ -34,7 +34,7 @@
             <!-- 사용자 관리 -->
             <li class="dropdown">사용자 관리
                 <ul class="dropdown-menu">
-                    <li><a href="user_list.html">사용자 목록</a></li>
+                    <li><a href="userInsert_list.do">사용자 목록</a></li>
                     <li><a href="user_add.html">사용자 추가</a></li>
                     <li><a href="user_stats.html">사용자 통계</a></li>
                 </ul>
