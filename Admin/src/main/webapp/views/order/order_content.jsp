@@ -33,7 +33,7 @@
 					<td><fmt:formatNumber value="${dto.price}"></fmt:formatNumber>원</td>
 					<td>
 						<c:if test="${sessionScope.user.userType == 'ADMIN'}">
-							<input type="button" value="주문목록삭제" onclick="location.href='orderitem_delete.do?no=${dto.oreder_no}'">
+							<input class="btn" type="button" value="주문목록삭제" onclick="location.href='orderitem_delete.do?no=${dto.oreder_no}'">
 						</c:if>
 					</td> 
 				</tr>

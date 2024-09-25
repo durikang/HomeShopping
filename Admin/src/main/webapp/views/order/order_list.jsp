@@ -49,18 +49,18 @@
 					
 						<td>
 						<c:if test="${sessionScope.user.userType == 'ADMIN'}">
-							<input type="button" value="배송상태설정" onclick="location.href='orderModify.do?no=${dto.order_no}'">&nbsp;&nbsp;
+							<input class="btn" type="button" value="배송상태설정" onclick="location.href='orderModify.do?no=${dto.order_no}'">&nbsp;&nbsp;
 						</c:if>
 					</td> 
 					
 						<c:if test="${dto.status == 'DELIVERED' }">
 							<td>
-							<input type="button" value="리뷰 작성" onclick="location.href='productReviewinsert.do'">
+							<input class="btn" type="button" value="리뷰 작성" onclick="location.href='productReviewinsert.do'">
 							</td>
 						</c:if>
 						<c:if test="${dto.status != 'DELIVERED' }">
 							<td>
-							<input type="button" value="리뷰 작성" onclick="showPopup()">
+							<input class="btn" type="button" value="리뷰 작성" onclick="showPopup()">
 							</td>
 						</c:if>
 					</tr>
