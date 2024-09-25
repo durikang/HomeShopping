@@ -53,31 +53,31 @@ public class ContentProductAction implements Action {
 		// 조회하는 메서드 호출
 		ProductDTO product = dao.getProductContent(product_no);
 
-//		조회수 증가 로직은 프론트에서만
-//		boolean flag = false; 
-//		
-//        // 조회수 증가 로직
-//        Cookie[] cookies = request.getCookies();
-//        if (cookies != null) {
-//            for (Cookie c : cookies) {
-//                if (c.getName().equals("no" + product_no)) {
-//                    flag = true;
-//                }
-//            }
-//            if (!flag) {
-//                int res = dao.increaseViews(product_no);
-//                if (res > 0) {
-//                	product = dao.getProductContent(product_no);
-////                	product = dao.selectProduct(product_no, userType);
-//                    Cookie c1 = new Cookie("no" + product_no, String.valueOf(product_no));
-//                    c1.setMaxAge(1 * 24 * 60 * 60);
-//                    response.addCookie(c1);
-//                }
-//            } else {
-//            	product = dao.getProductContent(product_no);
-////            	product = dao.selectProduct(product_no, userType); 이해 X
-//            }
-//        }
+		//조회수 증가 로직은 프론트에서만
+		boolean flag = false; 
+		
+        // 조회수 증가 로직
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName().equals("no" + product_no)) {
+                    flag = true;
+                }
+            }
+            if (!flag) {
+                int res = dao.increaseViews(product_no);
+                if (res > 0) {
+                	product = dao.getProductContent(product_no);
+//                	product = dao.selectProduct(product_no, userType);
+                    Cookie c1 = new Cookie("no" + product_no, String.valueOf(product_no));
+                    c1.setMaxAge(1 * 24 * 60 * 60);
+                    response.addCookie(c1);
+                }
+            } else {
+            	product = dao.getProductContent(product_no);
+//            	product = dao.selectProduct(product_no, userType); 이해 X
+            }
+        }
 		
 		int maxPage = (int) Math.ceil((double) listCount / boardLimit);
 

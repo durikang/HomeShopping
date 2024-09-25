@@ -533,25 +533,25 @@ public class ProductDAO {
 	}
 
 	// 조회수 증가는 프론트 에서만!
-//	public int increaseViews(String product_no) {
-//		int result = 0;
-//
-//		try {
-//			openConn();
-//			int paramIndex = 1;
-//			sql = "UPDATE PRODUCT SET VIEWS = VIEWS+1 WHERE PRODUCT_NO = ?";
-//			pstmt = con.prepareStatement(sql);
-//			pstmt.setString(paramIndex, product_no);
-//
-//			result = pstmt.executeUpdate();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			closeConn(pstmt, con);
-//		}
-//
-//		return result;
-//	}
+	public int increaseViews(String product_no) {
+		int result = 0;
+
+		try {
+			openConn();
+			int paramIndex = 1;
+			sql = "UPDATE PRODUCT SET VIEWS = VIEWS+1 WHERE PRODUCT_NO = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(paramIndex, product_no);
+
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConn(pstmt, con);
+		}
+
+		return result;
+	}
 
 	public ProductDTO selectProduct(String product_no, String userType) {
 		ProductDTO dto = null;

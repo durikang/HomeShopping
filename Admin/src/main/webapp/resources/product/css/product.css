@@ -1,23 +1,11 @@
 @charset "UTF-8";
 
-
 table{
 	align:center;
 	border: 1;	
 }
-
-
 .product_img{
 	width : 100px;
-	
-}
-
-
-
-.producter-content-th{
-	
-	
-	border-right:2px solid #aaa;
 }
 .producter-th{
 	border:1;
@@ -66,12 +54,12 @@ table{
 .product-th-sales{
     min-width: 45px;
 }
-
-
 .product-th-createAt, .product-th-updateAt, .product-th-views, .product-th-status{
 	padding: 10px;
 }
-
+td:last-child {
+    border: 1px solid #aaa;
+}
 .hover-row:hover {
     background-color: #f1f1f1;
     cursor: pointer;
