@@ -73,7 +73,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				<c:set var="list" value="${CartList }" />
 					<tr >
 						<th class="border-th board-th-boardNo">장바구니 No.</th>
-						<th class="border-th board-th-boardNo">유저No.</th>
+						<th class="border-th board-th-boardNo">유저 No.</th>
+						<th class="border-th board-th-boardNo">유저 아이디</th>
+						<th class="border-th board-th-boardNo">유저 이름</th>
+						<th class="border-th board-th-boardNo">유저 이메일</th>
 						<th class="border-th board-th-createAt">장바구니 생성일</th>
 						<th class="border-th board-th-status" > 구매하기 / 장바구니 삭제 </th>
 					</tr>
@@ -83,6 +86,8 @@ document.addEventListener('DOMContentLoaded', function() {
 							
 							<tr class="trlist" data-id="${dto.user_no}"  >
 								<td class="board-td">${dto.cart_no }</td>
+							
+								<td class="board-td">${dto.user_no }</td>
 								<td class="board-td">${dto.user_no }</td>
 								<td class="board-td">
 									<fmt:formatDate value="${dto.created_at }"/>

@@ -8,8 +8,10 @@ public class CartDTO {
 	private int user_no;			// 장바구니 소유자 
 	private Date created_at;		// 장바구니 생성일
 	
+
 	private String user_name;
 	private String user_type;
+
 	
 	public int getCart_no() {
 		return cart_no;
