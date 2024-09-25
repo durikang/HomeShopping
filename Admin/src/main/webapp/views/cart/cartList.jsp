@@ -20,10 +20,10 @@ function goToDetailPage(event) {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '${contextPath}/boardSaveVisit.do', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send('userNo=${sessionScope.user.userNo}&cart_no=' + No);
+        xhr.send('userNo=${sessionScope.user.userNo}&user_no=' + No);
         
         // 페이지 이동
-        window.location.href = '${contextPath}/cartItem_list.do?cart_no=' + No + '&currentPage=' + currentPage ;
+        window.location.href = '${contextPath}/cartItem_list.do?user_no=' + No + '&currentPage=' + currentPage ;
     }
 }
 
@@ -32,11 +32,28 @@ function goToDetailPage(event) {
 document.addEventListener('DOMContentLoaded', function() {
     const rows = document.querySelectorAll('table tr[data-id]');
     rows.forEach(row => {
+    	 if (event.target.closest('td.table_bottom.button')) {
+             event.stopPropagation(); // 이벤트 전파를 막아 tr 클릭 이벤트가 발생하지 않도록 함
+             return;
+         }
         row.addEventListener('click', goToDetailPage);
+
     });
     
 });
-
+document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('table tr[data-id]');
+    rows.forEach(row => {
+        row.addEventListener('click', function(event) {
+            // 클릭된 요소가 삭제 버튼인지 확인
+            if (event.target.closest('td.table_bottom.button')) {
+                event.stopPropagation(); // 이벤트 전파를 막아 tr 클릭 이벤트가 발생하지 않도록 함
+                return;
+            }
+            goToDetailPage(event);
+        });
+    });
+});
 </script>
 <style type="text/css">
 
@@ -58,20 +75,22 @@ document.addEventListener('DOMContentLoaded', function() {
 						<th class="border-th board-th-boardNo">장바구니 No.</th>
 						<th class="border-th board-th-boardNo">유저No.</th>
 						<th class="border-th board-th-createAt">장바구니 생성일</th>
-						<th class="border-th board-th-status" >장바구니 삭제</th>
+						<th class="border-th board-th-status" > 구매하기 / 장바구니 삭제 </th>
 					</tr>
 					
 					<c:if test="${!empty list }">
 						<c:forEach  items="${list }" var="dto" >
 							
-							<tr class="trlist" data-id="${dto.cart_no}"  >
+							<tr class="trlist" data-id="${dto.user_no}"  >
 								<td class="board-td">${dto.cart_no }</td>
 								<td class="board-td">${dto.user_no }</td>
 								<td class="board-td">
 									<fmt:formatDate value="${dto.created_at }"/>
 								</td>
-								<td class="table_bottom button">											
-									<input type="button" class="btn" value="삭제" onclick="if(confirm('정말로 게시글을 삭제하시겠습니까?')){
+								<td class="table_bottom button">					
+								<input type="button" class="btn" value="구매하기" onclick="if(confirm('해당 장바구니 상품을 구매하시겠습니까?')){
+													location.href='order_list.do?user_no=${dto.user_no }'} else{return;}">&nbsp;						
+								<input type="button" class="btn" value="삭제" onclick="if(confirm('정말로 게시글을 삭제하시겠습니까?')){
 													location.href='cart_delete.do?no=${dto.cart_no}'} else{return;}">
 								</td>
 							</tr>
