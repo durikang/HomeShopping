@@ -17,7 +17,7 @@ public class CartItemModifyOkAction implements Action {
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
-		int no = Integer.parseInt(request.getParameter("no").trim());
+		int user_no = Integer.parseInt(request.getParameter("no").trim());
 		int cartitem_no = Integer.parseInt(request.getParameter("cartItem_no").trim());
 		int quantity = Integer.parseInt(request.getParameter("quantity").trim());
 		
@@ -32,7 +32,7 @@ public class CartItemModifyOkAction implements Action {
 		int check = dao.modifyCartItem(dto);
 		
 		if (check > 0) {
-				ScriptUtil.sendScript(response, "장바구니 상품 수정 성공", "cartItem_list.do?cart_no="+no);
+				ScriptUtil.sendScript(response, "장바구니 상품 수정 성공", "cartItem_list.do?user_no="+ user_no);
 				
 	        } 
 	        
@@ -43,5 +43,4 @@ public class CartItemModifyOkAction implements Action {
 			return null;
 		
 	}
-
 }

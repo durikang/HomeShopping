@@ -12,8 +12,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-import com.global.board.model.BoardCategoryDTO;
-
 public class CartDAO {
 	
 	//DB와 연결하는 객체
@@ -190,10 +188,8 @@ public class CartDAO {
 			
 			openConn();
 		
-			
-			sql=" DELETE FROM cart_item where CART_ITEM_NO = ? ";
-			
-			
+			sql=" DELETE FROM cart_item where CART_NO = ? ";
+					
 			pstmt = con.prepareStatement(sql);
 			
 			pstmt.setInt(1, no);
@@ -218,118 +214,70 @@ public class CartDAO {
 		
 	}//deleteCart end
 	
-	
-	public int insertCart(CartDTO dto) {
-		int result = 0, count = 0;
-		
-		openConn();
-			try {
-				
-				sql="select max(cart_no) from cart_no";
-				pstmt = con.prepareStatement(sql);
-				rs = pstmt.executeQuery();
-				
-				sql="select max(cart_item_no) from cart_item_no";
-				pstmt = con.prepareStatement(sql);
-				rs = pstmt.executeQuery();
-				if(rs.next()) {
-					count = rs.getInt(1)+1;
-				}
-				sql = "insert into cart values(?,?,?)";
-				pstmt=con.prepareStatement(sql);
-				pstmt.setInt(1, count);
-				pstmt.setInt(2, dto.getUser_no());
-				pstmt.setDate(3, dto.getCreated_at());
-				
-				sql = "insert into cart_item values(?,?,?,?,?,?,?,?)";
-				pstmt=con.prepareStatement(sql);
-				pstmt.setInt(1, count);
-				pstmt.setInt(2, dto.getUser_no());
-				pstmt.setDate(3, dto.getCreated_at());
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}finally {
-				closeConn(rs, pstmt, con);
-			}
-		
-		return result;
+	public int insertCart(CartDTO dto, int user_no, int product_no) {
+	    int result = 0;
+	    int cartNo = 0; 
+	    int cartItemNo = 0;
+	    
+	    try {
+	        openConn();
+	        
+	       
+	        sql = "select cart_no from cart where user_no = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, user_no);
+	        rs = pstmt.executeQuery();
+	        
+	        if (rs.next()) {
+	           
+	            cartNo = rs.getInt("cart_no");
+	        } else {
+	            
+	            sql = "select max(cart_no) from cart";
+	            pstmt = con.prepareStatement(sql);
+	            rs = pstmt.executeQuery();
+	            if (rs.next()) {
+	                cartNo = rs.getInt(1) + 1;  
+	            } else {
+	                cartNo = 1;  
+	            }
+
+	           
+	            sql = "insert into cart(cart_no, user_no, created_at) values(?, ?, sysdate)";
+	            pstmt = con.prepareStatement(sql);
+	            pstmt.setInt(1, cartNo);
+	            pstmt.setInt(2, user_no);
+	            result = pstmt.executeUpdate();
+	        }
+
+	       
+	        sql = "select max(cart_item_no) from cart_item";
+	        pstmt = con.prepareStatement(sql);
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            cartItemNo = rs.getInt(1) + 1;  
+	        } else {
+	            cartItemNo = 1;  
+	        }
+
+	       
+	        sql = "insert into cart_item(cart_item_no, cart_no, product_no, quantity, added_at) "
+	            + "values(?, ?, ?, 1, sysdate)";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, cartItemNo);
+	        pstmt.setInt(2, cartNo);
+	        pstmt.setInt(3, product_no);
+	        result = pstmt.executeUpdate();
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeConn(rs, pstmt, con);
+	    }
+	    
+	    return result;
 	}
-	//cart 테이블 정보를 상세보기하는 메서드[..?]
-	
-	//cart 테이블 정보를 수정하는 메서드[..?]
-	
-	
-/*
- 	//cart 테이블 정보를 추가하는 메서드 ( 장바구니 버튼에서 user가 처음 장바구니 담기를 할때 (장바구니No가 null일때 ))
-	public int getCartCount(CartDTO dto) {
-		int result=0, count=0; 
-		
-		try {
-			
-			openConn();
-			
-			sql="SELECT MAX(CART_NO) FROM CART"; 
-			
-			pstmt = con.prepareStatement(sql);
-			
-			rs= pstmt.executeQuery();
-			
-			if(rs.next()) {
-					count = rs.getInt(1)+1;
-				}
-			
-			sql = "INSERT INTO CART VALUES(?, ?, SYSDATE )";
-			
-			pstmt = con.prepareStatement(sql);
-			
-			pstmt.setInt(1, count);
-			pstmt.setInt(2, dto.getCart_userNo());
-			
-			result = pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-				}finally {
-					closeConn(rs, pstmt, con);
-						}
-		
-		return result;
-		
-	} //insertCart end
-	
-		// cart 테이블 user_no로 해당하는 정보를 조회하는 메서드
-	public CartDTO contentCart(int no) {
-		CartDTO dto = null;
-		
-		
-		try {
-			openConn();
-			
-			sql = "SELECT * FROM CART WHERE USER_NO =? ";
-			
-			pstmt = con.prepareStatement(sql);
-			
-			pstmt.setInt(1, no);
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				dto = new CartDTO();
-				dto.getCart_no();
-				dto.getCart_userNo();
-				dto.getCart_createdAt();
-			}
-		} catch (SQLException e) {	
-				e.printStackTrace();
-			}finally {
-					closeConn(rs, pstmt, con);
-				}
-		
-		return dto;
-	}//contentCrt end
-	
-	
+
 	//cart 테이블 정보 삭제시 CART_NO 순서를 재작업하는 메서드
 	public void updateSequenceCart(int no) {
 
@@ -356,12 +304,10 @@ public class CartDAO {
 				e.printStackTrace();
 			} finally {
 					closeConn(pstmt, con);
-				}
-		
+				
+			}
 	}//updateSequence end
 	
 	
-	
- */
-	
 }//class end
+

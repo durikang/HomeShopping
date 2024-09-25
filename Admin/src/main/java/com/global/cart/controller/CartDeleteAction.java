@@ -1,8 +1,6 @@
 package com.global.cart.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,7 +10,6 @@ import com.global.action.Action;
 import com.global.action.View;
 import com.global.admin.model.UsersDTO;
 import com.global.cart.model.CartDAO;
-import com.global.cart.model.CartDTO;
 import com.global.utils.ScriptUtil;
 
 public class CartDeleteAction implements Action {
@@ -28,24 +25,25 @@ public class CartDeleteAction implements Action {
             return null;
         }
 		
+        int cart_no = Integer.parseInt(request.getParameter("no").trim());
+		
+     // CartDAO 객체 가져오기
+        CartDAO dao = CartDAO.getInstanceCart();
+
+        // 장바구니 삭제 작업 수행
+        int check = dao.deleteCart(cart_no);
         
-        int No = Integer.parseInt(request.getParameter("cart_no").trim());
-		
-		CartDAO dao = CartDAO.getInstanceCart();
-		
-		
-		int check = dao.deleteCart(No);
-		
-		if (check > 0) {
-			ScriptUtil.sendScript(response, "장바구니 삭제 성공", "cart_list.do");
-        } 
-        
-        else {
-        	ScriptUtil.sendScript(response, "장바구니 삭제 실패", null);
+        // 삭제 성공 여부에 따른 처리
+        if (check > 0) {
+            ScriptUtil.sendScript(response, "장바구니 삭제 성공", "cart_list.do");
+            
+        } else {
+            ScriptUtil.sendScript(response, "장바구니 삭제 실패", null);
         }
-		
-		return null;
+
+        return null;
 	}
 
 }
+
 
