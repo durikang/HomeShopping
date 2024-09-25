@@ -127,7 +127,7 @@ public class CartDAO {
 		List<CartDTO> list = new ArrayList<>();
 		
 		// 현재 회원 관련된 로직이 미구현 상태이므로 임시로 아래 쿼리를 사용합니다.
-		sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY c.CART_NO DESC) AS rnum, c.*, u.USER_TYPE, u.NAME AS USER_NAME FROM CART c LEFT JOIN USERS u ON c.USER_NO = u.USER_NO ) WHERE rnum BETWEEN ? AND ?";
+		sql = "SELECT * FROM (SELECT row_number() OVER (ORDER BY c.CART_NO DESC) AS rnum, c.*, u.USER_TYPE, u.NAME AS USER_NAME,u.EMAIL AS USER_EMAIL,u.USER_ID FROM CART c LEFT JOIN USERS u ON c.USER_NO = u.USER_NO ) WHERE rnum BETWEEN ? AND ?";
 
 		try {
 			openConn();
@@ -154,16 +154,12 @@ public class CartDAO {
 				}
 
 				cart.setCart_no(rs.getInt("CART_NO"));
-
 				cart.setCreated_at(rs.getDate("CREATED_AT"));
-
-
 				/* USERS 정보도 필요하므로 SET */
-
 				cart.setUser_no((rs.getInt("USER_NO")));;
-
-				
 				cart.setUser_name(rs.getString("USER_NAME"));
+				cart.setUser_id(rs.getString("USER_ID"));
+				cart.setUser_email(rs.getString("USER_EMAIL"));
 				cart.setUser_type(rs.getString("USER_TYPE"));
 
 				list.add(cart);

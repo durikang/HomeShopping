@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
 						<th class="border-th board-th-boardNo">유저 아이디</th>
 						<th class="border-th board-th-boardNo">유저 이름</th>
 						<th class="border-th board-th-boardNo">유저 이메일</th>
-						<th class="border-th board-th-createAt">장바구니 생성일</th>
 						<th class="border-th board-th-status" > 구매하기 / 장바구니 삭제 </th>
 					</tr>
 					
@@ -86,12 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
 							
 							<tr class="trlist" data-id="${dto.user_no}"  >
 								<td class="board-td">${dto.cart_no }</td>
-							
 								<td class="board-td">${dto.user_no }</td>
-								<td class="board-td">${dto.user_no }</td>
-								<td class="board-td">
-									<fmt:formatDate value="${dto.created_at }"/>
-								</td>
+								<td class="board-td">${dto.user_id }</td>
+								<td class="board-td">${dto.user_name }</td>
+								<td class="board-td">${dto.user_email }</td>
 								<td class="table_bottom button">					
 								<input type="button" class="btn" value="구매하기" onclick="if(confirm('해당 장바구니 상품을 구매하시겠습니까?')){
 													location.href='order_list.do?user_no=${dto.user_no }'} else{return;}">&nbsp;						
@@ -104,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					</c:if>
 						<c:if test="${empty list }">
 						<tr>
-							<td colspan="5" align="center">
+							<td colspan="7" align="center">
 								<h3>장바구니가 비어있습니다.</h3>
 							</td>
 							</tr>

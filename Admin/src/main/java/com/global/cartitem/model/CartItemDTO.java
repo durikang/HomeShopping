@@ -16,6 +16,7 @@ public class CartItemDTO {
 	
 	private int user_no;
 	private String user_name;
+	
 	public int getCartItem_no() {
 		return cartItem_no;
 	}
