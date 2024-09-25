@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			<c:set var="list" value="${List }" />
 			<c:if test="${!empty list }">
 				<c:forEach items="${list }" var="dto">
-					<tr data-id="${dto.getProduct_no()}" data-user-type="${dto.getUser_no()}">
+					<tr class="hover-row" data-id="${dto.getProduct_no()}" data-user-type="${dto.getUser_no()}">
 						<td class="product-td">${dto.getUser_no() }</td>
 						<td class="product-td">${dto.getProduct_no()}</td>
 						<td class="product-td">${dto.getCategory_no() }</td>
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				</c:forEach>
 			</c:if>
 			<c:if test="${empty list }">
-				<tr>
+				<tr class="no-hover-row">
 					<td colspan="14" align="center">
 						<h3>카테고리가 없습니다.</h3>
 					</td>

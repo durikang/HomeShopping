@@ -12,15 +12,8 @@ table{
 	
 }
 
-.product-container{
-	/* width:1250px; */
-}
 
-.product-td {
-    border-left: 0;
-    border-right: 0;
-    /* 다른 td에 필요한 스타일 추가 */
-}
+
 .producter-content-th{
 	
 	
@@ -77,5 +70,15 @@ table{
 
 .product-th-createAt, .product-th-updateAt, .product-th-views, .product-th-status{
 	padding: 10px;
+}
+
+.hover-row:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+    }
+
+.no-hover-row:hover {
+    background-color: transparent; /* 기본 배경색 유지 */
+    cursor: default; /* 커서 모양 기본으로 설정 */
 }
 	
