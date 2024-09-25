@@ -6,10 +6,34 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .content {
+        	width: 1000px;
+            max-width: 1250px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 28px;
+            text-align: center;
+        }
+
+    </style>
 <script type="text/javascript"></script>
 </head>
 <body>	
-	<div align="center">
+	<div align="center" class="content">
 		<c:set var="dto" value="${Modify }" />
 
 		
@@ -22,7 +46,7 @@
 		<%-- <form method="post" enctype="multipart/form-date" action="${contextPath}/orderModifyOk.do"> --%>
 		<form method="post" action="${contextPath}/orderModifyOk.do">
 		<%-- <input type="hidden" name="status" value="${dto.status }"> --%>
-			<table border="1">
+			<table border="1" class="form-group">
 			<tr>
 				<th>주문 번호</th>
 				<th>주문 고객 번호</th>
