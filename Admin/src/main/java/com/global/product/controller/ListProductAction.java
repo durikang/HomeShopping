@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.global.action.Action;
 import com.global.action.View;
+import com.global.product.model.ProductCategoryDTO;
 import com.global.product.model.ProductDAO;
 import com.global.product.model.ProductDTO;
 import com.global.utils.PageInfo;
@@ -34,6 +35,7 @@ public class ListProductAction implements Action {
         
 		List<ProductDTO> list;
 		
+		List<ProductCategoryDTO> categoryList = dao.selectProductCategoryList();
 		if("N".equals(status)) {
 			listCount = dao.getProductCount('N'); //얘는 필터 기능이다.
 			list = dao.selectProductList(currentPage, boardLimit, 'N');
@@ -63,7 +65,7 @@ public class ListProductAction implements Action {
 		
 		
 		
-		
+        request.setAttribute("categoryList", categoryList);
         request.setAttribute("count", pi.getListCount());
         request.setAttribute("pi", pi);
 		request.setAttribute("List", list);

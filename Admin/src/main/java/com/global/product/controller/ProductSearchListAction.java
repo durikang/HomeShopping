@@ -31,6 +31,7 @@ public class ProductSearchListAction implements Action {
         String subtitle = request.getParameter("subtitle");
         // 검색 키워드
         String searchKeyword = RequestParameterUtils.parseString(request.getParameter("searchKeyword").trim(), "");
+        String status = request.getParameter("status");
 
         System.out.println("search >>>> " + searchKeyword);
         
@@ -61,35 +62,54 @@ public class ProductSearchListAction implements Action {
         // 게시물 리스트를 가져오기
         int boardLimit = 10;
         int pageLimit = 10;
+        List<ProductDTO> list;
         List<ProductDTO> productList = dao.searchProductList(currentPage, boardLimit, searchKeyword, filter);
 
         // 페이지 정보 계산 및 설정
         int maxPage = (int) Math.ceil((double) listCount / boardLimit);
         int startPage = (currentPage - 1) / pageLimit * pageLimit + 1;
         int endPage = Math.min(startPage + pageLimit - 1, maxPage);
+        List<ProductCategoryDTO> categoryList = dao.selectProductCategoryList();
+		if("N".equals(status)) {
+			listCount = dao.getProductCount('N'); //얘는 필터 기능이다.
+			list = dao.selectProductList(currentPage, boardLimit, 'N');
+		}else if("Y".equals(status)) {
+			listCount = dao.getProductCount('Y');
+			list = dao.selectProductList(currentPage, boardLimit, 'Y');
+		}else {
+		listCount = dao.getProductListCount();
+        list = dao.getProduct(currentPage, boardLimit);
+		}
+
+        
         PageInfo pi = new PageInfo(currentPage, listCount, pageLimit, maxPage, startPage, endPage, boardLimit);
 
-        // 필터용 BoardCategory List
-        List<ProductCategoryDTO> categoryList = dao.selectProductCategoryList();
+        String category_No = filter.getCategoryNo();
+        int user_No = filter.getUserNo();
+        int min_views = filter.getMinViews();
+        int max_views = filter.getMaxViews();
+        Date start_Date = filter.getStartDate();
+        Date end_Date = filter.getEndDate();
+        int min_Price = filter.getMinPrice();
+        int max_Price = filter.getMaxPrice();
+        String is_Deleted = filter.getIsDeleted();
+        		
         
         for(ProductDTO product : productList) {
         	System.out.println("product >>> " + product);
         }
         
-		Location location = new Location();
-		location.addPath("홈");
-		location.addPath("게시판 관리");
-		location.setCurrent("검색 결과");  // 현재 위치
-		location.setTitle("게시판");  // 동적으로 h1 타이틀 설정
 		
         // request에 필요한 속성 설정
-		request.setAttribute("location", location);
         request.setAttribute("categoryList", categoryList);
         request.setAttribute("searchKeyword", searchKeyword);
         request.setAttribute("filter", filter);
         request.setAttribute("count", pi.getListCount());
         request.setAttribute("List", productList);
         request.setAttribute("pi", pi);
+        request.setAttribute("address", "productSearchList.do?");
+//        		+ "subtitle=&searchKeyword="+searchKeyword+"&categoryNo="+category_No+"&userNo="
+//        +user_No+"&minViews="+min_views+"&maxViews="+max_views+"&startDate="+start_Date+"&endDate="+end_Date+"&minPrice="+min_Price+"&maxPrice="+max_Price+"&isDeleted="+is_Deleted);
 
         // 결과 페이지로 이동
         return new View("main.go").setUrl("/views/product/product_list.jsp");

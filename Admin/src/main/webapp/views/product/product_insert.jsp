@@ -6,6 +6,8 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<link href="${contextPath }/resources/product/css/product.css"
+	rel="stylesheet" type="text/css" />
 <title>상품 등록</title>
     <style>
         body {
@@ -66,11 +68,11 @@
 				<div class="form-group">
 				
 					<label for="product_price">상품 가격</label>
-				<input type="text" name="product_price" required>
+				<input type="number" min="0" name="product_price"required>
 				</div>
 				<div class="form-group">
 					<label for="stock_quantity">제고 수량</label>
-					<input type="text" name="stock_quantity" required>
+					<input type="number" min="0" name="stock_quantity" required>
 				</div>
 				<div class="form-group">
 					<label for="image_url">상품 이미지</label>
@@ -80,7 +82,7 @@
 					<label for="product_image_info">상품 이미지 정보</label>
 					<textarea id="content" rows="8" cols="22" name="product_image_info"></textarea>
 				</div>
-				<table>
+			<table>
 				<tr>
 					<td colspan="2" align="center">
 						<input class="btn"  type="submit" value="상품 등록"> 

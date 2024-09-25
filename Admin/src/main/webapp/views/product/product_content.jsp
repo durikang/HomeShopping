@@ -96,7 +96,7 @@ request.setAttribute("br", "<br>");
 				<th class="producter-content-th product-th-status">상품 상태</th>
 				<td class="product-td">
 					<c:choose>
-						<c:when test="${dto.getIs_deleted() == 'N'}">정상</c:when>
+						<c:when test="${dto.getIs_deleted() == 'N'}">판매중</c:when>
 						<c:otherwise>삭제됨</c:otherwise>
 					</c:choose>
 				</td>

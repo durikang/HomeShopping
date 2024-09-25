@@ -254,7 +254,7 @@ public int insertCategory(ProductCategoryDTO dto) {
 		
 		List<ProductCategoryDTO> list = new ArrayList<>();
 		
-		sql = "SELECT * FROM ( SELECT ROW_NUMBER() OVER (ORDER BY CATEGORY_NO  ASC) AS rnum, B.* FROM PRODUCT_CATEGORY B )JOIN CATEGORY_IMAGE USING(CATEGORY_NO)  WHERE rnum BETWEEN ? AND ?";
+		sql = "SELECT * FROM ( SELECT ROW_NUMBER() OVER (ORDER BY CATEGORY_NO  ASC) AS rnum, B.* FROM PRODUCT_CATEGORY B )LEFT JOIN CATEGORY_IMAGE USING(CATEGORY_NO)  WHERE rnum BETWEEN ? AND ?";
 		
 		try {
 			
