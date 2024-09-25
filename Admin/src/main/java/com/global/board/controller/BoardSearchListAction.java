@@ -15,6 +15,7 @@ import com.global.board.model.BoardCategoryDTO;
 import com.global.board.model.BoardDAO;
 import com.global.board.model.BoardDTO;
 import com.global.board.model.BoardFilter;
+import com.global.utils.Location;
 import com.global.utils.PageInfo;
 import com.global.utils.RequestParameterUtils;
 
@@ -77,14 +78,21 @@ public class BoardSearchListAction implements Action {
         // 필터용 BoardCategory List
         List<BoardCategoryDTO> categoryList = dao.selectBoardCategoryList();
         
+        
+		Location location = new Location();
+		location.addPath("홈");
+		location.addPath("게시판 관리");
+		location.setCurrent("검색 결과");  // 현재 위치
+		location.setTitle("게시판");  // 동적으로 h1 타이틀 설정
+		
         // request에 필요한 속성 설정
+		request.setAttribute("location", location);
         request.setAttribute("categoryList", categoryList);
         request.setAttribute("searchKeyword", searchKeyword);
         request.setAttribute("filter", filter);
         request.setAttribute("count", pi.getListCount());
         request.setAttribute("list", boardList);
         request.setAttribute("pi", pi);
-        request.setAttribute("subtitle", subtitle);
 
         // 결과 페이지로 이동
         return new View("main.go").setUrl("/views/board/boardList.jsp");

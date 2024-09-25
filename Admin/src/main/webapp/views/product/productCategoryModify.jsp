@@ -12,15 +12,11 @@
 <div align="center">
 		<c:set var="dto" value="${Modify }" />
 
-		<hr width="30%" color="red">
 		<h3>${dto.getName() } 카테고리 수정 페이지</h3>
-		<hr width="30%" color="red">
 		<input type="hidden" name="category_no" value="${dto.getCategory_No() }">
 		<br>
 		<br>
-
-		<form method="post" enctype="multipart/form-date"
-			action="<%=request.getContextPath()%>/productCategoryModifyOk.do">
+		<form method="post" enctype="multipart/form-data" action="<%=request.getContextPath()%>/productCategoryModifyOk.do">
 			<table border="1" width="400">
 			<tr>
 				<th>카테고리 번호</th>
@@ -35,12 +31,20 @@
 			</tr>
 			<tr>
 				<th>카테고리 정보</th>
-				<td><textarea rows="8" cols="22" name="description" value="${dto.getDescription() }"></textarea></td>
+				<td><textarea rows="8" cols="22" name="description"></textarea></td>
+			</tr>
+			<tr>
+				<th>카테고리 이미지</th>
+				<td><input type="file" name="image_url"></td>
+			</tr>
+			<tr>
+				<th>카테고리 이미지 정보</th>
+				<td><textarea rows="8" cols="22" name="alt_text"></textarea></td>
 			</tr>
 			            
             <tr>
                 <td class="table_bottom button categoryInsertBtn" colspan="3">
-                <input class="btn" type="button" onclick="location.href='productCategoryList.do?status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb">뒤로가기</input>
+                <input class="btn" type="button" onclick="location.href='productCategoryList.do?status=${status}&currentPage=${currentPage}'" class="btn btn_space_tb" value="뒤로가기"/>
                     <input class="btn" type="submit" value="카테고리 수정">
                     <input class="btn" type="reset" value="초기화">
                 </td>

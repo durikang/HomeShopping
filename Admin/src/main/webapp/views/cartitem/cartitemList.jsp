@@ -14,9 +14,9 @@
 		<br><br>
 		<c:set var="cartitem" value="${CartItemList }"/>
 		<table>
-			<tr>
+		<tr>
 				<th>순번</th> <th>상품번호</th> <th>상품명</th>
-				<th>수량</th> <th>가격</th> <th>수정</th> <th>삭제</th>
+				<th>수량</th> <th>가격</th> <th>수정  /  삭제</th>
 			</tr>
 			<c:if test="${!empty cartitem}">
 			<c:forEach var ="item" items="${ cartitem }">
@@ -26,11 +26,9 @@
 					<td>${ item.product_name }</td>
 					<td><fmt:formatNumber value="${ item.quantity }"/>개 </td>
 					<td><fmt:formatNumber value="${ item.product_price }"/>원 </td>
-					<td>
-						<input type="button" value="수정" onclick="location.href='cartItem_modify.do?no=${item.cartItem_no}'">
-					</td>
-					<td>
-						<input type="button" value="삭제" onclick="if(confirm('정말로 게시글을 삭제하시겠습니까?')){
+					<td class="table_bottom button" >
+						<input type="button" class="btn" value="수정" onclick="location.href='cartItem_modify.do?no=${item.cartItem_no}'">&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="button" class="btn" value="삭제" onclick="if(confirm('정말로 게시글을 삭제하시겠습니까?')){
 											location.href='cartItem_delete.do?no=${item.cartItem_no}'} else{return;}">
 					</td>
 				</tr>

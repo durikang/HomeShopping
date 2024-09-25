@@ -18,9 +18,7 @@
 		<c:set var="pi" value="${count }"/>
 		<c:set var="dto" value="${Content }" />
 
-		<hr width="30%" color="red">
 		<h3>${dto.getName() } 카테고리 상세내역 페이지</h3>
-		<hr width="30%" color="red">
 		<br>
 		<br>
 
@@ -32,16 +30,32 @@
 
 			<tr>
 				<th>카테고리 목록</th>
-				<td>${dto.getName() }</td>
+				<td>${dto.getName() }</td>	
 			</tr>
 			<tr>
 				<th>카테고리 정보</th>
 				<td>${fn:replace(dto.getDescription(), newLine, br) }</td>
 			</tr>
+			<tr>
+				<th>카테고리 이미지</th>
+				<td>
+					<img src="${contextPath }/${dto.getImage_url()}">
+				</td>
+			</tr>
+		
+			
+			<tr>
+				<th>카테고리 이미지 정보</th>
+				<td>${fn:replace(dto.getAlt_text(), newLine, br) }</td>
+			</tr>
+						<tr>
+				<th>카테고리 등록일</th>
+				<td>${dto.getUpload_date() }</td>
+			</tr>
 			
 			<c:if test="${empty dto }">
 				<tr>
-					<td colspan="2" align="center">
+					<td colspan="6" align="center">
 						<h3>해당하는 게시글이 없습니다.</h3>
 					</td>
 				</tr>
@@ -49,13 +63,13 @@
 		</table>
 		<br>
 		
-		<input type="button" value="카테고리수정"
+		<input class="btn" type="button" value="카테고리수정"
 	        onclick="location.href='productCategoryModify.do?no=${dto.getCategory_No() }&currentPage=${pi}&status=${status}'">
 	   &nbsp;&nbsp;
-	   <input type="button" value="카테고리삭제"
+	   <input class="btn" type="button" value="카테고리삭제"
 	        onclick="location.href='productCategoryDelete.do?no=${dto.getCategory_No() }&currentPage=${pi}&status=${status}'">
 	   &nbsp;&nbsp;
-	   <input type="button" value="전체목록"
+	   <input class="btn" type="button" value="전체목록"
 	        onclick="location.href='productCategoryList.do?currentPage=${pi}&status=&subtitle='">
 	</div>
 </body>

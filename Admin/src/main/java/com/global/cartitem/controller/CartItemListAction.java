@@ -28,7 +28,7 @@ public class CartItemListAction implements Action {
         }
 		
 		
-		int No = Integer.parseInt(request.getParameter("no").trim());
+		int No = Integer.parseInt(request.getParameter("cart_no").trim());
 		
 		CartItemDAO dao = CartItemDAO.getInstanceCartItem();	
 		

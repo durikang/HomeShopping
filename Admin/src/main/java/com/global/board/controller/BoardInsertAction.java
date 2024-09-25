@@ -21,7 +21,7 @@ public class BoardInsertAction implements Action {
 		
 		BoardDAO dao = BoardDAO.getInstance();
 		
-		List<BoardCategoryDTO> list = dao.selectBoardCategoryList();
+		List<BoardCategoryDTO> list = dao.selectBoardCategoryList("N");
 	
         // request에 필요한 속성 설정
         request.setAttribute("categoryList", list);

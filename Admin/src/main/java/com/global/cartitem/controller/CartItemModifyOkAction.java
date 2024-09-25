@@ -32,7 +32,7 @@ public class CartItemModifyOkAction implements Action {
 		int check = dao.modifyCartItem(dto);
 		
 		if (check > 0) {
-				ScriptUtil.sendScript(response, "장바구니 상품 수정 성공", "cartItem_list.do?no="+no);
+				ScriptUtil.sendScript(response, "장바구니 상품 수정 성공", "cartItem_list.do?cart_no="+no);
 				
 	        } 
 	        

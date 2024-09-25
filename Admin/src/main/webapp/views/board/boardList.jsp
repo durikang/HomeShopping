@@ -63,18 +63,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </style>
 </head>
 <body>
-	<div class="title">
-	    <h1>게시판</h1>
-	    <c:if test="${ not empty param.subtitle}">
-	        <nav aria-label="breadcrumb">
-	            <ol class="breadcrumb">
-	                <li>홈</li> <!-- 홈으로 이동 -->
-	                <li>게시판 관리</li> <!-- 게시판 관리 페이지로 이동 -->
-	                <li class="active" aria-current="page">${ param.subtitle }</li> <!-- 현재 위치 -->
-	            </ol>
-	        </nav>
-	    </c:if>
-	</div>
+<!-- 경로를 나타내는 컴포넌트 -->
+<c:import url="common/pageTitleAndPath.jsp" />
+
     <!-- 왼쪽 사이드바 메뉴 -->
 <div class="container">
       <c:import url="board/import/categorySideBar.jsp" />

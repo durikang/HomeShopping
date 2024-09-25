@@ -15,6 +15,7 @@
 <link href="${contextPath }/resources/common/css/components.css" rel="stylesheet">
 <link href="${contextPath }/resources/common/css/search.css" rel="stylesheet">
 <link href="${contextPath }/resources/common/css/sidebar.css" rel="stylesheet">
+<link href="${contextPath }/resources/common/css/filter.css" rel="stylesheet">
 <link href="${contextPath }/resources/board/css/board.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -95,9 +96,9 @@
             <!-- 이벤트 관리 -->
             <li class="dropdown">이벤트 관리
                 <ul class="dropdown-menu">
-                    <li><a href="event_list.html">이벤트 목록</a></li>
-                    <li><a href="event_add.html">이벤트 추가</a></li>
-                    <li><a href="coupon_list.html">쿠폰 목록</a></li>
+                    <li><a href="eventList.do?eventType=EVENT">일반 이벤트 목록</a></li>
+                    <li><a href="eventList.do?eventType=BANNER">베너 이벤트 목록</a></li>
+                    <li><a href="eventList.do?eventType=COUPON">쿠폰 이벤트 목록</a></li>
                     <li><a href="email_log.html">이메일 발송 기록</a></li>
                 </ul>
             </li>
