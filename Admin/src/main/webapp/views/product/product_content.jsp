@@ -128,7 +128,7 @@ request.setAttribute("br", "<br>");
 			onclick="location.href='productList.do?currentPage=${pi}&status=${status}&subtitle='"><br>
 		<br> <input class="btn" type="button" value="찜하기" onclick="location.href='cart_insert.do?no=${dto.getProduct_no() }&num=${sessionScope.user.userNo}&user_no=${dto.getUser_no() }'"> 
 		<input class="btn" type="button" value="구매하기"
-			onclick="location.href='order_insert.do?no=${dto.getProduct_no() }&num=${sessionScope.user.userNo}'">
+			onclick="location.href='prodcut_buy_page.do?no=${dto.getProduct_no() }&num=${sessionScope.user.userNo}'">
 
 	</div>
 </body>

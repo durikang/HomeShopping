@@ -839,6 +839,12 @@ public class ProductDAO {
 		return list;
 	}
 
+	public ProductDTO getProductBuyContent(String product_no, String user_no) {
+
+		
+		return null;
+	}
+
 }
 
 	
