@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			<c:set var="list" value="${List }" />
 			<c:if test="${!empty list }">
 				<c:forEach items="${list }" var="dto">
-					<tr data-id=${dto.getCategory_No() }>
+					<tr class="hover-row" data-id=${dto.getCategory_No() }>
 						<td class="product-td">${dto.getCategory_No() }</td>
 						<td class="product-td">${dto.getName() }</td>
 						<td class="product-td">${dto.getDescription() }</td>
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					</td>
 				</tr>
 			</c:if>
-			<tr>
+			<tr class="no-hover-row">
 				<td colspan="6" align="center">
 					<input class="btn" type="button" value="카테고리 등록" onclick="location.href='productCategoryInsert.go'">
 				</td>
