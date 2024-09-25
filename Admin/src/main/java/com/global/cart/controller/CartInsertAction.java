@@ -17,21 +17,21 @@ public class CartInsertAction implements Action {
 	@Override
 	public View execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
-		
-		int user_no = Integer.parseInt(request.getParameter("user_no").trim());
 		int product_no = Integer.parseInt(request.getParameter("no").trim());
+		int user_no = Integer.parseInt(request.getParameter("user_no").trim());
 		
-		CartDAO dao = CartDAO.getInstanceCart();
+		
 		CartDTO dto = new CartDTO();
-		
-		int check = dao.insertCart(dto);
+		CartDAO dao = CartDAO.getInstanceCart();
+		int check = dao.insertCart(dto, user_no, product_no);
 		
 		if (check > 0) {
-			ScriptUtil.sendScript(response, "상품 찜하기 성공", "cartItem_list.do?user_no="+user_no);
-        }  
+			ScriptUtil.sendScript(response, "장바구니 상품 추가 성공","cart_list.do");
+			
+        } 
         
         else {
-        	ScriptUtil.sendScript(response, "상품 찜하기 실패", null);
+        	ScriptUtil.sendScript(response, "장바구니 상품 추가 실패", null);
         }
 		
 		return null;

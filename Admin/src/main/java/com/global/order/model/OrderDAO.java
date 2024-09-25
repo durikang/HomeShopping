@@ -368,7 +368,111 @@ public class OrderDAO {
 		}
 		return list;
 	}
-		
-	
 
-}
+		
+	//cart 테이블 정보 삭제시 CART_NO 순서를 재작업하는 메서드
+		public void updateSequenceOrder(int no) {
+
+			try {
+				openConn();
+				
+				sql="update orders set order_no = order_no -1 where order_no > ?";
+				
+				pstmt = con.prepareStatement(sql);
+				
+				pstmt.setInt(1, no);
+				
+				pstmt.executeUpdate();
+				
+				sql="update order_item set order_no = order_no -1 where order_no > ?";
+				
+				pstmt = con.prepareStatement(sql);
+				
+				pstmt.setInt(1, no);
+				
+				pstmt.executeUpdate();
+				
+			} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+						closeConn(pstmt, con);
+					
+				}
+		}//updateSequence end
+
+
+		public int InsertOrder(OrderDTO ordto, int user_no, int product_no) {
+		    int result = 0;
+		    int orderNo = 0;
+		    int orderitemNo = 0;
+
+		    try {
+		        openConn();
+
+		        // Get existing order number
+		        String sql = "SELECT order_no FROM orders WHERE user_no = ?";
+		        pstmt = con.prepareStatement(sql);
+		        pstmt.setInt(1, user_no);
+		        rs = pstmt.executeQuery();
+
+		        if (rs.next()) {
+		            orderNo = rs.getInt("order_no");
+		        }
+
+	            // Get the next order number
+	            sql = "SELECT MAX(order_no) FROM orders";
+	            pstmt = con.prepareStatement(sql);
+	            rs = pstmt.executeQuery();
+	            if (rs.next()) {
+	                orderNo = rs.getInt(1) + 1;
+	            } else {
+	                orderNo = 1;
+	            }
+
+	            // Insert new order
+	            sql = "INSERT INTO orders (order_no, user_no, order_date, total_amount, status) VALUES (?, ?, SYSDATE, 100, 'PENDING')";
+	            pstmt = con.prepareStatement(sql);
+	            pstmt.setInt(1, orderNo);
+	            pstmt.setInt(2, user_no);
+	            result = pstmt.executeUpdate();
+		        
+
+		        // Get the next order item number
+		        sql = "SELECT MAX(order_item_no) FROM order_item";
+		        pstmt = con.prepareStatement(sql);
+		        rs = pstmt.executeQuery();
+		        if (rs.next()) {
+		            orderitemNo = rs.getInt(1) + 1;
+		        } else {
+		            orderitemNo = 1;
+		        }
+		        sql = "select price from product where product_no = ?";
+		        
+		        pstmt = con.prepareStatement(sql);
+		        pstmt.setInt(1, product_no);
+		   
+		        rs= pstmt.executeQuery();
+		        
+		        rs.next();
+		        
+		        // Insert new order item
+		        sql = "INSERT INTO order_item (order_item_no, order_no, product_no, quantity, price) VALUES (?, ?, ?, ?, ?)";
+		        pstmt = con.prepareStatement(sql);
+		        pstmt.setInt(1, orderitemNo);
+		        pstmt.setInt(2, orderNo);
+		        pstmt.setInt(3, product_no);
+		        pstmt.setInt(4, 100); // quantity
+		        pstmt.setInt(5, rs.getInt(1)); // price
+		        result = pstmt.executeUpdate();
+
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    } finally {
+		        closeConn(rs, pstmt, con);
+		    }
+
+		    return result;
+		}
+
+		}
+

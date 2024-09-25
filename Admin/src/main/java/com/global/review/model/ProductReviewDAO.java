@@ -169,7 +169,6 @@ public class ProductReviewDAO {
 			
 			pstmt.setInt(1, count + 1);
 			
-			
 			result = pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -179,6 +178,7 @@ public class ProductReviewDAO {
 		}
 		
 		return result;
-	}
+		
+	} // insertReview() end
 	
 }

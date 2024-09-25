@@ -12,8 +12,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-import com.global.cart.model.CartDAO;
-
 public class CartItemDAO {
 	
 	//DB를 연결해주는 객체
@@ -102,7 +100,7 @@ public class CartItemDAO {
 						+ "join cart_item ci on(c.cart_no=ci.cart_no) "
 						+ "join product p on(ci.product_no = p.product_no) "
 						+ "join product_category pc on(p.CATEGORY_NO = pc.CATEGORY_NO) "
-						+ "where c.cart_no = ? "
+						+ "where u.user_no = ? "
 						+ "order by CART_ITEM_NO desc";
 			
 				pstmt = con.prepareStatement(sql);
@@ -124,6 +122,8 @@ public class CartItemDAO {
 					dto.setProduct_name(rs.getString("NAME"));
 					dto.setProduct_price(rs.getInt("PRICE"));
 					
+					dto.setUser_no(rs.getInt("user_no"));
+					
 					list.add(dto);
 				}
 			} catch (SQLException e) {
@@ -135,6 +135,22 @@ public class CartItemDAO {
 			return list;
 			
 		}//getCartItemList end
+		
+		public int getCartItemCount() {
+			int result = 0;
+			try {
+				openConn();
+				sql = "SELECT COUNT(*) FROM cart_item LEFT JOIN users USING(user_no)";
+				pstmt = con.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				closeConn(rs, pstmt, con);
+			}
+			return result;
+		}
 		
 		//cartItem 테이블 CART_ITEM_NO에 해당하는 정보를 삭제하는 메서드 
 		public int deleteCartItem(int no) {
@@ -218,6 +234,8 @@ public class CartItemDAO {
 					dto.setProduct_name(rs.getString("NAME"));
 					dto.setProduct_price(rs.getInt("PRICE"));
 					
+					dto.setUser_no(rs.getInt("USER_NO"));
+					
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -258,4 +276,3 @@ public class CartItemDAO {
 		}//modifyCartItem end
 		
 	}//class end
-

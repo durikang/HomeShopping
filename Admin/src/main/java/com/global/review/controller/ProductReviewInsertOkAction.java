@@ -31,7 +31,7 @@ public class ProductReviewInsertOkAction implements Action{
             return null;
         }
         
-        // 유저 번호를 가져와서 BoardDTO에 설정합니다.
+        // 유저 번호를 가져와서 ReviewDTO에 설정합니다.
         review.setUserNo(user.getUserNo());
 		String productCategoryNo = request.getParameter("product_CategoryNo");
 		String boardCategoryNo = request.getParameter("board_CategoryNo");

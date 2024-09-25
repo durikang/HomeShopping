@@ -26,16 +26,16 @@ public class CartItemDeleteAction implements Action {
             return null;
         }
 		
-        int no = Integer.parseInt(request.getParameter("no").trim());
-        
+        int cartItem_no = Integer.parseInt(request.getParameter("no").trim());
+        int user_no = Integer.parseInt(request.getParameter("user_no").trim());
         CartItemDAO dao = CartItemDAO.getInstanceCartItem();
         
-        int check = dao.deleteCartItem(no);
+        int check = dao.deleteCartItem(cartItem_no);
         
         if (check > 0) {
-        	dao.updateSequenceCartItem(no);
+        	dao.updateSequenceCartItem(cartItem_no);
         	
-			ScriptUtil.sendScript(response, "장바구니 상품 삭제 성공", "cartItem_list.do?cart_no="+no);
+			ScriptUtil.sendScript(response, "장바구니 상품 삭제 성공", "cartItem_list.do?user_no="+user_no);
         } 
         
         else {
@@ -44,6 +44,4 @@ public class CartItemDeleteAction implements Action {
 		
 		return null;
 	}
-
 }
-
