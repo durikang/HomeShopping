@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.global.action.Action;
 import com.global.action.View;
-import com.global.admin.model.UsersDTO;
 import com.global.board.model.BoardVisitDAO;
+import com.global.user.model.UsersDTO;
 import com.google.gson.Gson;
 
 /*

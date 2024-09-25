@@ -2,12 +2,12 @@ package com.global.admin.model;
 
 import java.sql.Date;
 
+import com.global.user.model.UsersDTO;
+
 public class AdminDTO extends UsersDTO{
 	
 	private String roleCode;
     private String roleName;
-    
-    private String rolePwd;
     
 	public AdminDTO() {
 		super();
@@ -37,13 +37,5 @@ public class AdminDTO extends UsersDTO{
 	
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
-	}
-	
-	public String getRolePwd() {
-		return rolePwd;
-	}
-
-	public void setRolePwd(String rolePwd) {
-		this.rolePwd = rolePwd;
 	}
 }

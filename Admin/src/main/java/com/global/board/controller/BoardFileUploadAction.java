@@ -16,10 +16,10 @@ import javax.servlet.http.Part;
 
 import com.global.action.Action;
 import com.global.action.View;
-import com.global.admin.model.UsersDTO;
 import com.google.gson.Gson;
 import com.global.board.model.BoardFileUploadDTO;
 import com.global.board.model.UploadResponse;
+import com.global.user.model.UsersDTO;
 
 public class BoardFileUploadAction implements Action {
 

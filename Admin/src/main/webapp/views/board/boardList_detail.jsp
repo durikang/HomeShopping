@@ -1,4 +1,4 @@
-<%@page import="com.global.admin.model.UsersDTO"%>
+<%@page import="com.global.user.model.UsersDTO"%>
 <%@ page import="com.global.board.model.BoardDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"

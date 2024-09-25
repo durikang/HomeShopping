@@ -1,4 +1,4 @@
-package com.global.admin.model;
+package com.global.user.model;
 
 import java.sql.Date;
 

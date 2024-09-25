@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.global.admin.model.UsersDTO;
+import com.global.user.model.UsersDTO;
 
 @WebFilter(urlPatterns = {"*.do", "*.go"})
 public class SessionCheckFilter implements Filter {

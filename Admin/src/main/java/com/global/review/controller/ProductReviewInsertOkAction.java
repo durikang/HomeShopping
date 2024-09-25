@@ -8,9 +8,9 @@ import javax.servlet.http.HttpSession;
 
 import com.global.action.Action;
 import com.global.action.View;
-import com.global.admin.model.UsersDTO;
 import com.global.review.model.ProductReviewDAO;
 import com.global.review.model.ProductReviewDTO;
+import com.global.user.model.UsersDTO;
 import com.global.utils.RequestParameterUtils;
 import com.global.utils.ScriptUtil;
 

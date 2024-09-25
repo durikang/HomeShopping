@@ -1,4 +1,4 @@
-package com.global.admin.controller;
+package com.global.user.controller;
 
 import java.io.IOException;
 

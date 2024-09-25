@@ -10,11 +10,11 @@ import javax.servlet.http.HttpSession;
 
 import com.global.action.Action;
 import com.global.action.View;
-import com.global.admin.model.UsersDTO;
 import com.global.product.model.ProductDAO;
 import com.global.product.model.ProductDTO;
 import com.global.product.model.ProductImageDAO;
 import com.global.product.model.ProductImageDTO;
+import com.global.user.model.UsersDTO;
 import com.global.utils.ScriptUtil;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;

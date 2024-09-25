@@ -9,24 +9,24 @@
 <body>
 	<div align = "center">
 		<hr width = "50%" color = "red">
-			<h3>관리자 등록 페이지</h3>
+			<h3>유저 등록 페이지</h3>
 		<hr width = "50%" color = "red">
 		
 		<br><br>
 		
-		<form method = "post" action = "${contextPath }/adminInsert_ok.do">
+		<form method = "post" action = "${contextPath }/userInsert_ok.do">
 			<table border = "1" width = "auto">
 			<tr>
 				<th>아이디</th>
 				<td>
-					<input type = "text" name = "id">
+					<input type = "text" name = "user_id">
 				</td>
 			</tr>
 			
 			<tr>
 				<th>비밀번호</th>
 				<td>
-					<input type = "password" name = "pwd">
+					<input type = "password" name = "user_pwd">
 				</td>
 			</tr>
 			
