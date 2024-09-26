@@ -11,6 +11,29 @@
 	function showPopup() {
     alert("배송이 완료되지 않아 리뷰 작성이 불가능합니다.");
 }
+	
+	 // JavaScript 함수: 클릭한 행의 ID를 가져와서 상세 페이지로 이동
+	function goToDetailPage(event) {
+	    const target = event.currentTarget;
+	    const No = target.getAttribute('data-id');
+	    const userType = target.getAttribute('data-user-type');
+	    const currentPage = ${pi.currentPage};  // pi.currentPage를 자바스크립트 변수로 설정
+	    const status = '${status}';
+	    const subtitle = '${param.subtitle}';
+	    
+	    if (No) {
+	        window.location.href = '${contextPath}/orderitemcontent.do?no=' + No + '&userType=' + userType + '&status=' + '${status}' + '&currentPage=' + '${pi.currentPage}';
+	    }
+	}
+
+	// 모든 행에 클릭 이벤트 리스너 추가
+	document.addEventListener('DOMContentLoaded', function() {
+	    const rows = document.querySelectorAll('table tr[data-id]');
+
+	    rows.forEach(row => {
+	        row.addEventListener('click', goToDetailPage);
+	    });
+	});
 </script>
 </head>
 <body>

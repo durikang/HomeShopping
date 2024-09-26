@@ -46,7 +46,7 @@
 		<%-- <form method="post" enctype="multipart/form-date" action="${contextPath}/orderModifyOk.do"> --%>
 		<form method="post" action="${contextPath}/delivery_ModifyOk.do">
 		<%-- <input type="hidden" name="status" value="${dto.status }"> --%>
-			<table border="1">
+			<table border="1" class="form-group">
 			<tr>
 				<th>배송 번호</th>
 				<th>주문 번호</th>
@@ -56,9 +56,9 @@
 			
 			
 			<tr>
-				<td><input name="delivery_no" readonly value="${dto.delivery_no }"></td>
-				<td><input name="order_no" readonly value="${dto.order_no }"></td>
-				<td><input name="delivery_date" readonly value="${dto.delivery_date }"></td>
+				<td>${dto.delivery_no }</td>
+				<td>${dto.order_no }</td>
+				<td>${dto.delivery_date }</td>
 				<td>
 				<!-- 
 					<select name="status" >

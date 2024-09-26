@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				<th class="border-th board-th-boardNo" >상품번호</th> 
 				<th class="border-th board-th-createAt">상품명</th>
 				<th class="border-th board-th-createAt">수량</th> 
-				<th class="border-th board-th-createAt" >가격</th> 
+				<th class="border-th board-th-createAt">가격</th> 
 				<th class="border-th board-th-status" >수정  /  삭제</th>
 			</tr>
 			<c:if test="${!empty cartitem}">

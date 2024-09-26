@@ -122,7 +122,7 @@ public class DeliveryDAO {
 			sql = "SELECT d.DELIVERY_NO, o.ORDER_NO, d.DELIVERY_DATE, d.DELIVERY_STATUS "
 				    + "FROM ORDERS o "
 				    + "LEFT JOIN DELIVERY d ON o.ORDER_NO = d.ORDER_NO "
-				    + "ORDER BY o.ORDER_DATE DESC, d.DELIVERY_DATE ASC";
+				    + "ORDER by delivery_no asc";
 
 			
 			pstmt = con.prepareStatement(sql);
@@ -324,7 +324,7 @@ public class DeliveryDAO {
 		 * boardList페이지에서 BOARD_DETAIL을 호출할때
 		 * USER_TYPE,USER_ID,USER_EMAIL,BOARD_CATEGORY테이블에 대한 정보를 포함하고 있습니다.
 		 */
-		sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY order_no ASC) AS rnum, b.* FROM delivery b ) WHERE rnum BETWEEN ? AND ?";
+		sql = "SELECT * FROM ( SELECT row_number() OVER (ORDER BY delivery_no ASC) AS rnum, b.* FROM delivery b ) WHERE rnum BETWEEN ? AND ?";
 
 		try {
 			openConn();
@@ -355,6 +355,51 @@ public class DeliveryDAO {
 			closeConn(rs, pstmt, con);
 		}
 		return list;
+	}
+
+
+	public int InsertDelivery(DeliveryDTO dto, int orderNo) {
+		int result = 0;
+		int deliveryNo = 0;
+		
+		
+        try {
+        	openConn();
+    		
+    	
+            sql = "SELECT delivery_no FROM delivery WHERE order_no = ?";
+            
+			pstmt = con.prepareStatement(sql);
+		
+        pstmt.setInt(1, orderNo);
+        rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            orderNo = rs.getInt("order_no");
+        }
+
+        
+        sql = "SELECT MAX(delivery_no) FROM delivery";
+        pstmt = con.prepareStatement(sql);
+        rs = pstmt.executeQuery();
+        if (rs.next()) {
+            deliveryNo = rs.getInt(1) + 1;
+        } else {
+            deliveryNo = 1;
+        }
+
+        
+        sql = "INSERT INTO delivery (delivery_no, order_no, delivery_date, delivery_status)"
+        		+ " VALUES (?, ?, sysdate, 'PENDING')";
+        pstmt = con.prepareStatement(sql);
+        pstmt.setInt(1, deliveryNo);
+        pstmt.setInt(2, orderNo);
+        result = pstmt.executeUpdate();
+        } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	} 

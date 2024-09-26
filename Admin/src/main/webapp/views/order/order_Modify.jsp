@@ -57,9 +57,9 @@
 			
 			
 			<tr>
-				<td><input name="order_no" readonly value="${dto.order_no }"></td>
-				<td><input name="user_no" readonly value="${dto.user_no }"></td>
-				<td><input name="order_date" readonly value="${dto.order_date }"></td>
+				<td>${dto.order_no }</td>
+				<td>${dto.user_no }</td>
+				<td>${dto.order_date }</td>
 				<td>
 				<!-- 
 					<select name="status" >
@@ -76,8 +76,7 @@
 					    <option value="CANCELLED" ${dto.status == 'CANCELLED' ? 'selected' : ''}>배송 취소</option>
 					</select>
 				</td>
-				<td><input name="total_amount" readonly
-					value="${dto.total_amount }"></td>
+				<td>${dto.total_amount }</td>
 			</tr>
 		
             <tr>

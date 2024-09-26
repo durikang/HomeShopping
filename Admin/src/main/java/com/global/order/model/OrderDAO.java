@@ -410,7 +410,7 @@ public class OrderDAO {
 		        openConn();
 
 		        // Get existing order number
-		        String sql = "SELECT order_no FROM orders WHERE user_no = ?";
+		        sql = "SELECT order_no FROM orders WHERE user_no = ?";
 		        pstmt = con.prepareStatement(sql);
 		        pstmt.setInt(1, user_no);
 		        rs = pstmt.executeQuery();
