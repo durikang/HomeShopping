@@ -839,11 +839,42 @@ public class ProductDAO {
 		return list;
 	}
 
-	public ProductDTO getProductBuyContent(String product_no, String user_no) {
+	public ProductDTO getProductBuyContent(String product_no) {
 
-		
-		return null;
+		ProductDTO dto = null;
+
+		try {
+
+			openConn();
+
+			sql = "SELECT B.NAME, B.PRICE, PI.IMAGE_URL FROM PRODUCT B JOIN PRODUCT_IMAGE PI ON B.PRODUCT_NO = PI.PRODUCT_NO WHERE B.PRODUCT_NO = ?";
+
+			pstmt = con.prepareStatement(sql);
+
+			pstmt.setString(1, product_no);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+
+				dto = new ProductDTO();
+
+				
+				dto.setImage_url(rs.getString("image_url"));
+				dto.setName(rs.getString("name"));
+				dto.setPrice(rs.getInt("price"));
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+
+		return dto;
 	}
+
 
 }
 

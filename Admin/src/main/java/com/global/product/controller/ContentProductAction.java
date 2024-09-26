@@ -51,7 +51,7 @@ public class ContentProductAction implements Action {
 		
 		
 		// 조회하는 메서드 호출
-		ProductDTO product = dao.getProductBuyContent(product_no, user_no);
+		ProductDTO product = dao.getProductContent(product_no);
                 
 
 		request.setAttribute("Content", product);
