@@ -34,6 +34,7 @@
 					<td>
 						<c:if test="${sessionScope.user.userType == 'ADMIN'}">
 							<input class="btn" type="button" value="주문목록삭제" onclick="location.href='orderitem_delete.do?no=${dto.oreder_no}'">
+							<input class="btn" type="button" value="배송하기" onclick="location.href='delivery_insert.do?no=${dto.oreder_no}'">
 						</c:if>
 					</td> 
 				</tr>

@@ -6,77 +6,11 @@
     <meta charset="UTF-8">
     <title>배송 정보</title>
     <script type="text/javascript">
-    function toggleInputFields() {
-        var filterType = document.getElementById("filterType").value;
-        var inputFieldContainer = document.getElementById("inputFields");
-
-        if (filterType === "orderNoAndStatus" || filterType === "deliveryNoAndStatus") {
-            inputFieldContainer.innerHTML = `
-                <input type="text" id="firstFilterValue" onkeyup="filterTable()" placeholder="검색">
-                <input type="text" id="secondFilterValue" onkeyup="filterTable()" placeholder="검색">
-            `;
-        } else {
-            inputFieldContainer.innerHTML = `
-                <input type="text" id="filterValue" onkeyup="filterTable()" placeholder="검색">
-            `;
-        }
-    }
-
-    function filterTable() {
-        var filterType = document.getElementById("filterType").value;
-        var table = document.getElementById("deliveryTable");
-        var rows = table.getElementsByTagName("tr");
-        var match = false;
-
-        for (var i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 1부터 시작
-            var cells = rows[i].getElementsByTagName("td");
-
-            if (filterType === "orderNoAndStatus") {
-                var orderNoValue = document.getElementById("firstFilterValue").value.toLowerCase();
-                var statusValue = document.getElementById("secondFilterValue").value.toLowerCase();
-                match = cells[1].textContent.toLowerCase().includes(orderNoValue) &&
-                        cells[3].textContent.toLowerCase().includes(statusValue);
-            } else if (filterType === "deliveryNoAndStatus") {
-                var deliveryNoValue = document.getElementById("firstFilterValue").value.toLowerCase();
-                var statusValue = document.getElementById("secondFilterValue").value.toLowerCase();
-                match = cells[0].textContent.toLowerCase().includes(deliveryNoValue) &&
-                        cells[3].textContent.toLowerCase().includes(statusValue);
-            } else {
-                var filterValue = document.getElementById("filterValue").value.toLowerCase();
-                if (filterType === "deliveryNo") {
-                    match = cells[0].textContent.toLowerCase().includes(filterValue);
-                } else if (filterType === "orderNo") {
-                    match = cells[1].textContent.toLowerCase().includes(filterValue);
-                } else if (filterType === "deliveryDate") {
-                    match = cells[2].textContent.toLowerCase().includes(filterValue);
-                } else if (filterType === "deliveryStatus") {
-                    match = cells[3].textContent.toLowerCase().includes(filterValue);
-                }
-            }
-
-            rows[i].style.display = match ? "" : "none"; // 일치 여부에 따라 표시/숨기기
-        }
-    }
     </script>
 </head>
 <body onload="toggleInputFields()">
     <div align="center">
-        <h3>배송 정보</h3>
-        
-        <div>
-            <label for="filterType">검색 기준:</label>
-            <select id="filterType" onchange="toggleInputFields()">
-                <option value="deliveryNo">배송 번호</option>
-                <option value="orderNo">주문 번호</option>
-                <option value="deliveryDate">배송일</option>
-                <option value="deliveryStatus">배송 상태</option>
-                <option value="orderNoAndStatus">주문 번호 + 배송 상태</option>
-                <option value="deliveryNoAndStatus">배송 번호 + 배송 상태</option>
-            </select>
-            <div id="inputFields">
-                <input type="text" id="filterValue" onkeyup="filterTable()" placeholder="검색">
-            </div>
-        </div>
+        <h3>배송 정보</h3>        
 
         <table id="deliveryTable" border="1">
             <tr>
